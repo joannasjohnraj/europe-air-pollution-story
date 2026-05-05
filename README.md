@@ -2,58 +2,67 @@
 
 ## Project Overview
 This project is a data journalism exploration of air pollution (PM2.5) across Europe.  
-The goal is to understand spatial inequality in air quality and how exposure varies by region.
+It investigates spatial inequality in air quality and how exposure varies across regions.
 
-We use geospatial data to visualize differences in pollution levels and identify regional patterns.
+Using geospatial analysis, the project aims to reveal patterns of environmental inequality and highlight differences in population exposure to fine particulate matter.
 
 ---
 
 ## Story Focus
-Although air quality in Europe has improved overall, exposure to fine particulate matter (PM2.5) is not evenly distributed.  
-Some regions consistently experience higher pollution levels, creating environmental and health inequalities.
+While air quality in Europe has improved over recent decades, PM2.5 exposure remains unevenly distributed.
+
+The central narrative of this project is that environmental quality is strongly shaped by geography, with persistent regional disparities in pollution levels across Europe.
 
 ---
 
 ## Data Source
 - Provider: European Environment Agency (EEA)  
-- Dataset: PM2.5 European air quality data (2024, interpolated interim data)  
+- Dataset: PM2.5 European air quality data (2024, interpolated interim dataset)  
 - Format: GeoTIFF raster (1 km grid resolution)  
 - Publication date: June 2025  
 - Coverage: Europe  
 
-Official source:
+Official source:  
 https://www.eea.europa.eu/
 
 ---
 
 ## Tools Used
-- QGIS (geospatial visualization and map creation)
-- GitLab (version control and collaboration)
+- QGIS (geospatial processing and visualization)
+- GitLab (version control and project tracking)
 
 ---
 
 ## Visualization
-- Heatmap of PM2.5 concentration across Europe
-- Color scale:
-  - Blue/Green = low pollution
-  - Yellow/Orange = medium
-  - Red = high pollution
+- Raster heatmap of PM2.5 annual mean concentration across Europe
+- Color scale interpretation:
+  - Blue / Green → low pollution
+  - Yellow / Orange → moderate pollution
+  - Red → high pollution
 
 ---
 
 ## Research Questions
 - How does PM2.5 exposure vary across European regions?
-- Which areas experience consistently higher pollution?
-- What spatial inequalities exist in air quality?
+- Which regions consistently experience higher pollution levels?
+- What spatial inequalities in air quality can be observed?
+
+---
+
+## Key Insight
+Preliminary analysis suggests a clear spatial divide in PM2.5 exposure across Europe, with higher pollution levels concentrated in Central and Eastern regions compared to Northern Europe.
 
 ---
 
 ## Limitations
-- Data is interpolated (model + sensor fusion), not purely raw measurements
-- Health outcomes are not directly included
-- Resolution is grid-based, not city-specific
+- Dataset is interpolated (combining monitoring data and model estimates)
+- Health outcomes are not directly measured
+- Spatial resolution is grid-based and not city-specific
+- Temporal analysis is not yet included in this version
 
 ---
 
 ## Project Status
-Ongoing data analysis and visualization for Data Journalism & Storytelling course (SoSe 2026).
+This project was developed as part of the Data Journalism & Storytelling course (SoSe 2026) at the University of Konstanz.
+
+It represents an iterative data storytelling process across multiple assignments, from topic selection to final narrative development.
