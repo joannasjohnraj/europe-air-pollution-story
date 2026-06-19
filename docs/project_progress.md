@@ -69,3 +69,28 @@ This week, the project moved further from story planning into implementation and
 - Identify persistent hotspots across multiple years.
 - Improve map styling and annotations.
 - Connect the analysis outputs to the interactive visual story prototype.
+
+## Implementation Progress – Interactive Prototype and Persistent Hotspots  
+**Date:** 19 June 2026
+
+This week, I extended the project from static raster outputs toward a first interactive visual data story prototype.
+
+Completed work:
+- Calculated cleaned yearly mean PM2.5 values for all available raster years from 2007 to 2024, excluding 2009 because it is not available in the dataset.
+- Created a time-series chart showing the long-term PM2.5 trend across available years.
+- Created a persistent hotspot analysis by counting how often comparable raster cells were above 10 µg/m³ across the available years.
+- Created a categorical persistent-hotspot map showing areas that exceeded the threshold in 40–60%, 60–80%, and 80–100% of valid years.
+- Built a first interactive HTML prototype in `prototype/index.html`.
+- Connected the main story stages to the current analysis outputs: overview, intermediate-year trend, change map, 2024 hotspots, persistent hotspots, and planned reader exploration.
+
+Current interpretation:
+The analysis shows that PM2.5 levels decreased strongly across Europe over time, but remaining pollution is spatially uneven. The persistent-hotspot map helps shift the story from a single-year view to the question of which areas repeatedly remain above the threshold.
+
+Current limitation:
+The raster files do not all have identical spatial coverage. Therefore, direct change and persistence analyses are based on comparable raster areas and should be described carefully. The current values are raster-cell based and not population-weighted exposure estimates.
+
+Next steps:
+- Improve the interactive prototype so it becomes more than a clickable slideshow.
+- Add clearer annotations and explanatory text inside the story.
+- Develop reader-driven exploration, such as switching between years or views.
+- Continue refining the final story structure for the presentation and report.
