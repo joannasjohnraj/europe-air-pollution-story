@@ -28,7 +28,10 @@ https://www.eea.europa.eu/
 ---
 
 ## Tools Used
-- QGIS (geospatial processing and visualization)
+- Python (raster processing, analysis, and chart generation)
+- Rasterio / NumPy / Matplotlib (geospatial raster analysis and visualization)
+- HTML / CSS / JavaScript (first interactive prototype)
+- QGIS (geospatial inspection and visualization)
 - GitLab (version control and project tracking)
 
 ---
@@ -58,7 +61,8 @@ Preliminary analysis suggests a clear spatial divide in PM2.5 exposure across Eu
 - Dataset is interpolated (combining monitoring data and model estimates)
 - Health outcomes are not directly measured
 - Spatial resolution is grid-based and not city-specific
-- Temporal analysis is not yet included in this version
+- Temporal analysis is currently based on cleaned raster-cell means and should not yet be interpreted as population-weighted exposure
+- Raster files do not all have identical spatial coverage, so direct comparisons are based on shared comparable areas
 
 ---
 
