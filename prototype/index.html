@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PM2.5 Europe Interactive Prototype</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f6f8;
+      color: #1f2937;
+    }
+
+    header {
+      background: #1f2937;
+      color: white;
+      padding: 28px 46px;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 32px;
+    }
+
+    header p {
+      max-width: 900px;
+      line-height: 1.5;
+      color: #d1d5db;
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 28px auto;
+      padding: 0 24px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 270px 1fr;
+      gap: 24px;
+    }
+
+    .panel {
+      background: white;
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+
+    button {
+      width: 100%;
+      display: block;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+      border-radius: 10px;
+      border: 1px solid #d1d5db;
+      background: white;
+      cursor: pointer;
+      text-align: left;
+      font-size: 15px;
+    }
+
+    button.active {
+      background: #1f2937;
+      color: white;
+      border-color: #1f2937;
+    }
+
+    .stage {
+      font-size: 12px;
+      font-weight: bold;
+      color: #6b7280;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 26px;
+    }
+
+    p {
+      line-height: 1.6;
+      font-size: 16px;
+    }
+
+    img {
+      width: 100%;
+      max-height: 620px;
+      object-fit: contain;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      background: white;
+      margin-top: 16px;
+    }
+
+    .note {
+      margin-top: 14px;
+      background: #f3f4f6;
+      border-left: 5px solid #6a3d9a;
+      padding: 12px 14px;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .status {
+      margin-top: 20px;
+      font-size: 13px;
+      color: #6b7280;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Unequal PM2.5 Improvement in Europe</h1>
+    <p>
+      Interactive prototype for a visual data story based on European Environment Agency PM2.5 raster data.
+      The final version will guide readers from overall improvement to regional comparison and persistent hotspots.
+    </p>
+  </header>
+
+  <main>
+    <div class="layout">
+      <aside class="panel">
+        <button class="active" onclick="showStage('overview', this)">1. Overview</button>
+        <button onclick="showStage('trend', this)">2. Intermediate Years</button>
+        <button onclick="showStage('change', this)">3. Change Map</button>
+        <button onclick="showStage('hotspots2024', this)">4. 2024 Hotspots</button>
+        <button onclick="showStage('persistent', this)">5. Persistent Hotspots</button>
+        <button onclick="showStage('explore', this)">6. Reader Exploration</button>
+      </aside>
+
+      <section class="panel">
+        <div class="stage" id="stage">Setup</div>
+        <h2 id="title">Europe-wide PM2.5 overview</h2>
+        <p id="text">
+          The story begins with a Europe-wide comparison between 2007 and 2024. This introduces PM2.5 as a spatial problem and shows that the project uses raster data rather than only country averages.
+        </p>
+
+        <img id="visual" src="../figures/pm25_2007_2024_comparison.png" alt="PM2.5 visual" />
+
+        <div class="note" id="note">
+          Narrative role: Setup. Pattern: Familiarization and Concretize.
+        </div>
+
+        <div class="status">
+          Prototype status: early interactive structure. Static analysis outputs are connected to story stages.
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const stages = {
+      overview: {
+        stage: "Setup",
+        title: "Europe-wide PM2.5 overview",
+        text: "The story begins with a Europe-wide comparison between 2007 and 2024. This introduces PM2.5 as a spatial problem and shows that the project uses raster data rather than only country averages.",
+        image: "../figures/pm25_2007_2024_comparison.png",
+        note: "Narrative role: Setup. Pattern: Familiarization and Concretize."
+      },
+
+      trend: {
+        stage: "Rising Action",
+        title: "Intermediate years show the long-term trend",
+        text: "This chart uses all available years from 2007 to 2024, excluding 2009. It shows that PM2.5 generally decreased over time, although the values are cleaned raster-cell means and not population-weighted exposure values.",
+        image: "../figures/yearly_pm25_mean_trend.png",
+        note: "Narrative role: Rising Action. Pattern: Gradual Reveal."
+      },
+
+      change: {
+        stage: "Rising Action",
+        title: "Where did PM2.5 decrease?",
+        text: "Because the raster files do not all have identical coverage, this map compares only the overlapping valid area between 2007 and 2024. It shows where PM2.5 decreased or increased.",
+        image: "../figures/pm25_change_2007_2024_overlap.png",
+        note: "Narrative role: Rising Action. Pattern: Compare."
+      },
+
+      hotspots2024: {
+        stage: "Climax",
+        title: "Where do high PM2.5 levels remain in 2024?",
+        text: "This map highlights areas above 10 µg/m³ in 2024. The threshold is policy-relevant because it corresponds to the EU 2030 annual PM2.5 limit.",
+        image: "../figures/pm25_hotspots_2024_threshold10.png",
+        note: "Narrative role: Climax. Pattern: Emphasis."
+      },
+
+      persistent: {
+        stage: "Climax",
+        title: "Which areas are persistent hotspots?",
+        text: "This map counts how often each comparable raster cell was above 10 µg/m³ across the available years. Darker purple means the area exceeded the threshold in more years.",
+        image: "../figures/persistent_hotspots_threshold10_categorical.png",
+        note: "Narrative role: Climax. Pattern: Emphasis. This moves from a single-year hotspot to repeated persistence."
+      },
+
+      explore: {
+        stage: "Resolution",
+        title: "Planned reader-driven exploration",
+        text: "The final version should allow readers to choose years, switch between level/change/hotspot views, and explore countries or regions themselves. This follows the Martini Glass structure: author-guided explanation first, then reader-driven exploration.",
+        image: "../figures/persistent_hotspots_threshold10_categorical.png",
+        note: "Narrative role: Resolution. Reader-driven exploration is planned next."
+      }
+    };
+
+    function showStage(key, button) {
+      const item = stages[key];
+
+      document.getElementById("stage").textContent = item.stage;
+      document.getElementById("title").textContent = item.title;
+      document.getElementById("text").textContent = item.text;
+      document.getElementById("visual").src = item.image;
+      document.getElementById("note").textContent = item.note;
+
+      document.querySelectorAll("button").forEach(btn => btn.classList.remove("active"));
+      button.classList.add("active");
+    }
+  </script>
+</body>
+</html>
