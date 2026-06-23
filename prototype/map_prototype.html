@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>PM2.5 Europe Interactive Map Prototype</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  />
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      color: #1f2937;
+      background: #f4f5f7;
+    }
+
+    header {
+      padding: 18px 28px;
+      background: #1f2937;
+      color: white;
+    }
+
+    header h1 {
+      margin: 0 0 6px 0;
+      font-size: 26px;
+    }
+
+    header p {
+      margin: 0;
+      color: #d1d5db;
+      max-width: 950px;
+      line-height: 1.4;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: 330px 1fr;
+      height: calc(100vh - 112px);
+    }
+
+    .sidebar {
+      background: white;
+      padding: 18px;
+      overflow-y: auto;
+      border-right: 1px solid #d1d5db;
+    }
+
+    .sidebar h2 {
+      margin-top: 0;
+      font-size: 22px;
+    }
+
+    .sidebar p {
+      line-height: 1.55;
+      font-size: 15px;
+    }
+
+    .story-box {
+      background: #f3f4f6;
+      border-left: 5px solid #6a3d9a;
+      padding: 12px;
+      margin: 16px 0;
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .buttons button {
+      width: 100%;
+      margin-bottom: 8px;
+      padding: 11px;
+      border-radius: 8px;
+      border: 1px solid #cfd4dc;
+      background: white;
+      cursor: pointer;
+      text-align: left;
+      font-size: 14px;
+    }
+
+    .buttons button.active {
+      background: #1f2937;
+      color: white;
+      border-color: #1f2937;
+    }
+
+    .small {
+      font-size: 13px;
+      color: #6b7280;
+      line-height: 1.4;
+    }
+
+    #map {
+      width: 100%;
+      height: 100%;
+    }
+
+    .leaflet-popup-content {
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .region-button {
+      display: inline-block;
+      margin: 4px 4px 4px 0;
+      padding: 7px 9px;
+      border: 1px solid #cfd4dc;
+      border-radius: 999px;
+      background: #ffffff;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .region-button:hover {
+      background: #f3f4f6;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Europe’s air got cleaner. But hotspots remain.</h1>
+    <p>
+      Interactive prototype v2. This version focuses on the main story:
+      PM2.5 improved across Europe, but some regions still remain above a policy-relevant threshold.
+    </p>
+  </header>
+
+  <div class="container">
+    <aside class="sidebar">
+      <h2 id="side-title">What is PM2.5?</h2>
+
+      <p id="side-text">
+        PM2.5 means fine particulate matter with a diameter smaller than 2.5 micrometers.
+        These particles are small enough to enter deep into the lungs and are linked to serious health risks.
+      </p>
+
+      <div class="story-box" id="story-box">
+        Start here: the story first explains why PM2.5 matters, then shows that Europe improved overall,
+        before focusing on the hotspot regions that still remain.
+      </div>
+
+      <h3>Map view</h3>
+      <div class="buttons">
+        <button class="active" onclick="setViewMode('intro', this)">1. PM2.5 background</button>
+        <button onclick="setViewMode('overview', this)">2. 2007 vs 2024 overview</button>
+        <button onclick="setViewMode('change', this)">3. Improvement pattern</button>
+        <button onclick="setViewMode('hotspots', this)">4. 2024 hotspots</button>
+      </div>
+
+      <h3>Zoom to hotspot regions</h3>
+      <button class="region-button" onclick="zoomRegion('northernItaly')">Northern Italy</button>
+      <button class="region-button" onclick="zoomRegion('poland')">Poland / Central Europe</button>
+      <button class="region-button" onclick="zoomRegion('balkans')">Balkans</button>
+      <button class="region-button" onclick="zoomRegion('turkey')">Turkey / Southeast</button>
+
+      <p class="small">
+        Prototype note: this version adds real map interaction: zooming, panning, clickable hotspot regions, and explanatory annotations. The next step is to add georeferenced PM2.5 raster overlays directly on the map.
+      </p>
+    </aside>
+
+    <div id="map"></div>
+  </div>
+
+  <script>
+    const map = L.map("map").setView([51, 12], 4);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 8,
+      attribution: "&copy; OpenStreetMap contributors"
+    }).addTo(map);
+
+    const hotspotStyle = {
+      color: "#6a3d9a",
+      fillColor: "#6a3d9a",
+      fillOpacity: 0.28,
+      weight: 2
+    };
+
+    const regions = {
+      northernItaly: {
+        name: "Northern Italy / Po Valley",
+        coords: [45.2, 9.5],
+        zoom: 6,
+        text: "Northern Italy is one of the clearest remaining hotspot areas. This is important because it suggests that even with overall European improvement, local geography, dense settlement, traffic, agriculture, and industry can keep pollution levels high.",
+        story: "Key story role: shows that improvement does not remove all regional hotspots."
+      },
+      poland: {
+        name: "Poland / Central Europe",
+        coords: [51.7, 19.2],
+        zoom: 6,
+        text: "Parts of Poland and Central Europe remain relevant for the hotspot story. These areas help connect air quality to heating, energy systems, industry, urban concentration, and regional geography.",
+        story: "Key story role: connects remaining hotspots to structural and regional factors."
+      },
+      balkans: {
+        name: "Balkans",
+        coords: [44.0, 20.5],
+        zoom: 6,
+        text: "The Balkans are important because hotspot patterns can remain even when the European average improves. This region can help explain why local conditions and emission sources matter.",
+        story: "Key story role: shows that the story is not only about country averages."
+      },
+      turkey: {
+        name: "Turkey / Southeastern Europe",
+        coords: [40.5, 29.0],
+        zoom: 6,
+        text: "Some later raster files include wider southeastern coverage than earlier years. This region is useful for discussing data coverage limitations and why comparable-area analysis is necessary.",
+        story: "Key story role: explains why raster coverage matters for fair comparison."
+      }
+    };
+
+    const markers = {};
+
+    Object.keys(regions).forEach(key => {
+      const r = regions[key];
+
+      markers[key] = L.circleMarker(r.coords, {
+        radius: 10,
+        color: "#4B0082",
+        fillColor: "#6a3d9a",
+        fillOpacity: 0.75,
+        weight: 2
+      })
+      .addTo(map)
+      .bindPopup("<b>" + r.name + "</b><br>" + r.text)
+      .on("click", function () {
+        updateSidebar(r.name, r.text, r.story);
+      });
+    });
+
+    function updateSidebar(title, text, story) {
+      document.getElementById("side-title").textContent = title;
+      document.getElementById("side-text").textContent = text;
+      document.getElementById("story-box").textContent = story;
+    }
+
+    function setViewMode(mode, button) {
+      document.querySelectorAll(".buttons button").forEach(btn => btn.classList.remove("active"));
+      button.classList.add("active");
+
+      if (mode === "intro") {
+        map.setView([51, 12], 4);
+        updateSidebar(
+          "What is PM2.5?",
+          "PM2.5 means fine particulate matter with a diameter smaller than 2.5 micrometers. These particles are small enough to enter deep into the lungs and are linked to serious health risks.",
+          "Start here: the story first explains why PM2.5 matters, then shows that Europe improved overall, before focusing on the hotspot regions that still remain."
+        );
+      }
+
+      if (mode === "overview") {
+        map.setView([51, 12], 4);
+        updateSidebar(
+          "Europe improved overall",
+          "The long-term analysis shows that PM2.5 decreased across the available years. This gives the reader the first main message: Europe’s air quality improved.",
+          "Story role: establish the overall improvement before showing the remaining problem."
+        );
+      }
+
+      if (mode === "change") {
+        map.setView([51, 12], 4);
+        updateSidebar(
+          "Improvement was spatially uneven",
+          "The overlap-based change analysis compares only valid shared raster cells. It shows overall improvement, but the geography of change is not uniform.",
+          "Story role: transition from overall improvement to uneven regional change."
+        );
+      }
+
+      if (mode === "hotspots") {
+        map.setView([47, 15], 5);
+        updateSidebar(
+          "Hotspots remain in 2024",
+          "The 2024 hotspot analysis highlights cells above 10 micrograms per cubic meter. The main question becomes: why do some areas remain high even after overall improvement?",
+          "Story role: climax of the story. Improvement happened, but hotspot regions remain."
+        );
+      }
+    }
+
+    function zoomRegion(key) {
+      const r = regions[key];
+      map.setView(r.coords, r.zoom);
+      markers[key].openPopup();
+      updateSidebar(r.name, r.text, r.story);
+    }
+  </script>
+</body>
+</html>
