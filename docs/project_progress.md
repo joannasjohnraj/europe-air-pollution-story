@@ -94,3 +94,33 @@ Next steps:
 - Add clearer annotations and explanatory text inside the story.
 - Develop reader-driven exploration, such as switching between years or views.
 - Continue refining the final story structure for the presentation and report.
+
+
+## Implementation Progress – Scrollytelling Website Refinement  
+**Date:** 07 July 2026
+
+This week, I responded to feedback that the project should feel more like a data story and less like a collection of maps.
+
+### Completed
+
+- Redesigned the website into a scrollytelling structure.
+- Added clearer narrative flow: introduction, PM2.5 explanation, sources, baseline, transition, trend, hotspots, regional focus, and reader exploration.
+- Improved the 2007 to 2024 interactive transition using sampled PM2.5 values.
+- Added slower Play animation so the transition is easier to follow.
+- Refined the interactive explorer map with year scrubbing, hover values, and cleaner sampled-point visualization.
+- Removed visually distracting raster overlays from the explorer map.
+- Improved educational text so the website explains PM2.5, hotspots, and uneven improvement more clearly.
+- Unified the visual language and improved layout consistency.
+
+### Current Focus
+
+The project now focuses on the main message:
+
+> Europe’s PM2.5 levels improved, but the improvement is uneven and important hotspots remain.
+
+### Next Steps
+
+- Add exact official EEA, WHO, and EU citations.
+- Improve remaining map visuals and legends.
+- Refine final text for an environmental audience.
+- Continue polishing the scrollytelling experience for the final presentation.

@@ -19,6 +19,14 @@
       --mist: #eaf1f4;
       --line: #d8e0e8;
       --blue: #276c85;
+      --pm-low: #2c7bb6;
+      --pm-mid: #63b35d;
+      --pm-threshold: #f2c94c;
+      --pm-high: #f46d43;
+      --pm-extreme: #a50026;
+      --change-improve: #2166ac;
+      --change-neutral: #f7f7f7;
+      --change-worse: #b2182b;
       --green: #2f8f6b;
       --amber: #c77728;
       --red: #b9472f;
@@ -211,8 +219,9 @@
 
     .body-copy {
       margin: 22px 0 0;
-      font-size: 19px;
-      line-height: 1.62;
+      max-width: 68ch;
+      font-size: 18px;
+      line-height: 1.65;
       color: #314154;
     }
 
@@ -329,7 +338,7 @@
       display: block;
       margin-bottom: 6px;
       font-family: Arial, Helvetica, sans-serif;
-      font-size: clamp(26px, 4vw, 40px);
+      font-size: clamp(24px, 3.4vw, 36px);
       line-height: 1;
       color: var(--ink);
     }
@@ -359,7 +368,7 @@
     .map-frame {
       min-height: 560px;
       display: grid;
-      grid-template-rows: auto 1fr auto;
+      grid-template-rows: auto minmax(430px, 1fr) auto auto auto;
       position: relative;
     }
 
@@ -453,6 +462,11 @@
       color: white;
     }
 
+    .play-button.is-playing {
+      background: var(--blue);
+      border-color: var(--blue);
+    }
+
     .region-button.active {
       background: var(--ink);
       color: white;
@@ -460,7 +474,8 @@
     }
 
     .story-legend {
-      min-width: 210px;
+      min-width: 236px;
+      max-width: 270px;
       padding: 10px 12px;
       border: 1px solid var(--line);
       border-radius: 8px;
@@ -472,16 +487,12 @@
     }
 
     .data-readout {
-      position: absolute;
-      left: 18px;
-      bottom: 76px;
-      z-index: 600;
-      max-width: min(330px, calc(100% - 36px));
+      position: static;
+      z-index: 2;
+      width: 100%;
       padding: 12px 14px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: rgba(255, 255, 255, 0.94);
-      box-shadow: 0 1px 8px rgba(23, 32, 51, 0.14);
+      border-top: 1px solid var(--line);
+      background: #f7fafc;
       font-family: Arial, Helvetica, sans-serif;
       font-size: 13px;
       line-height: 1.45;
@@ -504,7 +515,11 @@
       height: 10px;
       margin-bottom: 6px;
       border-radius: 999px;
-      background: linear-gradient(90deg, #000004, #57106e, #bc3754, #f98e09, #fcffa4);
+      background: linear-gradient(90deg, var(--pm-low), var(--pm-mid), var(--pm-threshold), var(--pm-high), var(--pm-extreme));
+    }
+
+    .legend-ramp.change {
+      background: linear-gradient(90deg, var(--change-improve), #d1e5f0, var(--change-neutral), #fddbc7, var(--change-worse));
     }
 
     .legend-scale {
@@ -522,6 +537,7 @@
       font-size: 11px;
       font-family: Arial, Helvetica, sans-serif;
       letter-spacing: 0.02em;
+      line-height: 1.45;
     }
 
     .image-comparison {
@@ -673,7 +689,11 @@
       }
 
       .map-frame {
-        min-height: 520px;
+        min-height: 540px;
+      }
+
+      .story-map {
+        min-height: 410px;
       }
     }
 
@@ -714,6 +734,14 @@
         min-width: 0;
         text-align: left;
       }
+
+      .story-map {
+        min-height: 360px;
+      }
+
+      .story-legend {
+        max-width: 230px;
+      }
     }
   </style>
 </head>
@@ -724,7 +752,7 @@
       <p class="eyebrow">European PM2.5 raster data, 2007-2024</p>
       <h1>Europe's air got cleaner. But not everywhere equally.</h1>
       <p class="hook">
-        Annual EEA maps show a continent-wide decline in fine particle pollution, while regional hotspots still shape who breathes cleaner air.
+        Annual EEA raster maps show lower fine-particle pollution across much of Europe since 2007, while several regions still stand out in 2024.
       </p>
       <a class="scroll-cue" href="#pm25"><span></span>Start the story</a>
     </div>
@@ -739,27 +767,26 @@
         </div>
         <div class="reveal">
           <p class="lede">
-            PM2.5 is fine particulate matter smaller than 2.5 micrometers, small enough to travel deep into the lungs.
+            PM2.5 is fine particulate matter smaller than 2.5 micrometers, small enough to travel deep into the lungs and enter the bloodstream.
           </p>
           <p class="body-copy">
-            It is invisible in daily life, but it matters because long-term exposure is linked to serious health risks. This story uses PM2.5 as a way to see how environmental improvement can be real and uneven at the same time.
+            The World Health Organization treats particulate matter as a key indicator of air pollution because exposure is linked to cardiovascular and respiratory disease. This story follows PM2.5 because it makes Europe's air-quality progress visible at a regional scale.
           </p>
-
           <div class="fact-strip">
             <article class="fact">
               <div class="fact-icon">2.5</div>
               <h3>Very small particles</h3>
-              <p>Fine particles are far smaller than dust we can see, which makes them easy to inhale.</p>
+              <p>PM2.5 particles are much smaller than visible dust, so maps are often the first way readers can see the pattern.</p>
             </article>
             <article class="fact">
               <div class="fact-icon">!</div>
               <h3>Health relevance</h3>
-              <p>PM2.5 exposure is associated with respiratory and cardiovascular harm.</p>
+              <p>Health agencies link fine-particle exposure to heart and lung disease, especially over long periods.</p>
             </article>
             <article class="fact">
               <div class="fact-icon">EU</div>
               <h3>Policy threshold</h3>
-              <p>The hotspot maps use 10 ug/m3, matching the EU 2030 annual PM2.5 limit.</p>
+              <p>The hotspot maps use 10 ug/m3, the stricter annual PM2.5 limit planned under updated EU air-quality rules.</p>
             </article>
           </div>
         </div>
@@ -774,33 +801,32 @@
         </div>
         <div class="reveal">
           <p class="lede">
-            Fine particle pollution is not one single problem. It comes from everyday systems that heat homes, move people, grow food and produce goods.
+            Fine-particle pollution is not one single source. It can come directly from combustion and can also form in the air from other pollutants.
           </p>
-
           <div class="sources">
             <article class="source-card">
               <strong>Heating</strong>
               <div class="source-icon">H</div>
               <h3>Homes and buildings</h3>
-              <p>Residential heating can create winter pollution, especially where solid fuels are common.</p>
+              <p>Residential heating can contribute to PM2.5, especially where solid fuels are used and cold air traps pollution near the ground.</p>
             </article>
             <article class="source-card">
               <strong>Transport</strong>
               <div class="source-icon">T</div>
               <h3>Road traffic</h3>
-              <p>Vehicles add exhaust and non-exhaust particles in dense urban corridors.</p>
+              <p>Traffic contributes exhaust particles and non-exhaust particles from brakes, tyres and road dust in dense corridors.</p>
             </article>
             <article class="source-card">
               <strong>Industry</strong>
               <div class="source-icon">I</div>
               <h3>Production and power</h3>
-              <p>Industrial activity and energy systems can concentrate pollution around regional economies.</p>
+              <p>Industry and energy production can create local and regional emissions that show up as persistent spatial patterns.</p>
             </article>
             <article class="source-card">
               <strong>Agriculture</strong>
               <div class="source-icon">A</div>
               <h3>Secondary particles</h3>
-              <p>Agricultural emissions can react in the atmosphere and contribute to particulate pollution.</p>
+              <p>Agricultural emissions can react with other pollutants and help form secondary particulate matter in the atmosphere.</p>
             </article>
           </div>
         </div>
@@ -813,7 +839,7 @@
           <p class="kicker">The baseline</p>
           <h2>Start in 2007.</h2>
           <p class="body-copy">
-            Before comparing years, the story needs a starting point. The 2007 raster shows a more polluted Europe, with higher PM2.5 levels visible across parts of Central, Southern and Eastern Europe.
+            Before comparing years, the reader needs a baseline. The 2007 layer shows where fine-particle concentrations were higher at the beginning of the available series, especially across parts of Central, Southern and Eastern Europe.
           </p>
           <div class="stat-strip">
             <article class="stat-card">
@@ -829,7 +855,7 @@
             <article class="stat-card">
               <p class="stat-label">Interaction</p>
               <strong>Map</strong>
-              <p>Zoom, pan and read guided annotations.</p>
+              <p>Zoom, pan and inspect sampled cells to connect the color pattern to values.</p>
             </article>
           </div>
         </div>
@@ -837,7 +863,7 @@
           <div class="map-header">
             <div>
               <p class="kicker">Europe in 2007</p>
-              <p>A more polluted baseline before the long-term decline.</p>
+              <p>Use this as the reference year before judging later improvement.</p>
             </div>
             <div class="year-badge">2007</div>
           </div>
@@ -857,17 +883,17 @@
           <p class="kicker">The central question</p>
           <h2>Has Europe improved?</h2>
           <p class="body-copy">
-            Drag the year control to turn the 2007 baseline into the latest available year. The interaction animates real sampled raster values, designed to make the direction of change visible.
+            Drag the year control to animate sampled raster values from 2007 toward 2024. Blue and green cells mark lower concentrations; orange and red cells mark values closer to or above the hotspot threshold.
           </p>
           <p class="body-copy">
-            The map becomes cleaner overall. But the next sections ask the more important question: where does the problem remain?
+            This view is a visual bridge between two measured years. It shows the direction of change, while the exact change calculation later uses only comparable raster cells.
           </p>
         </div>
         <figure class="visual-frame map-frame reveal">
           <div class="transition-map-header">
             <div>
               <p class="kicker">Interactive map transition</p>
-              <p id="transition-copy">Drag the slider to animate sampled PM2.5 values from 2007 to 2024 and watch the broad pattern become cleaner.</p>
+              <p id="transition-copy">Drag the slider to see how sampled PM2.5 values move from the 2007 baseline toward the 2024 pattern.</p>
             </div>
             <div class="transition-year" id="transition-year">2007</div>
           </div>
@@ -895,9 +921,9 @@
 
           <div class="data-readout" id="transition-readout">
             <strong>Hover or click the sampled cells</strong>
-            Read 2007, 2024 and change values for comparable sampled locations.
+            Inspect the selected-year value, with 2007 and 2024 shown as context.
           </div>
-          <figcaption class="caption">Intermediate slider positions interpolate between real 2007 and 2024 sampled raster values for visual exploration.</figcaption>
+          <figcaption class="caption">Intermediate slider positions interpolate between the sampled 2007 and 2024 raster values to show the direction of change.</figcaption>
         </figure>
       </div>
     </section>
@@ -912,7 +938,7 @@
           <p class="kicker">The evidence behind the animation</p>
           <h2>The long-term trend points downward.</h2>
           <p class="body-copy">
-            The transition map gives the visual impression. The yearly mean chart confirms the broad pattern: PM2.5 generally declined across the available raster years.
+            The transition map gives a spatial impression. The yearly mean chart checks that impression against the full set of available annual rasters, showing a broad decline in raster-cell means.
           </p>
           <div class="stat-strip">
             <article class="stat-card">
@@ -941,10 +967,10 @@
           <p class="kicker">The complication</p>
           <h2>Improvement was not spatially even.</h2>
           <p class="body-copy">
-            The fair 2007 to 2024 change map compares only overlapping valid raster cells, because the annual files do not all cover exactly the same area.
+            The 2007 and 2024 rasters do not cover exactly the same area. To avoid a misleading comparison, this map compares only cells that are valid in both years.
           </p>
           <p class="body-copy">
-            This is where the story turns: a cleaner Europe does not mean every place changed in the same way.
+            Read this map as the geography of improvement: blue areas improved more strongly, while neutral or warmer areas improved less or increased.
           </p>
         </div>
         <figure class="visual-frame reveal">
@@ -964,13 +990,13 @@
           <p class="kicker">The remaining problem</p>
           <h2>Cleaner does not mean equal.</h2>
           <p class="body-copy">
-            By 2024, the overall pattern is cleaner, but some areas still exceed the 10 ug/m3 threshold used in this project. These hotspots carry the second half of the story.
+            By 2024, many sampled areas are lower than in 2007, but some places still exceed the 10 ug/m3 threshold used here. Those areas are important because EU air-quality policy is moving toward stricter annual PM2.5 limits.
           </p>
           <ul class="hotspot-list">
             <li><span class="dot"></span><span>About 20.7% of valid 2024 raster cells are above 10 ug/m3.</span></li>
-            <li><span class="dot"></span><span>Northern Italy shows how geography, density and economic activity can sustain high PM2.5.</span></li>
-            <li><span class="dot"></span><span>Central and Eastern Europe keep the focus on heating, energy and industrial systems.</span></li>
-            <li><span class="dot"></span><span>The Balkans and southeast help readers see why local and regional context matters.</span></li>
+            <li><span class="dot"></span><span>Northern Italy is a useful focus area because basin geography, dense settlement and emissions can combine to limit dispersion.</span></li>
+            <li><span class="dot"></span><span>Central and Eastern Europe highlight the role of heating, industry and energy systems in regional air-quality patterns.</span></li>
+            <li><span class="dot"></span><span>The Balkans and southeast show why a European average can hide local exceedance patterns.</span></li>
           </ul>
         </div>
       </div>
@@ -982,7 +1008,7 @@
           <p class="kicker">Overview to zoom to details</p>
           <h2>Now look closer.</h2>
           <p class="body-copy" id="region-copy">
-            The Europe-wide hotspot map becomes more memorable when it zooms into specific places. Start with Northern Italy, then compare other hotspot regions.
+            The Europe-wide hotspot map is easier to understand when it zooms into named regions. Start with Northern Italy, then compare how other regions appear in the sampled 2024 layer.
           </p>
         </div>
         <figure class="visual-frame map-frame reveal">
@@ -1019,7 +1045,7 @@
           <p class="kicker">A longer memory</p>
           <h2>Some hotspots are not one-year events.</h2>
           <p class="body-copy">
-            Persistence adds time back into the hotspot story. It asks whether areas that appear important now have repeatedly exceeded the threshold across the available years.
+            Persistence adds time back into the hotspot story. It asks whether areas above the threshold in the mapped period were repeatedly high across available years, rather than appearing only once.
           </p>
           <p class="body-copy">
             This layer should be read carefully: it is based on project raster-cell counting, not an official EEA persistence statistic.
@@ -1033,7 +1059,7 @@
         <p class="kicker">Final chapter</p>
         <h2>Explore the pattern yourself.</h2>
         <p class="body-copy">
-          After the guided story, readers can move into the interactive map to zoom, pan, inspect regions and revisit the contrast between improvement and remaining hotspots.
+          After the guided story, readers can use the explorer to change views, inspect sampled values and test the main claim themselves: broad improvement, uneven remaining hotspots.
         </p>
         <div class="cta-row">
           <a class="cta" href="map_prototype.html">Open interactive map</a>
@@ -1047,7 +1073,7 @@
         <p class="section-number">Methods and limits</p>
         <h2>What this story can show, and what it cannot.</h2>
         <p class="body-copy">
-          The analysis uses annual EEA PM2.5 raster datasets from 2007 to 2024. The story is built from raster-cell calculations and map overlays, so it shows spatial patterns but should not be read as population-weighted exposure.
+          The analysis uses annual EEA PM2.5 raster datasets from 2007 to 2024. The story is built from raster-cell calculations and sampled browser layers, so it shows spatial concentration patterns but should not be read as population-weighted exposure.
         </p>
         <div class="method-grid">
           <article class="method-card">
@@ -1060,7 +1086,7 @@
           </article>
           <article class="method-card">
             <h3>Interpretation</h3>
-            <p>The maps support a spatial story about improvement and remaining hotspots, not individual exposure estimates.</p>
+            <p>The maps support a spatial story about concentration patterns, improvement and remaining hotspots, not individual exposure estimates.</p>
           </article>
         </div>
       </div>
@@ -1093,17 +1119,20 @@
       }).addTo(map);
     }
 
-    function addLegend(map, label) {
+    function addLegend(map, options) {
+      const label = options.label;
+      const rampClass = options.type === "change" ? "legend-ramp change" : "legend-ramp";
+      const scale = options.scale || ["low", "10 ug/m3", "high"];
       const legend = L.control({ position: "bottomright" });
       legend.onAdd = function () {
         const div = L.DomUtil.create("div", "story-legend");
         div.innerHTML = `
           <div class="legend-title">${label}</div>
-          <div class="legend-ramp"></div>
+          <div class="${rampClass}"></div>
           <div class="legend-scale">
-            <span>0</span>
-            <span>10 ug/m3</span>
-            <span>25+</span>
+            <span>${scale[0]}</span>
+            <span>${scale[1]}</span>
+            <span>${scale[2]}</span>
           </div>
         `;
         return div;
@@ -1113,6 +1142,9 @@
     }
 
     function interpolateValue(point, progress) {
+      if (point.pm25_2007 === null && point.pm25_2024 === null) {
+        return null;
+      }
       if (point.pm25_2007 === null) {
         return point.pm25_2024;
       }
@@ -1122,13 +1154,58 @@
       return point.pm25_2007 + (point.pm25_2024 - point.pm25_2007) * progress;
     }
 
+    function valueForSelectedYear(point, yearValue) {
+      const year = Math.round(Number(yearValue));
+      if (year <= 2007) {
+        return {
+          year,
+          value: point.pm25_2007,
+          note: point.pm25_2007 === null ? "No valid raster value for this year." : "Observed 2007 raster value."
+        };
+      }
+      if (year >= 2024) {
+        return {
+          year,
+          value: point.pm25_2024,
+          note: point.pm25_2024 === null ? "No valid raster value for this year." : "Observed 2024 raster value."
+        };
+      }
+
+      if (point.pm25_2007 !== null && point.pm25_2024 !== null) {
+        const progress = (Number(yearValue) - 2007) / (2024 - 2007);
+        return {
+          year,
+          value: interpolateValue(point, progress),
+          note: "Interpolated between the sampled 2007 and 2024 values."
+        };
+      }
+
+      const nearestYear = year <= 2016 ? 2007 : 2024;
+      const nearestValue = nearestYear === 2007 ? point.pm25_2007 : point.pm25_2024;
+      return {
+        year,
+        value: nearestValue,
+        note: nearestValue === null
+          ? "No valid raster value for this year."
+          : `Nearest available sampled value: ${nearestYear}.`
+      };
+    }
+
+    function formatPm25(value) {
+      return value === null || Number.isNaN(value) ? "No valid raster value for this year." : `${value.toFixed(2)} ug/m3`;
+    }
+
+    function formatContextValue(value) {
+      return value === null || Number.isNaN(value) ? "not available" : `${Number(value).toFixed(2)} ug/m3`;
+    }
+
     function colorForValue(value) {
       if (value === null || Number.isNaN(value)) {
         return "#9aa6b2";
       }
       if (value < 5) return "#2c7bb6";
-      if (value < 8) return "#00a6a6";
-      if (value < 10) return "#8bc34a";
+      if (value < 8) return "#2f8f6b";
+      if (value < 10) return "#f2c94c";
       if (value < 15) return "#fdae61";
       if (value < 20) return "#f46d43";
       return "#a50026";
@@ -1142,24 +1219,30 @@
       return Math.max(4, Math.min(11, 3.5 + value / 4 + zoomBoost));
     }
 
-    function pointPopup(point, value, label) {
-      const changeText = point.change === null ? "not comparable" : `${point.change > 0 ? "+" : ""}${point.change} ug/m3`;
+    function pointPopup(point, value, label, selectedYearValue) {
+      const selected = valueForSelectedYear(point, selectedYearValue);
+      const changeText = point.change === null ? "Comparable change not available" : `${point.change > 0 ? "+" : ""}${point.change.toFixed(2)} ug/m3`;
       return `
-        <strong>${label}: ${value === null ? "no value" : value.toFixed(2) + " ug/m3"}</strong><br>
-        2007: ${point.pm25_2007 === null ? "no value" : point.pm25_2007 + " ug/m3"}<br>
-        2024: ${point.pm25_2024 === null ? "no value" : point.pm25_2024 + " ug/m3"}<br>
+        <strong>Selected year: ${selected.year}</strong><br>
+        PM2.5: ${formatPm25(selected.value)}<br>
+        <span>${selected.note}</span><br>
+        2007: ${formatContextValue(point.pm25_2007)}<br>
+        2024: ${formatContextValue(point.pm25_2024)}<br>
         Change: ${changeText}
       `;
     }
 
-    function updateReadout(id, point, value, label) {
+    function updateReadout(id, point, value, label, selectedYearValue) {
       const element = document.getElementById(id);
       if (!element) return;
-      const changeText = point.change === null ? "not comparable" : `${point.change > 0 ? "+" : ""}${point.change} ug/m3`;
+      const selected = valueForSelectedYear(point, selectedYearValue);
+      const changeText = point.change === null ? "Comparable change not available" : `${point.change > 0 ? "+" : ""}${point.change.toFixed(2)} ug/m3`;
       element.innerHTML = `
-        <strong>${label}: ${value === null ? "no value" : value.toFixed(2) + " ug/m3"}</strong>
-        2007: ${point.pm25_2007 === null ? "no value" : point.pm25_2007 + " ug/m3"}<br>
-        2024: ${point.pm25_2024 === null ? "no value" : point.pm25_2024 + " ug/m3"}<br>
+        <strong>Selected year: ${selected.year}</strong>
+        PM2.5: ${formatPm25(selected.value)}<br>
+        ${selected.note}<br>
+        2007: ${formatContextValue(point.pm25_2007)}<br>
+        2024: ${formatContextValue(point.pm25_2024)}<br>
         Change: ${changeText}
       `;
     }
@@ -1185,9 +1268,10 @@
         circle.currentValue = value;
         circle.on("mouseover click", () => {
           const label = options.label ? options.label() : "PM2.5";
-          circle.bindPopup(pointPopup(point, circle.currentValue, label)).openPopup();
+          const selectedYearValue = options.yearValue ? options.yearValue() : 2007;
+          circle.bindPopup(pointPopup(point, circle.currentValue, label, selectedYearValue)).openPopup();
           if (options.readoutId) {
-            updateReadout(options.readoutId, point, circle.currentValue, label);
+            updateReadout(options.readoutId, point, circle.currentValue, label, selectedYearValue);
           }
         });
         circles.push(circle);
@@ -1223,11 +1307,15 @@
 
     const baselineMap = L.map("baseline-map", mapOptions).setView([51, 12], 4);
     addBaseTiles(baselineMap);
-    addLegend(baselineMap, "Sampled PM2.5 annual mean, 2007");
+    addLegend(baselineMap, {
+      label: "Sampled PM2.5 annual mean, 2007",
+      scale: ["low", "10 threshold", "high"]
+    });
     const baselineSamples = createSampleLayer(baselineMap, {
       value: point => point.pm25_2007,
       readoutId: "baseline-readout",
-      label: () => "2007 sampled PM2.5"
+      label: () => "2007 sampled PM2.5",
+      yearValue: () => 2007
     });
     baselineMap.on("zoomend", () => baselineSamples.restyle());
     L.marker([50.5, 19.2]).addTo(baselineMap).bindPopup("Central Europe: higher PM2.5 levels are visible in the baseline year.");
@@ -1235,11 +1323,15 @@
 
     const improvementMap = L.map("improvement-map", mapOptions).setView([51, 12], 4);
     addBaseTiles(improvementMap);
-    const transitionLegend = addLegend(improvementMap, 'Sampled PM2.5 annual mean, <span id="legend-year">2007</span>');
+    const transitionLegend = addLegend(improvementMap, {
+      label: 'Sampled PM2.5 annual mean, <span id="legend-year">2007</span>',
+      scale: ["low", "10 threshold", "high"]
+    });
     const transitionSamples = createSampleLayer(improvementMap, {
       value: point => point.pm25_2007,
       readoutId: "transition-readout",
-      label: () => `${Math.round(Number(slider.value))} interpolated PM2.5`
+      label: () => `${Math.round(Number(slider.value))} PM2.5`,
+      yearValue: () => Number(slider.value)
     });
     improvementMap.on("zoomend", () => transitionSamples.restyle());
 
@@ -1248,12 +1340,16 @@
     const transitionCopy = document.getElementById("transition-copy");
     const playButton = document.getElementById("transition-play");
     let transitionAnimation = null;
+    let transitionStartTime = null;
+    const transitionDuration = 6500;
 
     function updateImprovementTransition(yearValue) {
-      const year = Math.round(yearValue);
-      const progress = (yearValue - 2007) / (2024 - 2007);
+      const clampedYearValue = Math.max(2007, Math.min(2024, Number(yearValue)));
+      const year = Math.round(clampedYearValue);
+      const progress = (clampedYearValue - 2007) / (2024 - 2007);
 
       transitionSamples.update(progress);
+      slider.value = clampedYearValue;
       yearLabel.textContent = year;
 
       const legendYear = document.getElementById("legend-year");
@@ -1262,11 +1358,11 @@
       }
 
       if (year <= 2011) {
-        transitionCopy.textContent = "The 2007 baseline shows a more polluted Europe, with warmer colors marking higher PM2.5 concentrations.";
+        transitionCopy.textContent = "The 2007 layer shows more high-concentration colors across parts of Central, Southern and Eastern Europe.";
       } else if (year < 2021) {
-        transitionCopy.textContent = "Scrubbing forward interpolates sampled raster values, making the direction of improvement visible as many cells cool.";
+        transitionCopy.textContent = "As the animation moves forward, many sampled cells shift from orange and yellow toward green and blue, indicating lower PM2.5.";
       } else {
-        transitionCopy.textContent = "By 2024, the sampled map is cleaner overall, but warm hotspot cells remain visible.";
+        transitionCopy.textContent = "By 2024, lower values are more visible across Europe, while selected hotspot regions still stand out.";
       }
     }
 
@@ -1275,19 +1371,26 @@
         cancelAnimationFrame(transitionAnimation);
         transitionAnimation = null;
       }
+      transitionStartTime = null;
       playButton.textContent = "Play";
+      playButton.classList.remove("is-playing");
+      playButton.setAttribute("aria-pressed", "false");
     }
 
     function playTransition() {
       stopTransitionAnimation();
-      const start = performance.now();
-      const duration = 4200;
+      const startYear = Number(slider.value) >= 2024 ? 2007 : Number(slider.value);
+      const remaining = 2024 - startYear;
+      const duration = Math.max(1400, transitionDuration * (remaining / (2024 - 2007)));
 
       function step(now) {
-        const elapsed = now - start;
+        if (transitionStartTime === null) {
+          transitionStartTime = now;
+        }
+        const elapsed = now - transitionStartTime;
         const progress = Math.min(elapsed / duration, 1);
-        const yearValue = 2007 + progress * (2024 - 2007);
-        slider.value = yearValue;
+        const easedProgress = 1 - Math.pow(1 - progress, 3);
+        const yearValue = startYear + easedProgress * remaining;
         updateImprovementTransition(yearValue);
 
         if (progress < 1) {
@@ -1298,6 +1401,8 @@
       }
 
       playButton.textContent = "Playing";
+      playButton.classList.add("is-playing");
+      playButton.setAttribute("aria-pressed", "true");
       transitionAnimation = requestAnimationFrame(step);
     }
 
@@ -1317,37 +1422,41 @@
         playTransition();
       }
     });
+    updateImprovementTransition(2007);
 
     const regions = {
       northernItaly: {
         name: "Northern Italy / Po Valley",
         coords: [45.2, 9.5],
         zoom: 6,
-        text: "Northern Italy is one of the clearest remaining hotspot areas. Local geography, dense settlement, traffic, agriculture and industry can keep PM2.5 levels high even when Europe improves overall."
+        text: "Northern Italy is a clear remaining hotspot area. Basin geography can reduce air exchange, while dense settlement, transport, agriculture and industry add emissions."
       },
       poland: {
         name: "Poland / Central Europe",
         coords: [51.7, 19.2],
         zoom: 6,
-        text: "Parts of Poland and Central Europe connect the hotspot story to heating, energy systems, industry and urban concentration."
+        text: "Parts of Poland and Central Europe connect the hotspot story to residential heating, energy systems, industry and urban concentration."
       },
       balkans: {
         name: "Balkans",
         coords: [44.0, 20.5],
         zoom: 6,
-        text: "The Balkans show why the story cannot stop at a European average. Regional conditions still matter."
+        text: "The Balkans show why the story cannot stop at a European average: sampled hotspots remain visible even after broad continental improvement."
       },
       turkey: {
         name: "Turkey / Southeastern Europe",
         coords: [40.5, 29.0],
         zoom: 6,
-        text: "Southeastern coverage is useful for discussing both remaining hotspots and the need to explain raster coverage limits carefully."
+        text: "The southeast is useful for discussing remaining hotspots and for reminding readers that raster coverage differs across years."
       }
     };
 
     const regionMap = L.map("region-map", mapOptions).setView([47, 15], 5);
     addBaseTiles(regionMap);
-    addLegend(regionMap, "2024 sampled hotspots >= 10 ug/m3");
+    addLegend(regionMap, {
+      label: "2024 sampled hotspots",
+      scale: ["below hidden", "10 ug/m3", "higher"]
+    });
     const regionSamples = createSampleLayer(regionMap, {
       filter: point => point.hotspot_2024,
       value: point => point.pm25_2024,

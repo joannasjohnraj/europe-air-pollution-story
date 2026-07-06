@@ -67,6 +67,18 @@ Preliminary analysis suggests a clear spatial divide in PM2.5 exposure across Eu
 ---
 
 ## Project Status
-This project was developed as part of the Data Journalism & Storytelling course (SoSe 2026) at the University of Konstanz.
 
-It represents an iterative data storytelling process across multiple assignments, from topic selection to final narrative development.
+This project is being developed as part of the **Data Journalism & Storytelling** course (SoSe 2026) at the University of Konstanz.
+
+Current progress includes:
+
+- Interactive scrollytelling website structure.
+- PM2.5 introduction and educational context.
+- Interactive 2007–2024 transition map.
+- Yearly PM2.5 trend analysis.
+- 2007–2024 overlap change analysis.
+- 2024 hotspot analysis.
+- Persistent hotspot analysis.
+- Interactive exploration map with year scrubbing and regional exploration.
+
+The current focus is refining the visual design, educational content, interaction quality, and integrating official EEA, WHO, and EU information before the final presentation.

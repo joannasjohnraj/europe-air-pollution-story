@@ -21,6 +21,11 @@
       --paper: #ffffff;
       --soft: #f5f7fa;
       --blue: #276c85;
+      --pm-low: #2c7bb6;
+      --pm-mid: #2f8f6b;
+      --pm-threshold: #f2c94c;
+      --pm-high: #f46d43;
+      --pm-extreme: #a50026;
       --hot: #d94801;
       --purple: #7357a4;
     }
@@ -161,6 +166,33 @@
       border-color: #172033;
     }
 
+    .play-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .play-row button {
+      flex: 0 0 auto;
+      min-width: 84px;
+      text-align: center;
+      background: #172033;
+      color: white;
+      border-color: #172033;
+    }
+
+    .play-row button.is-playing {
+      background: var(--blue);
+      border-color: var(--blue);
+    }
+
+    .play-row span {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
     .small {
       font-size: 13px;
       color: var(--muted);
@@ -193,7 +225,7 @@
       height: 10px;
       border-radius: 999px;
       margin-bottom: 6px;
-      background: linear-gradient(90deg, #000004, #57106e, #bc3754, #f98e09, #fcffa4);
+      background: linear-gradient(90deg, var(--pm-low), var(--pm-mid), var(--pm-threshold), var(--pm-high), var(--pm-extreme));
     }
 
     .legend-ramp.change {
@@ -253,6 +285,10 @@
           <span>2007</span>
           <span>2024</span>
         </div>
+        <div class="play-row">
+          <button id="year-play" type="button" aria-pressed="false">Play</button>
+          <span>Animate the transition from the 2007 baseline to the 2024 layer.</span>
+        </div>
       </div>
 
       <h3>Map mode</h3>
@@ -276,7 +312,7 @@
       </div>
 
       <p class="small">
-        Note: sampled cells are for interactive browser exploration. Full-resolution results remain in the static raster analyses.
+        The sampled layer keeps the map responsive while preserving the spatial pattern from the project rasters.
       </p>
     </aside>
 
@@ -331,16 +367,58 @@
     const circles = [];
 
     function interpolate(point, progress) {
+      if (point.pm25_2007 === null && point.pm25_2024 === null) return null;
       if (point.pm25_2007 === null) return point.pm25_2024;
       if (point.pm25_2024 === null) return point.pm25_2007;
       return point.pm25_2007 + (point.pm25_2024 - point.pm25_2007) * progress;
     }
 
+    function selectedYearValue(point, yearValue) {
+      const year = Math.round(Number(yearValue));
+      if (year <= 2007) {
+        return {
+          year,
+          value: point.pm25_2007,
+          note: point.pm25_2007 === null ? "No valid raster value for this year." : "Observed 2007 raster value."
+        };
+      }
+      if (year >= 2024) {
+        return {
+          year,
+          value: point.pm25_2024,
+          note: point.pm25_2024 === null ? "No valid raster value for this year." : "Observed 2024 raster value."
+        };
+      }
+      if (point.pm25_2007 !== null && point.pm25_2024 !== null) {
+        const progress = (Number(yearValue) - 2007) / (2024 - 2007);
+        return {
+          year,
+          value: interpolate(point, progress),
+          note: "Interpolated between the sampled 2007 and 2024 values."
+        };
+      }
+      const nearestYear = year <= 2016 ? 2007 : 2024;
+      const nearestValue = nearestYear === 2007 ? point.pm25_2007 : point.pm25_2024;
+      return {
+        year,
+        value: nearestValue,
+        note: nearestValue === null ? "No valid raster value for this year." : `Nearest available sampled value: ${nearestYear}.`
+      };
+    }
+
+    function formatPm25(value) {
+      return value === null || Number.isNaN(value) ? "No valid raster value for this year." : `${value.toFixed(2)} ug/m3`;
+    }
+
+    function formatContextValue(value) {
+      return value === null || Number.isNaN(value) ? "not available" : `${Number(value).toFixed(2)} ug/m3`;
+    }
+
     function colorForValue(value) {
       if (value === null || Number.isNaN(value)) return "#9aa6b2";
       if (value < 5) return "#2c7bb6";
-      if (value < 8) return "#00a6a6";
-      if (value < 10) return "#8bc34a";
+      if (value < 8) return "#2f8f6b";
+      if (value < 10) return "#f2c94c";
       if (value < 15) return "#fdae61";
       if (value < 20) return "#f46d43";
       return "#a50026";
@@ -365,8 +443,7 @@
     function pointValue(point) {
       if (currentMode === "change") return point.change;
       if (currentMode === "hotspots") return point.pm25_2024;
-      const progress = (currentYearValue - 2007) / (2024 - 2007);
-      return interpolate(point, progress);
+      return selectedYearValue(point, currentYearValue).value;
     }
 
     function shouldShow(point) {
@@ -389,15 +466,25 @@
 
     function describe(point) {
       const current = pointValue(point);
-      const change = point.change === null ? "not comparable" : `${point.change > 0 ? "+" : ""}${point.change} ug/m3`;
-      const title = currentMode === "change"
-        ? `Change: ${change}`
-        : `Displayed value: ${current === null ? "no value" : current.toFixed(2) + " ug/m3"}`;
+      const selected = selectedYearValue(point, currentYearValue);
+      const change = point.change === null ? "Comparable change not available" : `${point.change > 0 ? "+" : ""}${point.change.toFixed(2)} ug/m3`;
+
+      if (currentMode === "change") {
+        return `
+          <strong>2007-2024 change</strong><br>
+          Change: ${change}<br>
+          Blue indicates improvement; red indicates worsening.<br>
+          2007: ${formatContextValue(point.pm25_2007)}<br>
+          2024: ${formatContextValue(point.pm25_2024)}
+        `;
+      }
 
       return `
-        <strong>${title}</strong><br>
-        2007: ${point.pm25_2007 === null ? "no value" : point.pm25_2007 + " ug/m3"}<br>
-        2024: ${point.pm25_2024 === null ? "no value" : point.pm25_2024 + " ug/m3"}<br>
+        <strong>Selected year: ${selected.year}</strong><br>
+        PM2.5: ${formatPm25(current)}<br>
+        ${selected.note}<br>
+        2007: ${formatContextValue(point.pm25_2007)}<br>
+        2024: ${formatContextValue(point.pm25_2024)}<br>
         2024 hotspot: ${point.hotspot_2024 ? "yes" : "no"}
       `;
     }
@@ -431,6 +518,25 @@
       });
 
       document.getElementById("year-readout").textContent = Math.round(currentYearValue);
+      updateLegendText();
+    }
+
+    function updateLegendText() {
+      const title = document.getElementById("legend-title");
+      const ramp = document.getElementById("legend-ramp");
+      const scale = document.getElementById("legend-scale");
+      if (!title || !ramp || !scale) return;
+
+      if (currentMode === "change") {
+        title.textContent = "2007-2024 change";
+        ramp.className = "legend-ramp change";
+        scale.innerHTML = "<span>improvement</span><span>little change</span><span>worsening</span>";
+        return;
+      }
+
+      title.textContent = currentMode === "hotspots" ? "2024 PM2.5 hotspots" : `PM2.5 level, ${Math.round(currentYearValue)}`;
+      ramp.className = "legend-ramp";
+      scale.innerHTML = "<span>low</span><span>10 ug/m3</span><span>high</span>";
     }
 
     function setMode(mode) {
@@ -442,8 +548,8 @@
       if (mode === "level") {
         updateSidebar(
           "Scrub PM2.5 levels",
-          "Drag the year slider to interpolate sampled raster values between 2007 and 2024.",
-          "This view is the main improvement story: Europe gets cleaner overall, but not uniformly."
+          "Drag the year slider or press Play to move from the 2007 baseline toward the 2024 layer.",
+          "Many sampled locations shift toward lower PM2.5 values, while remaining hotspots keep the pattern uneven."
         );
       }
 
@@ -453,15 +559,15 @@
         updateSidebar(
           "2024 hotspots",
           "Only sampled cells at or above 10 ug/m3 in 2024 are shown.",
-          "This view isolates the remaining problem after the improvement."
+          "This view isolates places where fine-particle pollution remains elevated after broad improvement."
         );
       }
 
       if (mode === "change") {
         updateSidebar(
           "2007-2024 change",
-          "Blue cells improved more strongly; red cells increased or improved less. This uses comparable sampled locations only.",
-          "This view introduces nuance: improvement is real, but spatially uneven."
+          "Change compares PM2.5 values in comparable valid raster areas. Blue indicates improvement, neutral colors indicate little change, and red indicates worsening.",
+          "This view adds nuance: improvement is real, but it is not evenly distributed across Europe."
         );
       }
 
@@ -475,20 +581,88 @@
     }
 
     document.getElementById("year-slider").addEventListener("input", event => {
+      stopYearAnimation();
       currentYearValue = Number(event.target.value);
       if (currentMode !== "level") setMode("level");
       redraw();
     });
 
+    const playButton = document.getElementById("year-play");
+    let yearAnimation = null;
+    let yearAnimationStart = null;
+    const yearAnimationDuration = 6500;
+
+    function stopYearAnimation() {
+      if (yearAnimation) {
+        cancelAnimationFrame(yearAnimation);
+        yearAnimation = null;
+      }
+      yearAnimationStart = null;
+      playButton.textContent = "Play";
+      playButton.classList.remove("is-playing");
+      playButton.setAttribute("aria-pressed", "false");
+    }
+
+    function playYearTransition() {
+      stopYearAnimation();
+      if (currentMode !== "level") {
+        setMode("level");
+      }
+      const startYear = currentYearValue >= 2024 ? 2007 : currentYearValue;
+      currentYearValue = startYear;
+      document.getElementById("year-slider").value = startYear;
+      redraw();
+
+      const remaining = 2024 - startYear;
+      const duration = Math.max(1400, yearAnimationDuration * (remaining / (2024 - 2007)));
+
+      function step(now) {
+        if (yearAnimationStart === null) {
+          yearAnimationStart = now;
+        }
+        const elapsed = now - yearAnimationStart;
+        const progress = Math.min(elapsed / duration, 1);
+        const easedProgress = 1 - Math.pow(1 - progress, 3);
+        currentYearValue = startYear + easedProgress * remaining;
+        document.getElementById("year-slider").value = currentYearValue;
+        redraw();
+
+        if (progress < 1) {
+          yearAnimation = requestAnimationFrame(step);
+        } else {
+          currentYearValue = 2024;
+          document.getElementById("year-slider").value = 2024;
+          redraw();
+          stopYearAnimation();
+        }
+      }
+
+      playButton.textContent = "Playing";
+      playButton.classList.add("is-playing");
+      playButton.setAttribute("aria-pressed", "true");
+      yearAnimation = requestAnimationFrame(step);
+    }
+
+    playButton.addEventListener("click", () => {
+      if (yearAnimation) {
+        stopYearAnimation();
+      } else {
+        playYearTransition();
+      }
+    });
+
     document.querySelectorAll("[data-mode]").forEach(button => {
-      button.addEventListener("click", () => setMode(button.dataset.mode));
+      button.addEventListener("click", () => {
+        stopYearAnimation();
+        setMode(button.dataset.mode);
+      });
     });
 
     document.querySelectorAll("[data-region]").forEach(button => {
       button.addEventListener("click", () => {
         const region = regions[button.dataset.region];
         map.flyTo(region.coords, region.zoom, { duration: 1.1 });
-        updateSidebar(region.name, region.text, "Guided zoom: overview to regional detail.");
+        updateSidebar(region.name, region.text, "The regional view connects the Europe-wide pattern to a specific hotspot geography.");
       });
     });
 
@@ -498,9 +672,9 @@
     legend.onAdd = function () {
       const div = L.DomUtil.create("div", "legend");
       div.innerHTML = `
-        <div class="legend-title">PM2.5 level / change</div>
-        <div class="legend-ramp"></div>
-        <div class="legend-scale">
+        <div class="legend-title" id="legend-title">PM2.5 level, 2007</div>
+        <div class="legend-ramp" id="legend-ramp"></div>
+        <div class="legend-scale" id="legend-scale">
           <span>low</span>
           <span>10 ug/m3</span>
           <span>high</span>
