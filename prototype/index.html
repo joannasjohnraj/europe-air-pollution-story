@@ -3,219 +3,1404 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PM2.5 Europe Interactive Prototype</title>
+  <title>Europe's PM2.5 Story</title>
+
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  />
 
   <style>
+    :root {
+      --ink: #172033;
+      --muted: #607085;
+      --paper: #ffffff;
+      --soft: #f4f7f9;
+      --mist: #eaf1f4;
+      --line: #d8e0e8;
+      --blue: #276c85;
+      --green: #2f8f6b;
+      --amber: #c77728;
+      --red: #b9472f;
+      --purple: #7357a4;
+      --shadow: 0 18px 60px rgba(23, 32, 51, 0.14);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f5f6f8;
-      color: #1f2937;
-    }
-
-    header {
-      background: #1f2937;
-      color: white;
-      padding: 28px 46px;
-    }
-
-    header h1 {
-      margin: 0;
-      font-size: 32px;
-    }
-
-    header p {
-      max-width: 900px;
-      line-height: 1.5;
-      color: #d1d5db;
-    }
-
-    main {
-      max-width: 1200px;
-      margin: 28px auto;
-      padding: 0 24px;
-    }
-
-    .layout {
-      display: grid;
-      grid-template-columns: 270px 1fr;
-      gap: 24px;
-    }
-
-    .panel {
-      background: white;
-      border-radius: 14px;
-      padding: 20px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-    }
-
-    button {
-      width: 100%;
-      display: block;
-      padding: 12px 14px;
-      margin-bottom: 10px;
-      border-radius: 10px;
-      border: 1px solid #d1d5db;
-      background: white;
-      cursor: pointer;
-      text-align: left;
-      font-size: 15px;
-    }
-
-    button.active {
-      background: #1f2937;
-      color: white;
-      border-color: #1f2937;
-    }
-
-    .stage {
-      font-size: 12px;
-      font-weight: bold;
-      color: #6b7280;
-      text-transform: uppercase;
-      margin-bottom: 6px;
-    }
-
-    h2 {
-      margin-top: 0;
-      font-size: 26px;
-    }
-
-    p {
-      line-height: 1.6;
-      font-size: 16px;
+      font-family: Georgia, "Times New Roman", serif;
+      color: var(--ink);
+      background: var(--soft);
     }
 
     img {
-      width: 100%;
-      max-height: 620px;
-      object-fit: contain;
-      border: 1px solid #e5e7eb;
-      border-radius: 10px;
-      background: white;
-      margin-top: 16px;
+      display: block;
+      max-width: 100%;
     }
 
-    .note {
-      margin-top: 14px;
-      background: #f3f4f6;
-      border-left: 5px solid #6a3d9a;
-      padding: 12px 14px;
+    a {
+      color: inherit;
+    }
+
+    .eyebrow,
+    .kicker,
+    .section-number,
+    .caption,
+    .source-card strong,
+    .stat-label,
+    .button-row,
+    .method-card h3 {
+      font-family: Arial, Helvetica, sans-serif;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      align-items: end;
+      color: white;
+      background:
+        linear-gradient(180deg, rgba(9, 19, 32, 0.16), rgba(9, 19, 32, 0.88)),
+        url("../figures/pm25_2007_2024_comparison.png") center / cover no-repeat;
+    }
+
+    .hero-inner {
+      width: min(1120px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 96px 0 54px;
+    }
+
+    .eyebrow {
+      margin: 0 0 18px;
+      color: #b8d8e4;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    h1 {
+      max-width: 940px;
+      margin: 0;
+      font-size: clamp(48px, 8vw, 112px);
+      line-height: 0.94;
+      font-weight: 700;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: clamp(34px, 5vw, 62px);
+      line-height: 1.02;
+    }
+
+    h3 {
+      margin: 0;
+    }
+
+    .hook {
+      max-width: 680px;
+      margin: 26px 0 0;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: clamp(18px, 2vw, 24px);
+      line-height: 1.45;
+      color: #e7eef4;
+    }
+
+    .scroll-cue {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 56px;
+      font-family: Arial, Helvetica, sans-serif;
+      color: #d6e6ee;
+      font-size: 14px;
+      text-decoration: none;
+    }
+
+    .scroll-cue span {
+      width: 22px;
+      height: 36px;
+      border: 1px solid rgba(255, 255, 255, 0.72);
+      border-radius: 999px;
+      position: relative;
+    }
+
+    .scroll-cue span::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 8px;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: white;
+      transform: translateX(-50%);
+      animation: cue 1.8s ease-in-out infinite;
+    }
+
+    @keyframes cue {
+      0%, 100% {
+        opacity: 0.35;
+        transform: translate(-50%, 0);
+      }
+      50% {
+        opacity: 1;
+        transform: translate(-50%, 11px);
+      }
+    }
+
+    .story-section {
+      padding: 96px 0;
+      background: var(--paper);
+    }
+
+    .story-section.alt {
+      background: var(--mist);
+    }
+
+    .story-section.question-panel {
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, #ffffff, #edf3f5);
+    }
+
+    .story-grid,
+    .visual-step,
+    .wide-inner {
+      width: min(1120px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .story-grid {
+      display: grid;
+      grid-template-columns: minmax(220px, 0.9fr) minmax(0, 1.7fr);
+      gap: clamp(34px, 6vw, 88px);
+      align-items: start;
+    }
+
+    .visual-step {
+      display: grid;
+      grid-template-columns: minmax(280px, 0.9fr) minmax(0, 1.45fr);
+      gap: clamp(34px, 5vw, 72px);
+      align-items: center;
+    }
+
+    .visual-step.reverse {
+      grid-template-columns: minmax(0, 1.45fr) minmax(280px, 0.9fr);
+    }
+
+    .section-number {
+      margin: 0 0 16px;
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .lede {
+      margin: 0;
+      font-size: clamp(22px, 3vw, 34px);
+      line-height: 1.22;
+    }
+
+    .body-copy {
+      margin: 22px 0 0;
+      font-size: 19px;
+      line-height: 1.62;
+      color: #314154;
+    }
+
+    .kicker {
+      margin: 0 0 14px;
+      color: var(--purple);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .fact-strip,
+    .sources,
+    .stat-strip {
+      margin-top: 34px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .fact-strip {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .sources {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .stat-strip {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .fact,
+    .source-card,
+    .stat-card,
+    .method-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcfd;
+    }
+
+    .fact,
+    .source-card,
+    .stat-card {
+      padding: 18px;
+    }
+
+    .source-card {
+      min-height: 210px;
+      background: var(--paper);
+      box-shadow: 0 12px 34px rgba(23, 32, 51, 0.08);
+    }
+
+    .fact-icon,
+    .source-icon {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 16px;
+      border-radius: 50%;
+      font-family: Arial, Helvetica, sans-serif;
+      font-weight: 700;
+      color: white;
+    }
+
+    .source-icon {
+      border-radius: 12px;
+      background: var(--blue);
+    }
+
+    .fact:nth-child(1) .fact-icon,
+    .source-card:nth-child(1) .source-icon {
+      background: var(--blue);
+    }
+
+    .fact:nth-child(2) .fact-icon,
+    .source-card:nth-child(3) .source-icon {
+      background: var(--red);
+    }
+
+    .fact:nth-child(3) .fact-icon,
+    .source-card:nth-child(4) .source-icon {
+      background: var(--green);
+    }
+
+    .source-card:nth-child(2) .source-icon {
+      background: var(--amber);
+    }
+
+    .fact h3,
+    .source-card h3 {
+      margin: 0 0 8px;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 18px;
+    }
+
+    .fact p,
+    .source-card p,
+    .stat-card p {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
       font-size: 15px;
+      line-height: 1.5;
+      color: var(--muted);
+    }
+
+    .source-card strong {
+      display: block;
+      margin-bottom: 14px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .stat-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: clamp(26px, 4vw, 40px);
+      line-height: 1;
+      color: var(--ink);
+    }
+
+    .stat-label {
+      margin: 0 0 8px;
+      color: var(--blue);
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .visual-frame {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .visual-frame img {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      object-fit: contain;
+      background: #f7f9fb;
+    }
+
+    .map-frame {
+      min-height: 560px;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      position: relative;
+    }
+
+    .map-header,
+    .transition-map-header {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: start;
+      padding: 18px 18px 14px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.94);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .map-header p,
+    .transition-map-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .year-badge,
+    .transition-year {
+      min-width: 112px;
+      text-align: right;
+      font-size: clamp(38px, 6vw, 64px);
+      line-height: 0.9;
+      font-weight: 800;
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .story-map {
+      width: 100%;
+      min-height: 430px;
+      background: #dfe8ef;
+      z-index: 1;
+    }
+
+    .transition-controls,
+    .region-controls {
+      display: grid;
+      gap: 18px;
+      align-items: center;
+      padding: 14px 18px 16px;
+      border-top: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.96);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .transition-controls {
+      grid-template-columns: 1fr auto;
+    }
+
+    .region-controls {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .transition-controls input[type="range"] {
+      width: 100%;
+      accent-color: var(--blue);
+    }
+
+    .year-endpoints {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .play-button,
+    .region-button {
+      min-height: 42px;
+      padding: 0 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--paper);
+      color: var(--ink);
+      cursor: pointer;
+      font-weight: 700;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .play-button {
+      background: var(--ink);
+      color: white;
+    }
+
+    .region-button.active {
+      background: var(--ink);
+      color: white;
+      border-color: var(--ink);
+    }
+
+    .story-legend {
+      min-width: 210px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.94);
+      box-shadow: 0 1px 8px rgba(23, 32, 51, 0.14);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 12px;
+    }
+
+    .data-readout {
+      position: absolute;
+      left: 18px;
+      bottom: 76px;
+      z-index: 600;
+      max-width: min(330px, calc(100% - 36px));
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.94);
+      box-shadow: 0 1px 8px rgba(23, 32, 51, 0.14);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 13px;
+      line-height: 1.45;
+      color: var(--muted);
+    }
+
+    .data-readout strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--ink);
+      font-size: 15px;
+    }
+
+    .legend-title {
+      margin-bottom: 7px;
+      font-weight: 700;
+    }
+
+    .legend-ramp {
+      height: 10px;
+      margin-bottom: 6px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #000004, #57106e, #bc3754, #f98e09, #fcffa4);
+    }
+
+    .legend-scale {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--muted);
+    }
+
+    .caption {
+      margin: 0;
+      padding: 12px 14px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 11px;
+      font-family: Arial, Helvetica, sans-serif;
+      letter-spacing: 0.02em;
+    }
+
+    .image-comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--line);
+    }
+
+    .hotspot-list {
+      margin: 28px 0 0;
+      padding: 0;
+      list-style: none;
+      border-top: 1px solid var(--line);
+    }
+
+    .hotspot-list li {
+      display: grid;
+      grid-template-columns: 18px 1fr;
+      gap: 12px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--line);
+      font-family: Arial, Helvetica, sans-serif;
+      color: #314154;
+      line-height: 1.45;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      margin-top: 6px;
+      border-radius: 50%;
+      background: var(--red);
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 700ms ease, transform 700ms ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .explore {
+      min-height: 92vh;
+      display: grid;
+      align-items: center;
+      color: white;
+      background:
+        linear-gradient(90deg, rgba(14, 23, 36, 0.9), rgba(14, 23, 36, 0.54)),
+        url("../figures/persistent_hotspots_threshold10_categorical.png") center / cover no-repeat;
+    }
+
+    .explore-inner {
+      width: min(1120px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 88px 0;
+    }
+
+    .explore h2,
+    .explore p {
+      max-width: 680px;
+    }
+
+    .explore p {
+      color: #e0e9ef;
+    }
+
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 34px;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      min-height: 46px;
+      padding: 0 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.38);
+      background: white;
+      color: var(--ink);
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .cta.secondary {
+      background: transparent;
+      color: white;
+    }
+
+    .method-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 34px;
+    }
+
+    .method-card {
+      padding: 20px;
+    }
+
+    .method-card h3 {
+      margin: 0 0 10px;
+      color: var(--blue);
+      font-size: 12px;
+    }
+
+    .method-card p {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 15px;
+      line-height: 1.55;
+      color: var(--muted);
+    }
+
+    footer {
+      padding: 34px 20px;
+      background: #172033;
+      color: #b9c7d4;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 13px;
       line-height: 1.5;
     }
 
-    .status {
-      margin-top: 20px;
-      font-size: 13px;
-      color: #6b7280;
+    footer div {
+      width: min(1120px, 100%);
+      margin: 0 auto;
+    }
+
+    @media (max-width: 940px) {
+      .story-grid,
+      .visual-step,
+      .visual-step.reverse {
+        grid-template-columns: 1fr;
+      }
+
+      .fact-strip,
+      .sources,
+      .stat-strip,
+      .method-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .map-frame {
+        min-height: 520px;
+      }
+    }
+
+    @media (max-width: 680px) {
+      .hero-inner,
+      .story-grid,
+      .visual-step,
+      .wide-inner,
+      .explore-inner {
+        width: min(100% - 28px, 1120px);
+      }
+
+      .story-section {
+        padding: 70px 0;
+      }
+
+      .fact-strip,
+      .sources,
+      .stat-strip,
+      .method-grid,
+      .image-comparison,
+      .region-controls,
+      .transition-controls {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 48px;
+      }
+
+      .map-header,
+      .transition-map-header {
+        display: grid;
+      }
+
+      .year-badge,
+      .transition-year {
+        min-width: 0;
+        text-align: left;
+      }
     }
   </style>
 </head>
 
 <body>
-  <header>
-    <h1>Europe’s air got cleaner. But not everywhere equally.</h1>
-    <p>
-      A first interactive prototype using European Environment Agency PM2.5 raster data.
-The story guides readers from long-term improvement to the regions where pollution remains persistent.
-    </p>
-  </header>
+  <section class="hero" id="top">
+    <div class="hero-inner reveal">
+      <p class="eyebrow">European PM2.5 raster data, 2007-2024</p>
+      <h1>Europe's air got cleaner. But not everywhere equally.</h1>
+      <p class="hook">
+        Annual EEA maps show a continent-wide decline in fine particle pollution, while regional hotspots still shape who breathes cleaner air.
+      </p>
+      <a class="scroll-cue" href="#pm25"><span></span>Start the story</a>
+    </div>
+  </section>
 
   <main>
-    <div class="layout">
-      <aside class="panel">
-        <button class="active" onclick="showStage('overview', this)">1. Overview</button>
-        <button onclick="showStage('trend', this)">2. Intermediate Years</button>
-        <button onclick="showStage('change', this)">3. Change Map</button>
-        <button onclick="showStage('hotspots2024', this)">4. 2024 Hotspots</button>
-        <button onclick="showStage('persistent', this)">5. Persistent Hotspots</button>
-        <button onclick="showStage('explore', this)">6. Reader Exploration</button>
-      </aside>
+    <section class="story-section" id="pm25">
+      <div class="story-grid">
+        <div class="reveal">
+          <p class="section-number">01 / What readers need to know</p>
+          <h2>PM2.5 is tiny. Its effects are not.</h2>
+        </div>
+        <div class="reveal">
+          <p class="lede">
+            PM2.5 is fine particulate matter smaller than 2.5 micrometers, small enough to travel deep into the lungs.
+          </p>
+          <p class="body-copy">
+            It is invisible in daily life, but it matters because long-term exposure is linked to serious health risks. This story uses PM2.5 as a way to see how environmental improvement can be real and uneven at the same time.
+          </p>
 
-      <section class="panel">
-        <div class="stage" id="stage">Setup</div>
-        <h2 id="title">Europe-wide PM2.5 overview</h2>
-        <p id="text">
-          The story begins with a Europe-wide view of PM2.5 in 2007 and 2024. The raster files do not cover exactly the same area, but they introduce the broad pattern: PM2.5 decreased strongly, while remaining pollution is still spatially uneven.
+          <div class="fact-strip">
+            <article class="fact">
+              <div class="fact-icon">2.5</div>
+              <h3>Very small particles</h3>
+              <p>Fine particles are far smaller than dust we can see, which makes them easy to inhale.</p>
+            </article>
+            <article class="fact">
+              <div class="fact-icon">!</div>
+              <h3>Health relevance</h3>
+              <p>PM2.5 exposure is associated with respiratory and cardiovascular harm.</p>
+            </article>
+            <article class="fact">
+              <div class="fact-icon">EU</div>
+              <h3>Policy threshold</h3>
+              <p>The hotspot maps use 10 ug/m3, matching the EU 2030 annual PM2.5 limit.</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="story-section alt" id="sources">
+      <div class="story-grid">
+        <div class="reveal">
+          <p class="section-number">02 / Before the maps</p>
+          <h2>Where does PM2.5 come from?</h2>
+        </div>
+        <div class="reveal">
+          <p class="lede">
+            Fine particle pollution is not one single problem. It comes from everyday systems that heat homes, move people, grow food and produce goods.
+          </p>
+
+          <div class="sources">
+            <article class="source-card">
+              <strong>Heating</strong>
+              <div class="source-icon">H</div>
+              <h3>Homes and buildings</h3>
+              <p>Residential heating can create winter pollution, especially where solid fuels are common.</p>
+            </article>
+            <article class="source-card">
+              <strong>Transport</strong>
+              <div class="source-icon">T</div>
+              <h3>Road traffic</h3>
+              <p>Vehicles add exhaust and non-exhaust particles in dense urban corridors.</p>
+            </article>
+            <article class="source-card">
+              <strong>Industry</strong>
+              <div class="source-icon">I</div>
+              <h3>Production and power</h3>
+              <p>Industrial activity and energy systems can concentrate pollution around regional economies.</p>
+            </article>
+            <article class="source-card">
+              <strong>Agriculture</strong>
+              <div class="source-icon">A</div>
+              <h3>Secondary particles</h3>
+              <p>Agricultural emissions can react in the atmosphere and contribute to particulate pollution.</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="story-section" id="baseline">
+      <div class="visual-step">
+        <div class="reveal">
+          <p class="kicker">The baseline</p>
+          <h2>Start in 2007.</h2>
+          <p class="body-copy">
+            Before comparing years, the story needs a starting point. The 2007 raster shows a more polluted Europe, with higher PM2.5 levels visible across parts of Central, Southern and Eastern Europe.
+          </p>
+          <div class="stat-strip">
+            <article class="stat-card">
+              <p class="stat-label">Cleaned mean</p>
+              <strong>11.17</strong>
+              <p>ug/m3 across valid raster cells in 2007.</p>
+            </article>
+            <article class="stat-card">
+              <p class="stat-label">Role in story</p>
+              <strong>Start</strong>
+              <p>The reference point for the later transformation.</p>
+            </article>
+            <article class="stat-card">
+              <p class="stat-label">Interaction</p>
+              <strong>Map</strong>
+              <p>Zoom, pan and read guided annotations.</p>
+            </article>
+          </div>
+        </div>
+        <figure class="visual-frame map-frame reveal">
+          <div class="map-header">
+            <div>
+              <p class="kicker">Europe in 2007</p>
+              <p>A more polluted baseline before the long-term decline.</p>
+            </div>
+            <div class="year-badge">2007</div>
+          </div>
+          <div id="baseline-map" class="story-map" aria-label="Interactive 2007 PM2.5 baseline map"></div>
+          <div class="data-readout" id="baseline-readout">
+            <strong>Hover or click the sampled cells</strong>
+            Read actual PM2.5 values sampled from the 2007 raster.
+          </div>
+          <figcaption class="caption">Interactive sampled layer created from the 2007 EEA PM2.5 raster. Values are annual mean concentrations.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="story-section question-panel" id="improved">
+      <div class="visual-step">
+        <div class="reveal">
+          <p class="kicker">The central question</p>
+          <h2>Has Europe improved?</h2>
+          <p class="body-copy">
+            Drag the year control to turn the 2007 baseline into the latest available year. The interaction animates real sampled raster values, designed to make the direction of change visible.
+          </p>
+          <p class="body-copy">
+            The map becomes cleaner overall. But the next sections ask the more important question: where does the problem remain?
+          </p>
+        </div>
+        <figure class="visual-frame map-frame reveal">
+          <div class="transition-map-header">
+            <div>
+              <p class="kicker">Interactive map transition</p>
+              <p id="transition-copy">Drag the slider to animate sampled PM2.5 values from 2007 to 2024 and watch the broad pattern become cleaner.</p>
+            </div>
+            <div class="transition-year" id="transition-year">2007</div>
+          </div>
+
+          <div id="improvement-map" class="story-map" aria-label="Interactive PM2.5 map transition from 2007 to 2024"></div>
+
+          <div class="transition-controls">
+            <div>
+              <input
+                id="transition-slider"
+                type="range"
+                min="2007"
+                max="2024"
+                step="0.01"
+                value="2007"
+                aria-label="Scrub between the 2007 and 2024 PM2.5 map overlays"
+              />
+              <div class="year-endpoints">
+                <span>2007 baseline</span>
+                <span>2024 latest year</span>
+              </div>
+            </div>
+            <button class="play-button" id="transition-play" type="button">Play</button>
+          </div>
+
+          <div class="data-readout" id="transition-readout">
+            <strong>Hover or click the sampled cells</strong>
+            Read 2007, 2024 and change values for comparable sampled locations.
+          </div>
+          <figcaption class="caption">Intermediate slider positions interpolate between real 2007 and 2024 sampled raster values for visual exploration.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="story-section" id="trend">
+      <div class="visual-step reverse">
+        <figure class="visual-frame reveal">
+          <img src="../figures/yearly_pm25_mean_trend.png" alt="Line chart showing yearly mean PM2.5 decline across available years" />
+          <figcaption class="caption">Existing trend output: cleaned annual raster-cell means from the available years.</figcaption>
+        </figure>
+        <div class="reveal">
+          <p class="kicker">The evidence behind the animation</p>
+          <h2>The long-term trend points downward.</h2>
+          <p class="body-copy">
+            The transition map gives the visual impression. The yearly mean chart confirms the broad pattern: PM2.5 generally declined across the available raster years.
+          </p>
+          <div class="stat-strip">
+            <article class="stat-card">
+              <p class="stat-label">2007</p>
+              <strong>11.17</strong>
+              <p>ug/m3 cleaned raster-cell mean.</p>
+            </article>
+            <article class="stat-card">
+              <p class="stat-label">2024</p>
+              <strong>7.07</strong>
+              <p>ug/m3 cleaned raster-cell mean.</p>
+            </article>
+            <article class="stat-card">
+              <p class="stat-label">Caution</p>
+              <strong>Cell</strong>
+              <p>Raster-cell means, not population-weighted exposure.</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="story-section alt" id="change">
+      <div class="visual-step">
+        <div class="reveal">
+          <p class="kicker">The complication</p>
+          <h2>Improvement was not spatially even.</h2>
+          <p class="body-copy">
+            The fair 2007 to 2024 change map compares only overlapping valid raster cells, because the annual files do not all cover exactly the same area.
+          </p>
+          <p class="body-copy">
+            This is where the story turns: a cleaner Europe does not mean every place changed in the same way.
+          </p>
+        </div>
+        <figure class="visual-frame reveal">
+          <img src="../figures/pm25_change_2007_2024_overlap.png" alt="Overlap-based PM2.5 change map from 2007 to 2024" />
+          <figcaption class="caption">Overlap-based change analysis. The comparable-area mean decreased by about 4.44 ug/m3.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="story-section" id="hotspots">
+      <div class="visual-step reverse">
+        <figure class="visual-frame reveal">
+          <img src="../figures/pm25_hotspots_2024_threshold10.png" alt="Map highlighting PM2.5 hotspots above the threshold in 2024" />
+          <figcaption class="caption">Existing hotspot output: areas above 10 ug/m3 in 2024.</figcaption>
+        </figure>
+        <div class="reveal">
+          <p class="kicker">The remaining problem</p>
+          <h2>Cleaner does not mean equal.</h2>
+          <p class="body-copy">
+            By 2024, the overall pattern is cleaner, but some areas still exceed the 10 ug/m3 threshold used in this project. These hotspots carry the second half of the story.
+          </p>
+          <ul class="hotspot-list">
+            <li><span class="dot"></span><span>About 20.7% of valid 2024 raster cells are above 10 ug/m3.</span></li>
+            <li><span class="dot"></span><span>Northern Italy shows how geography, density and economic activity can sustain high PM2.5.</span></li>
+            <li><span class="dot"></span><span>Central and Eastern Europe keep the focus on heating, energy and industrial systems.</span></li>
+            <li><span class="dot"></span><span>The Balkans and southeast help readers see why local and regional context matters.</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="story-section alt" id="regions">
+      <div class="visual-step">
+        <div class="reveal">
+          <p class="kicker">Overview to zoom to details</p>
+          <h2>Now look closer.</h2>
+          <p class="body-copy" id="region-copy">
+            The Europe-wide hotspot map becomes more memorable when it zooms into specific places. Start with Northern Italy, then compare other hotspot regions.
+          </p>
+        </div>
+        <figure class="visual-frame map-frame reveal">
+          <div class="map-header">
+            <div>
+              <p class="kicker">Guided hotspot tour</p>
+              <p id="region-title">Northern Italy / Po Valley</p>
+            </div>
+            <div class="year-badge">2024</div>
+          </div>
+          <div id="region-map" class="story-map" aria-label="Interactive regional hotspot focus map"></div>
+          <div class="region-controls">
+            <button class="region-button active" type="button" data-region="northernItaly">Northern Italy</button>
+            <button class="region-button" type="button" data-region="poland">Poland / Central Europe</button>
+            <button class="region-button" type="button" data-region="balkans">Balkans</button>
+            <button class="region-button" type="button" data-region="turkey">Turkey / Southeast</button>
+          </div>
+          <div class="data-readout" id="region-readout">
+            <strong>Regional focus</strong>
+            Orange sampled cells mark locations above 10 ug/m3 in 2024.
+          </div>
+          <figcaption class="caption">The map combines guided regional annotations with sampled 2024 raster cells above the hotspot threshold.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="story-section" id="persistence">
+      <div class="visual-step reverse">
+        <figure class="visual-frame reveal">
+          <img src="../figures/persistent_hotspots_threshold10_categorical.png" alt="Categorical persistent PM2.5 hotspot map" />
+          <figcaption class="caption">Persistent hotspot analysis: how often comparable raster cells exceeded 10 ug/m3 across available years.</figcaption>
+        </figure>
+        <div class="reveal">
+          <p class="kicker">A longer memory</p>
+          <h2>Some hotspots are not one-year events.</h2>
+          <p class="body-copy">
+            Persistence adds time back into the hotspot story. It asks whether areas that appear important now have repeatedly exceeded the threshold across the available years.
+          </p>
+          <p class="body-copy">
+            This layer should be read carefully: it is based on project raster-cell counting, not an official EEA persistence statistic.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="explore" id="explore">
+      <div class="explore-inner reveal">
+        <p class="kicker">Final chapter</p>
+        <h2>Explore the pattern yourself.</h2>
+        <p class="body-copy">
+          After the guided story, readers can move into the interactive map to zoom, pan, inspect regions and revisit the contrast between improvement and remaining hotspots.
         </p>
-
-        <img id="visual" src="../figures/pm25_2007_2024_comparison.png" alt="PM2.5 visual" />
-
-        <div class="note" id="note">
-          Narrative role: Setup. Pattern: Familiarization and Concretize.
+        <div class="cta-row">
+          <a class="cta" href="map_prototype.html">Open interactive map</a>
+          <a class="cta secondary" href="#top">Back to the beginning</a>
         </div>
+      </div>
+    </section>
 
-        <div class="status">
-          Prototype status: early interactive structure. Static analysis outputs are connected to story stages.
+    <section class="story-section" id="methods">
+      <div class="wide-inner reveal">
+        <p class="section-number">Methods and limits</p>
+        <h2>What this story can show, and what it cannot.</h2>
+        <p class="body-copy">
+          The analysis uses annual EEA PM2.5 raster datasets from 2007 to 2024. The story is built from raster-cell calculations and map overlays, so it shows spatial patterns but should not be read as population-weighted exposure.
+        </p>
+        <div class="method-grid">
+          <article class="method-card">
+            <h3>Data</h3>
+            <p>Annual EEA PM2.5 GeoTIFF rasters, with 2009 unavailable in the current dataset collection.</p>
+          </article>
+          <article class="method-card">
+            <h3>Comparison</h3>
+            <p>Exact 2007 to 2024 change uses overlapping valid raster cells because coverage differs across years.</p>
+          </article>
+          <article class="method-card">
+            <h3>Interpretation</h3>
+            <p>The maps support a spatial story about improvement and remaining hotspots, not individual exposure estimates.</p>
+          </article>
         </div>
-      </section>
-    </div>
+      </div>
+    </section>
   </main>
 
+  <footer>
+    <div>
+      Data source: European Environment Agency PM2.5 raster datasets, 2007-2024. Values are based on raster-cell analyses and are not population-weighted exposure estimates.
+    </div>
+  </footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="pm25_interactive_samples.js"></script>
   <script>
-    const stages = {
-      overview: {
-        stage: "Setup",
-        title: "Europe-wide PM2.5 overview",
-        text: "The story begins with a Europe-wide view of PM2.5 in 2007 and 2024. The raster files do not cover exactly the same area, but they introduce the broad pattern: PM2.5 decreased strongly, while remaining pollution is still spatially uneven.",
-        image: "../figures/pm25_2007_2024_comparison.png",
-        note: "Narrative role: Setup. Pattern: Familiarization and Concretize."
-      },
+    const samples = window.PM25_INTERACTIVE_SAMPLES.points;
+    const canvasRenderer = L.canvas({ padding: 0.35 });
 
-      trend: {
-        stage: "Rising Action",
-        title: "Intermediate years show the long-term trend",
-        text: "This chart uses all available years from 2007 to 2024, excluding 2009. It shows that PM2.5 generally decreased over time, although the values are cleaned raster-cell means and not population-weighted exposure values.",
-        image: "../figures/yearly_pm25_mean_trend.png",
-        note: "Narrative role: Rising Action. Pattern: Gradual Reveal."
-      },
+    const mapOptions = {
+      zoomControl: true,
+      scrollWheelZoom: false,
+      attributionControl: true,
+      renderer: canvasRenderer
+    };
 
-      change: {
-        stage: "Rising Action",
-        title: "Where did PM2.5 decrease?",
-        text: "Because the raster files do not all have identical coverage, this map compares only the overlapping valid area between 2007 and 2024. It shows where PM2.5 decreased or increased.",
-        image: "../figures/pm25_change_2007_2024_overlap.png",
-        note: "Narrative role: Rising Action. Pattern: Compare."
-      },
+    function addBaseTiles(map) {
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 8,
+        attribution: "&copy; OpenStreetMap contributors"
+      }).addTo(map);
+    }
 
-      hotspots2024: {
-        stage: "Climax",
-        title: "Where do high PM2.5 levels remain in 2024?",
-        text: "This map highlights areas above 10 µg/m³ in 2024. The threshold is policy-relevant because it corresponds to the EU 2030 annual PM2.5 limit.",
-        image: "../figures/pm25_hotspots_2024_threshold10.png",
-        note: "Narrative role: Climax. Pattern: Emphasis."
-      },
+    function addLegend(map, label) {
+      const legend = L.control({ position: "bottomright" });
+      legend.onAdd = function () {
+        const div = L.DomUtil.create("div", "story-legend");
+        div.innerHTML = `
+          <div class="legend-title">${label}</div>
+          <div class="legend-ramp"></div>
+          <div class="legend-scale">
+            <span>0</span>
+            <span>10 ug/m3</span>
+            <span>25+</span>
+          </div>
+        `;
+        return div;
+      };
+      legend.addTo(map);
+      return legend;
+    }
 
-      persistent: {
-        stage: "Climax",
-        title: "Which areas are persistent hotspots?",
-        text: "This map counts how often each comparable raster cell was above 10 µg/m³ across the available years. Darker purple means the area exceeded the threshold in more years.",
-        image: "../figures/persistent_hotspots_threshold10_categorical.png",
-        note: "Narrative role: Climax. Pattern: Emphasis. This moves from a single-year hotspot to repeated persistence."
-      },
+    function interpolateValue(point, progress) {
+      if (point.pm25_2007 === null) {
+        return point.pm25_2024;
+      }
+      if (point.pm25_2024 === null) {
+        return point.pm25_2007;
+      }
+      return point.pm25_2007 + (point.pm25_2024 - point.pm25_2007) * progress;
+    }
 
-      explore: {
-        stage: "Resolution",
-        title: "Planned reader-driven exploration",
-        text: "The final version should allow readers to choose years, switch between level/change/hotspot views, and explore countries or regions themselves. This follows the Martini Glass structure: author-guided explanation first, then reader-driven exploration.",
-        image: "../figures/persistent_hotspots_threshold10_categorical.png",
-        note: "Narrative role: Resolution. Reader-driven exploration is planned next."
+    function colorForValue(value) {
+      if (value === null || Number.isNaN(value)) {
+        return "#9aa6b2";
+      }
+      if (value < 5) return "#2c7bb6";
+      if (value < 8) return "#00a6a6";
+      if (value < 10) return "#8bc34a";
+      if (value < 15) return "#fdae61";
+      if (value < 20) return "#f46d43";
+      return "#a50026";
+    }
+
+    function radiusForValue(value, map) {
+      const zoomBoost = Math.max(0, map.getZoom() - 4) * 0.9;
+      if (value === null || Number.isNaN(value)) {
+        return 3 + zoomBoost;
+      }
+      return Math.max(4, Math.min(11, 3.5 + value / 4 + zoomBoost));
+    }
+
+    function pointPopup(point, value, label) {
+      const changeText = point.change === null ? "not comparable" : `${point.change > 0 ? "+" : ""}${point.change} ug/m3`;
+      return `
+        <strong>${label}: ${value === null ? "no value" : value.toFixed(2) + " ug/m3"}</strong><br>
+        2007: ${point.pm25_2007 === null ? "no value" : point.pm25_2007 + " ug/m3"}<br>
+        2024: ${point.pm25_2024 === null ? "no value" : point.pm25_2024 + " ug/m3"}<br>
+        Change: ${changeText}
+      `;
+    }
+
+    function updateReadout(id, point, value, label) {
+      const element = document.getElementById(id);
+      if (!element) return;
+      const changeText = point.change === null ? "not comparable" : `${point.change > 0 ? "+" : ""}${point.change} ug/m3`;
+      element.innerHTML = `
+        <strong>${label}: ${value === null ? "no value" : value.toFixed(2) + " ug/m3"}</strong>
+        2007: ${point.pm25_2007 === null ? "no value" : point.pm25_2007 + " ug/m3"}<br>
+        2024: ${point.pm25_2024 === null ? "no value" : point.pm25_2024 + " ug/m3"}<br>
+        Change: ${changeText}
+      `;
+    }
+
+    function createSampleLayer(map, options) {
+      const layer = L.layerGroup().addTo(map);
+      const circles = [];
+      const filtered = samples.filter(options.filter || (() => true));
+
+      filtered.forEach(point => {
+        const value = options.value(point);
+        if (value === null) return;
+        const circle = L.circleMarker([point.lat, point.lng], {
+          renderer: canvasRenderer,
+          radius: radiusForValue(value, map),
+          color: "rgba(23, 32, 51, 0.32)",
+          weight: 0.35,
+          fillColor: options.color ? options.color(point, value) : colorForValue(value),
+          fillOpacity: options.opacity || 0.72
+        }).addTo(layer);
+
+        circle.pm25Point = point;
+        circle.currentValue = value;
+        circle.on("mouseover click", () => {
+          const label = options.label ? options.label() : "PM2.5";
+          circle.bindPopup(pointPopup(point, circle.currentValue, label)).openPopup();
+          if (options.readoutId) {
+            updateReadout(options.readoutId, point, circle.currentValue, label);
+          }
+        });
+        circles.push(circle);
+      });
+
+      return {
+        layer,
+        circles,
+        update(progress, label) {
+          circles.forEach(circle => {
+            const point = circle.pm25Point;
+            const value = interpolateValue(point, progress);
+            circle.currentValue = value;
+            circle.setStyle({
+              fillColor: colorForValue(value),
+              fillOpacity: point.hotspot_2024 && progress > 0.78 ? 0.86 : 0.7
+            });
+            circle.setRadius(radiusForValue(value, map));
+          });
+          if (label) {
+            layer.eachLayer(circle => {
+              circle.options.pm25Label = label;
+            });
+          }
+        },
+        restyle() {
+          circles.forEach(circle => {
+            circle.setRadius(radiusForValue(circle.currentValue, map));
+          });
+        }
+      };
+    }
+
+    const baselineMap = L.map("baseline-map", mapOptions).setView([51, 12], 4);
+    addBaseTiles(baselineMap);
+    addLegend(baselineMap, "Sampled PM2.5 annual mean, 2007");
+    const baselineSamples = createSampleLayer(baselineMap, {
+      value: point => point.pm25_2007,
+      readoutId: "baseline-readout",
+      label: () => "2007 sampled PM2.5"
+    });
+    baselineMap.on("zoomend", () => baselineSamples.restyle());
+    L.marker([50.5, 19.2]).addTo(baselineMap).bindPopup("Central Europe: higher PM2.5 levels are visible in the baseline year.");
+    L.marker([45.2, 9.5]).addTo(baselineMap).bindPopup("Northern Italy / Po Valley: a region that remains important later in the story.");
+
+    const improvementMap = L.map("improvement-map", mapOptions).setView([51, 12], 4);
+    addBaseTiles(improvementMap);
+    const transitionLegend = addLegend(improvementMap, 'Sampled PM2.5 annual mean, <span id="legend-year">2007</span>');
+    const transitionSamples = createSampleLayer(improvementMap, {
+      value: point => point.pm25_2007,
+      readoutId: "transition-readout",
+      label: () => `${Math.round(Number(slider.value))} interpolated PM2.5`
+    });
+    improvementMap.on("zoomend", () => transitionSamples.restyle());
+
+    const slider = document.getElementById("transition-slider");
+    const yearLabel = document.getElementById("transition-year");
+    const transitionCopy = document.getElementById("transition-copy");
+    const playButton = document.getElementById("transition-play");
+    let transitionAnimation = null;
+
+    function updateImprovementTransition(yearValue) {
+      const year = Math.round(yearValue);
+      const progress = (yearValue - 2007) / (2024 - 2007);
+
+      transitionSamples.update(progress);
+      yearLabel.textContent = year;
+
+      const legendYear = document.getElementById("legend-year");
+      if (legendYear) {
+        legendYear.textContent = year;
+      }
+
+      if (year <= 2011) {
+        transitionCopy.textContent = "The 2007 baseline shows a more polluted Europe, with warmer colors marking higher PM2.5 concentrations.";
+      } else if (year < 2021) {
+        transitionCopy.textContent = "Scrubbing forward interpolates sampled raster values, making the direction of improvement visible as many cells cool.";
+      } else {
+        transitionCopy.textContent = "By 2024, the sampled map is cleaner overall, but warm hotspot cells remain visible.";
+      }
+    }
+
+    function stopTransitionAnimation() {
+      if (transitionAnimation) {
+        cancelAnimationFrame(transitionAnimation);
+        transitionAnimation = null;
+      }
+      playButton.textContent = "Play";
+    }
+
+    function playTransition() {
+      stopTransitionAnimation();
+      const start = performance.now();
+      const duration = 4200;
+
+      function step(now) {
+        const elapsed = now - start;
+        const progress = Math.min(elapsed / duration, 1);
+        const yearValue = 2007 + progress * (2024 - 2007);
+        slider.value = yearValue;
+        updateImprovementTransition(yearValue);
+
+        if (progress < 1) {
+          transitionAnimation = requestAnimationFrame(step);
+        } else {
+          stopTransitionAnimation();
+        }
+      }
+
+      playButton.textContent = "Playing";
+      transitionAnimation = requestAnimationFrame(step);
+    }
+
+    slider.addEventListener("input", function (event) {
+      stopTransitionAnimation();
+      updateImprovementTransition(Number(event.target.value));
+    });
+
+    playButton.addEventListener("click", function () {
+      if (transitionAnimation) {
+        stopTransitionAnimation();
+      } else {
+        if (Number(slider.value) >= 2024) {
+          slider.value = 2007;
+          updateImprovementTransition(2007);
+        }
+        playTransition();
+      }
+    });
+
+    const regions = {
+      northernItaly: {
+        name: "Northern Italy / Po Valley",
+        coords: [45.2, 9.5],
+        zoom: 6,
+        text: "Northern Italy is one of the clearest remaining hotspot areas. Local geography, dense settlement, traffic, agriculture and industry can keep PM2.5 levels high even when Europe improves overall."
+      },
+      poland: {
+        name: "Poland / Central Europe",
+        coords: [51.7, 19.2],
+        zoom: 6,
+        text: "Parts of Poland and Central Europe connect the hotspot story to heating, energy systems, industry and urban concentration."
+      },
+      balkans: {
+        name: "Balkans",
+        coords: [44.0, 20.5],
+        zoom: 6,
+        text: "The Balkans show why the story cannot stop at a European average. Regional conditions still matter."
+      },
+      turkey: {
+        name: "Turkey / Southeastern Europe",
+        coords: [40.5, 29.0],
+        zoom: 6,
+        text: "Southeastern coverage is useful for discussing both remaining hotspots and the need to explain raster coverage limits carefully."
       }
     };
 
-    function showStage(key, button) {
-      const item = stages[key];
+    const regionMap = L.map("region-map", mapOptions).setView([47, 15], 5);
+    addBaseTiles(regionMap);
+    addLegend(regionMap, "2024 sampled hotspots >= 10 ug/m3");
+    const regionSamples = createSampleLayer(regionMap, {
+      filter: point => point.hotspot_2024,
+      value: point => point.pm25_2024,
+      color: () => "#d94801",
+      opacity: 0.82,
+      readoutId: "region-readout",
+      label: () => "2024 sampled hotspot"
+    });
+    regionMap.on("zoomend", () => regionSamples.restyle());
 
-      document.getElementById("stage").textContent = item.stage;
-      document.getElementById("title").textContent = item.title;
-      document.getElementById("text").textContent = item.text;
-      document.getElementById("visual").src = item.image;
-      document.getElementById("note").textContent = item.note;
+    const regionMarkers = {};
+    Object.keys(regions).forEach(key => {
+      const region = regions[key];
+      regionMarkers[key] = L.circleMarker(region.coords, {
+        radius: 9,
+        color: "#8b2500",
+        fillColor: "#d94801",
+        fillOpacity: 0.88,
+        weight: 2
+      })
+      .addTo(regionMap)
+      .bindPopup(`<b>${region.name}</b><br>${region.text}`);
+    });
 
-      document.querySelectorAll("button").forEach(btn => btn.classList.remove("active"));
-      button.classList.add("active");
+    function selectRegion(key) {
+      const region = regions[key];
+      regionMap.flyTo(region.coords, region.zoom, { duration: 1.1 });
+      regionMarkers[key].openPopup();
+      document.getElementById("region-title").textContent = region.name;
+      document.getElementById("region-copy").textContent = region.text;
+      document.querySelectorAll(".region-button").forEach(button => {
+        button.classList.toggle("active", button.dataset.region === key);
+      });
     }
+
+    document.querySelectorAll(".region-button").forEach(button => {
+      button.addEventListener("click", function () {
+        selectRegion(button.dataset.region);
+      });
+    });
+
+    selectRegion("northernItaly");
+
+    const revealObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.16 });
+
+    document.querySelectorAll(".reveal").forEach(element => revealObserver.observe(element));
   </script>
 </body>
 </html>

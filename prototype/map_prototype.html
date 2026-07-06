@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>PM2.5 Europe Interactive Map Prototype</title>
+  <title>PM2.5 Europe Interactive Explorer</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <link
@@ -11,18 +11,34 @@
   />
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="pm25_interactive_samples.js"></script>
 
   <style>
+    :root {
+      --ink: #172033;
+      --muted: #607085;
+      --line: #d7dde6;
+      --paper: #ffffff;
+      --soft: #f5f7fa;
+      --blue: #276c85;
+      --hot: #d94801;
+      --purple: #7357a4;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      color: #1f2937;
-      background: #f4f5f7;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--ink);
+      background: var(--soft);
     }
 
     header {
       padding: 18px 28px;
-      background: #1f2937;
+      background: #172033;
       color: white;
     }
 
@@ -33,27 +49,27 @@
 
     header p {
       margin: 0;
+      max-width: 980px;
       color: #d1d5db;
-      max-width: 950px;
       line-height: 1.4;
     }
 
     .container {
       display: grid;
-      grid-template-columns: 330px 1fr;
+      grid-template-columns: 360px 1fr;
       height: calc(100vh - 112px);
     }
 
     .sidebar {
-      background: white;
+      background: var(--paper);
       padding: 18px;
       overflow-y: auto;
-      border-right: 1px solid #d1d5db;
+      border-right: 1px solid var(--line);
     }
 
     .sidebar h2 {
-      margin-top: 0;
-      font-size: 22px;
+      margin: 0 0 10px;
+      font-size: 24px;
     }
 
     .sidebar p {
@@ -61,105 +77,206 @@
       font-size: 15px;
     }
 
-    .story-box {
-      background: #f3f4f6;
-      border-left: 5px solid #6a3d9a;
+    .story-box,
+    .readout {
+      border-left: 5px solid var(--purple);
+      background: #f6f2ff;
       padding: 12px;
       margin: 16px 0;
       font-size: 14px;
       line-height: 1.45;
     }
 
-    .buttons button {
-      width: 100%;
-      margin-bottom: 8px;
-      padding: 11px;
+    .readout {
+      border-color: var(--blue);
+      background: #eef7fa;
+    }
+
+    .control-panel {
+      border: 1px solid var(--line);
       border-radius: 8px;
-      border: 1px solid #cfd4dc;
+      padding: 12px;
+      margin: 16px 0;
+      background: #fbfcfe;
+    }
+
+    .control-label {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: baseline;
+      margin-bottom: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .year-readout {
+      color: var(--ink);
+      font-size: 28px;
+      font-weight: 800;
+      text-transform: none;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--blue);
+    }
+
+    .range-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 5px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .button-stack,
+    .region-grid {
+      display: grid;
+      gap: 8px;
+    }
+
+    .region-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    button {
+      min-height: 40px;
+      padding: 9px 11px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
       background: white;
+      color: var(--ink);
       cursor: pointer;
       text-align: left;
       font-size: 14px;
+      font-weight: 700;
     }
 
-    .buttons button.active {
-      background: #1f2937;
+    button.active {
+      background: #172033;
       color: white;
-      border-color: #1f2937;
+      border-color: #172033;
     }
 
     .small {
       font-size: 13px;
-      color: #6b7280;
+      color: var(--muted);
       line-height: 1.4;
     }
 
     #map {
       width: 100%;
       height: 100%;
+      background: #dfe6ee;
     }
 
-    .leaflet-popup-content {
-      font-size: 14px;
-      line-height: 1.45;
+    .legend {
+      min-width: 230px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.94);
+      box-shadow: 0 1px 8px rgba(24, 33, 47, 0.14);
+      font-size: 12px;
+      color: var(--ink);
     }
 
-    .region-button {
-      display: inline-block;
-      margin: 4px 4px 4px 0;
-      padding: 7px 9px;
-      border: 1px solid #cfd4dc;
+    .legend-title {
+      font-weight: 700;
+      margin-bottom: 7px;
+    }
+
+    .legend-ramp {
+      height: 10px;
       border-radius: 999px;
-      background: #ffffff;
-      cursor: pointer;
-      font-size: 13px;
+      margin-bottom: 6px;
+      background: linear-gradient(90deg, #000004, #57106e, #bc3754, #f98e09, #fcffa4);
     }
 
-    .region-button:hover {
-      background: #f3f4f6;
+    .legend-ramp.change {
+      background: linear-gradient(90deg, #2166ac, #d1e5f0, #f7f7f7, #fddbc7, #b2182b);
+    }
+
+    .legend-scale {
+      display: flex;
+      justify-content: space-between;
+      color: var(--muted);
+    }
+
+    @media (max-width: 840px) {
+      .container {
+        grid-template-columns: 1fr;
+        height: auto;
+      }
+
+      .sidebar {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      #map {
+        height: 70vh;
+      }
     }
   </style>
 </head>
 
 <body>
   <header>
-    <h1>Europe’s air got cleaner. But hotspots remain.</h1>
+    <h1>Europe's PM2.5 explorer</h1>
     <p>
-      Interactive prototype v2. This version focuses on the main story:
-      PM2.5 improved across Europe, but some regions still remain above a policy-relevant threshold.
+      Sampled directly from the project rasters. Scrub time, inspect values, filter hotspots and zoom into regions.
     </p>
   </header>
 
   <div class="container">
     <aside class="sidebar">
-      <h2 id="side-title">What is PM2.5?</h2>
-
+      <h2 id="side-title">Explore the data layer</h2>
       <p id="side-text">
-        PM2.5 means fine particulate matter with a diameter smaller than 2.5 micrometers.
-        These particles are small enough to enter deep into the lungs and are linked to serious health risks.
+        This map renders sampled PM2.5 values as interactive cells. Hover or click any cell to see its 2007 value, 2024 value and change.
       </p>
 
       <div class="story-box" id="story-box">
-        Start here: the story first explains why PM2.5 matters, then shows that Europe improved overall,
-        before focusing on the hotspot regions that still remain.
+        The sampled layer is lighter than the full raster but much more interactive: it can be filtered, animated, styled and queried in the browser.
       </div>
 
-      <h3>Map view</h3>
-      <div class="buttons">
-        <button class="active" onclick="setViewMode('intro', this)">1. PM2.5 background</button>
-        <button onclick="setViewMode('overview', this)">2. 2007 vs 2024 overview</button>
-        <button onclick="setViewMode('change', this)">3. Improvement pattern</button>
-        <button onclick="setViewMode('hotspots', this)">4. 2024 hotspots</button>
+      <div class="control-panel">
+        <div class="control-label">
+          <span>Year scrubber</span>
+          <span class="year-readout" id="year-readout">2007</span>
+        </div>
+        <input id="year-slider" type="range" min="2007" max="2024" value="2007" step="0.01" />
+        <div class="range-labels">
+          <span>2007</span>
+          <span>2024</span>
+        </div>
       </div>
 
-      <h3>Zoom to hotspot regions</h3>
-      <button class="region-button" onclick="zoomRegion('northernItaly')">Northern Italy</button>
-      <button class="region-button" onclick="zoomRegion('poland')">Poland / Central Europe</button>
-      <button class="region-button" onclick="zoomRegion('balkans')">Balkans</button>
-      <button class="region-button" onclick="zoomRegion('turkey')">Turkey / Southeast</button>
+      <h3>Map mode</h3>
+      <div class="button-stack">
+        <button class="active" data-mode="level">PM2.5 level</button>
+        <button data-mode="hotspots">2024 hotspots only</button>
+        <button data-mode="change">2007-2024 change</button>
+      </div>
+
+      <h3>Zoom to region</h3>
+      <div class="region-grid">
+        <button data-region="northernItaly">Northern Italy</button>
+        <button data-region="poland">Poland / Central Europe</button>
+        <button data-region="balkans">Balkans</button>
+        <button data-region="turkey">Turkey / Southeast</button>
+      </div>
+
+      <div class="readout" id="readout">
+        <strong>Hover or click a sampled cell</strong><br>
+        Values will appear here.
+      </div>
 
       <p class="small">
-        Prototype note: this version adds real map interaction: zooming, panning, clickable prototype annotations, and region-focused explanation. The next step is to connect these regions to actual PM2.5 raster values and georeferenced map overlays.
+        Note: sampled cells are for interactive browser exploration. Full-resolution results remain in the static raster analyses.
       </p>
     </aside>
 
@@ -167,69 +284,189 @@
   </div>
 
   <script>
-    const map = L.map("map").setView([51, 12], 4);
+    const samples = window.PM25_INTERACTIVE_SAMPLES.points;
+    const renderer = L.canvas({ padding: 0.35 });
+    let currentMode = "level";
+    let currentYearValue = 2007;
+
+    const map = L.map("map", {
+      renderer,
+      zoomControl: true,
+      scrollWheelZoom: true
+    }).setView([51, 12], 4);
 
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       maxZoom: 8,
       attribution: "&copy; OpenStreetMap contributors"
     }).addTo(map);
 
-    const hotspotStyle = {
-      color: "#6a3d9a",
-      fillColor: "#6a3d9a",
-      fillOpacity: 0.28,
-      weight: 2
-    };
-
     const regions = {
       northernItaly: {
         name: "Northern Italy / Po Valley",
         coords: [45.2, 9.5],
         zoom: 6,
-        text: "Northern Italy is one of the clearest remaining hotspot areas. This is important because it suggests that even with overall European improvement, local geography, dense settlement, traffic, agriculture, and industry can keep pollution levels high.",
-        story: "Key story role: shows that improvement does not remove all regional hotspots."
+        text: "Northern Italy shows how geography, density and economic activity can keep PM2.5 high even when Europe improves overall."
       },
       poland: {
         name: "Poland / Central Europe",
         coords: [51.7, 19.2],
         zoom: 6,
-        text: "Parts of Poland and Central Europe remain relevant for the hotspot story. These areas help connect air quality to heating, energy systems, industry, urban concentration, and regional geography.",
-        story: "Key story role: connects remaining hotspots to structural and regional factors."
+        text: "Central Europe connects the hotspot story to heating, energy systems, industry and urban concentration."
       },
       balkans: {
         name: "Balkans",
         coords: [44.0, 20.5],
         zoom: 6,
-        text: "The Balkans are important because hotspot patterns can remain even when the European average improves. This region can help explain why local conditions and emission sources matter.",
-        story: "Key story role: shows that the story is not only about country averages."
+        text: "The Balkans show why the story cannot stop at a Europe-wide average."
       },
       turkey: {
         name: "Turkey / Southeastern Europe",
         coords: [40.5, 29.0],
         zoom: 6,
-        text: "Some later raster files include wider southeastern coverage than earlier years. This region is useful for discussing data coverage limitations and why comparable-area analysis is necessary.",
-        story: "Key story role: explains why raster coverage matters for fair comparison."
+        text: "The southeast is useful for exploring both hotspots and data coverage limitations."
       }
     };
 
-    const markers = {};
+    const layer = L.layerGroup().addTo(map);
+    const circles = [];
 
-    Object.keys(regions).forEach(key => {
-      const r = regions[key];
+    function interpolate(point, progress) {
+      if (point.pm25_2007 === null) return point.pm25_2024;
+      if (point.pm25_2024 === null) return point.pm25_2007;
+      return point.pm25_2007 + (point.pm25_2024 - point.pm25_2007) * progress;
+    }
 
-      markers[key] = L.circleMarker(r.coords, {
-        radius: 10,
-        color: "#4B0082",
-        fillColor: "#6a3d9a",
-        fillOpacity: 0.75,
-        weight: 2
-      })
-      .addTo(map)
-      .bindPopup("<b>" + r.name + "</b><br>" + r.text)
-      .on("click", function () {
-        updateSidebar(r.name, r.text, r.story);
+    function colorForValue(value) {
+      if (value === null || Number.isNaN(value)) return "#9aa6b2";
+      if (value < 5) return "#2c7bb6";
+      if (value < 8) return "#00a6a6";
+      if (value < 10) return "#8bc34a";
+      if (value < 15) return "#fdae61";
+      if (value < 20) return "#f46d43";
+      return "#a50026";
+    }
+
+    function colorForChange(change) {
+      if (change === null) return "#9aa6b2";
+      if (change < -7) return "#2166ac";
+      if (change < -4) return "#67a9cf";
+      if (change < -1) return "#d1e5f0";
+      if (change < 1) return "#f7f7f7";
+      if (change < 4) return "#fddbc7";
+      return "#b2182b";
+    }
+
+    function radiusFor(value) {
+      const zoomBoost = Math.max(0, map.getZoom() - 4) * 0.9;
+      if (value === null || Number.isNaN(value)) return 3 + zoomBoost;
+      return Math.max(4, Math.min(11, 3.5 + Math.abs(value) / 4 + zoomBoost));
+    }
+
+    function pointValue(point) {
+      if (currentMode === "change") return point.change;
+      if (currentMode === "hotspots") return point.pm25_2024;
+      const progress = (currentYearValue - 2007) / (2024 - 2007);
+      return interpolate(point, progress);
+    }
+
+    function shouldShow(point) {
+      if (currentMode === "hotspots") return point.hotspot_2024;
+      if (currentMode === "change") return point.change !== null;
+      return pointValue(point) !== null;
+    }
+
+    function styleFor(point) {
+      const value = pointValue(point);
+      const fillColor = currentMode === "change" ? colorForChange(value) : colorForValue(value);
+      return {
+        radius: radiusFor(value),
+        color: "rgba(23, 32, 51, 0.35)",
+        weight: 0.35,
+        fillColor,
+        fillOpacity: currentMode === "hotspots" ? 0.86 : 0.72
+      };
+    }
+
+    function describe(point) {
+      const current = pointValue(point);
+      const change = point.change === null ? "not comparable" : `${point.change > 0 ? "+" : ""}${point.change} ug/m3`;
+      const title = currentMode === "change"
+        ? `Change: ${change}`
+        : `Displayed value: ${current === null ? "no value" : current.toFixed(2) + " ug/m3"}`;
+
+      return `
+        <strong>${title}</strong><br>
+        2007: ${point.pm25_2007 === null ? "no value" : point.pm25_2007 + " ug/m3"}<br>
+        2024: ${point.pm25_2024 === null ? "no value" : point.pm25_2024 + " ug/m3"}<br>
+        2024 hotspot: ${point.hotspot_2024 ? "yes" : "no"}
+      `;
+    }
+
+    function updateReadout(point) {
+      document.getElementById("readout").innerHTML = describe(point);
+    }
+
+    samples.forEach(point => {
+      const circle = L.circleMarker([point.lat, point.lng], {
+        renderer,
+        ...styleFor(point)
       });
+      circle.pm25Point = point;
+      circle.on("mouseover click", () => {
+        updateReadout(point);
+        circle.bindPopup(describe(point)).openPopup();
+      });
+      circles.push(circle);
     });
+
+    function redraw() {
+      layer.clearLayers();
+      circles.forEach(circle => {
+        const point = circle.pm25Point;
+        if (!shouldShow(point)) return;
+        const style = styleFor(point);
+        circle.setStyle(style);
+        circle.setRadius(style.radius);
+        circle.addTo(layer);
+      });
+
+      document.getElementById("year-readout").textContent = Math.round(currentYearValue);
+    }
+
+    function setMode(mode) {
+      currentMode = mode;
+      document.querySelectorAll("[data-mode]").forEach(button => {
+        button.classList.toggle("active", button.dataset.mode === mode);
+      });
+
+      if (mode === "level") {
+        updateSidebar(
+          "Scrub PM2.5 levels",
+          "Drag the year slider to interpolate sampled raster values between 2007 and 2024.",
+          "This view is the main improvement story: Europe gets cleaner overall, but not uniformly."
+        );
+      }
+
+      if (mode === "hotspots") {
+        currentYearValue = 2024;
+        document.getElementById("year-slider").value = 2024;
+        updateSidebar(
+          "2024 hotspots",
+          "Only sampled cells at or above 10 ug/m3 in 2024 are shown.",
+          "This view isolates the remaining problem after the improvement."
+        );
+      }
+
+      if (mode === "change") {
+        updateSidebar(
+          "2007-2024 change",
+          "Blue cells improved more strongly; red cells increased or improved less. This uses comparable sampled locations only.",
+          "This view introduces nuance: improvement is real, but spatially uneven."
+        );
+      }
+
+      redraw();
+    }
 
     function updateSidebar(title, text, story) {
       document.getElementById("side-title").textContent = title;
@@ -237,53 +474,43 @@
       document.getElementById("story-box").textContent = story;
     }
 
-    function setViewMode(mode, button) {
-      document.querySelectorAll(".buttons button").forEach(btn => btn.classList.remove("active"));
-      button.classList.add("active");
+    document.getElementById("year-slider").addEventListener("input", event => {
+      currentYearValue = Number(event.target.value);
+      if (currentMode !== "level") setMode("level");
+      redraw();
+    });
 
-      if (mode === "intro") {
-        map.setView([51, 12], 4);
-        updateSidebar(
-          "What is PM2.5?",
-          "PM2.5 means fine particulate matter with a diameter smaller than 2.5 micrometers. These particles are small enough to enter deep into the lungs and are linked to serious health risks.",
-          "Start here: the story first explains why PM2.5 matters, then shows that Europe improved overall, before focusing on the hotspot regions that still remain."
-        );
-      }
+    document.querySelectorAll("[data-mode]").forEach(button => {
+      button.addEventListener("click", () => setMode(button.dataset.mode));
+    });
 
-      if (mode === "overview") {
-        map.setView([51, 12], 4);
-        updateSidebar(
-          "Europe improved overall",
-          "The long-term analysis shows that PM2.5 decreased across the available years. This gives the reader the first main message: Europe’s air quality improved.",
-          "Story role: establish the overall improvement before showing the remaining problem."
-        );
-      }
+    document.querySelectorAll("[data-region]").forEach(button => {
+      button.addEventListener("click", () => {
+        const region = regions[button.dataset.region];
+        map.flyTo(region.coords, region.zoom, { duration: 1.1 });
+        updateSidebar(region.name, region.text, "Guided zoom: overview to regional detail.");
+      });
+    });
 
-      if (mode === "change") {
-        map.setView([51, 12], 4);
-        updateSidebar(
-          "Improvement was spatially uneven",
-          "The overlap-based change analysis compares only valid shared raster cells. It shows overall improvement, but the geography of change is not uniform.",
-          "Story role: transition from overall improvement to uneven regional change."
-        );
-      }
+    map.on("zoomend", redraw);
 
-      if (mode === "hotspots") {
-        map.setView([47, 15], 5);
-        updateSidebar(
-          "Hotspots remain in 2024",
-          "The 2024 hotspot analysis highlights cells above 10 micrograms per cubic meter. The main question becomes: why do some areas remain high even after overall improvement?",
-          "Story role: climax of the story. Improvement happened, but hotspot regions remain."
-        );
-      }
-    }
+    const legend = L.control({ position: "bottomright" });
+    legend.onAdd = function () {
+      const div = L.DomUtil.create("div", "legend");
+      div.innerHTML = `
+        <div class="legend-title">PM2.5 level / change</div>
+        <div class="legend-ramp"></div>
+        <div class="legend-scale">
+          <span>low</span>
+          <span>10 ug/m3</span>
+          <span>high</span>
+        </div>
+      `;
+      return div;
+    };
+    legend.addTo(map);
 
-    function zoomRegion(key) {
-      const r = regions[key];
-      map.setView(r.coords, r.zoom);
-      markers[key].openPopup();
-      updateSidebar(r.name, r.text, r.story);
-    }
+    redraw();
   </script>
 </body>
 </html>
