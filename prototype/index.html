@@ -1494,6 +1494,141 @@
       color: var(--muted);
     }
 
+    .transparency-section {
+      padding: 82px 0;
+      border-top: 1px solid var(--line);
+      background: var(--mist);
+    }
+
+    .transparency-inner {
+      width: min(1120px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .transparency-intro {
+      max-width: 780px;
+    }
+
+    .transparency-intro h2 {
+      font-size: 48px;
+    }
+
+    .transparency-subtitle {
+      margin: 20px 0 0;
+      color: #314154;
+      font-size: 19px;
+      line-height: 1.6;
+    }
+
+    .transparency-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 34px;
+    }
+
+    .transparency-card {
+      min-width: 0;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-top: 4px solid var(--blue);
+      border-radius: 8px;
+      background: var(--paper);
+    }
+
+    .transparency-card-heading {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .transparency-icon {
+      display: inline-grid;
+      flex: 0 0 36px;
+      width: 36px;
+      height: 36px;
+      place-items: center;
+      border: 1px solid #bfd0d9;
+      border-radius: 50%;
+      color: var(--blue);
+      background: #f3f8fa;
+    }
+
+    .transparency-icon svg {
+      width: 19px;
+      height: 19px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .transparency-card h3 {
+      font-size: 21px;
+      line-height: 1.2;
+    }
+
+    .transparency-card p,
+    .transparency-card li,
+    .transparency-links a {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .transparency-card p {
+      margin: 0;
+      color: #405066;
+    }
+
+    .transparency-card ul {
+      margin: 0;
+      padding-left: 19px;
+      color: #405066;
+    }
+
+    .transparency-card li + li {
+      margin-top: 5px;
+    }
+
+    .transparency-card .scenario-disclaimer {
+      margin-top: 15px;
+      padding-top: 13px;
+      border-top: 1px solid var(--line);
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    .transparency-links {
+      display: grid;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .transparency-links a {
+      display: inline-flex;
+      width: fit-content;
+      align-items: center;
+      gap: 7px;
+      color: var(--blue);
+      font-weight: 700;
+      text-underline-offset: 3px;
+    }
+
+    .transparency-links a::after {
+      content: "↗";
+      font-size: 12px;
+      text-decoration: none;
+    }
+
+    .transparency-links a:focus-visible {
+      outline: 3px solid var(--pm-threshold);
+      outline-offset: 3px;
+      border-radius: 2px;
+    }
+
     footer {
       padding: 34px 20px;
       background: #172033;
@@ -1565,7 +1700,8 @@
       .fact-strip,
       .sources,
       .stat-strip,
-      .method-grid {
+      .method-grid,
+      .transparency-grid {
         grid-template-columns: repeat(2, 1fr);
       }
 
@@ -1598,7 +1734,8 @@
       .scenario-summary,
       .scenario-note,
       .drivers-inner,
-      .baseline-layout {
+      .baseline-layout,
+      .transparency-inner {
         width: min(100% - 28px, 1120px);
       }
 
@@ -1610,9 +1747,18 @@
       .sources,
       .stat-strip,
       .method-grid,
+      .transparency-grid,
       .image-comparison,
       .region-controls {
         grid-template-columns: 1fr;
+      }
+
+      .transparency-section {
+        padding: 64px 0;
+      }
+
+      .transparency-intro h2 {
+        font-size: 36px;
       }
 
       .scenario-legend {
@@ -2375,7 +2521,7 @@
           After the guided story, readers can use the explorer to change views, inspect sampled values and test the main claim themselves: broad improvement, uneven remaining hotspots.
         </p>
         <div class="cta-row">
-          <a class="cta" href="map_prototype.html">Open interactive map</a>
+          <a class="cta" href="explorer.html">Open interactive map</a>
           <a class="cta secondary" href="#top">Back to the beginning</a>
         </div>
       </div>
@@ -2400,6 +2546,72 @@
           <article class="method-card">
             <h3>Interpretation</h3>
             <p>The maps support a spatial story about concentration patterns, improvement and remaining hotspots, not individual exposure estimates.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="transparency-section" id="transparency" aria-labelledby="transparency-title">
+      <div class="transparency-inner">
+        <div class="transparency-intro reveal">
+          <p class="section-number">Transparency and reproducibility</p>
+          <h2 id="transparency-title">How this story was built</h2>
+          <p class="transparency-subtitle">
+            This interactive story combines official environmental data, reproducible analysis, and interactive visualization to explore how PM2.5 changed across Europe between 2007 and 2024.
+          </p>
+        </div>
+
+        <div class="transparency-grid">
+          <article class="transparency-card reveal">
+            <div class="transparency-card-heading">
+              <span class="transparency-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false"><ellipse cx="12" cy="5" rx="7" ry="3"></ellipse><path d="M5 5v6c0 1.7 3.1 3 7 3s7-1.3 7-3V5"></path><path d="M5 11v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6"></path></svg>
+              </span>
+              <h3>Official data</h3>
+            </div>
+            <ul>
+              <li>European Environment Agency (EEA)</li>
+              <li>Annual PM2.5 GeoTIFF datasets</li>
+              <li>1 km raster grids</li>
+              <li>2007–2024, with 2009 unavailable</li>
+            </ul>
+          </article>
+
+          <article class="transparency-card reveal">
+            <div class="transparency-card-heading">
+              <span class="transparency-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false"><path d="M4 6h16"></path><path d="M7 12h10"></path><path d="M10 18h4"></path><circle cx="8" cy="6" r="2"></circle><circle cx="15" cy="12" r="2"></circle><circle cx="12" cy="18" r="2"></circle></svg>
+              </span>
+              <h3>Data processing</h3>
+            </div>
+            <p>Python was used for metadata inspection, raster alignment, comparable-area analysis, yearly summaries, and hotspot detection.</p>
+          </article>
+
+          <article class="transparency-card reveal">
+            <div class="transparency-card-heading">
+              <span class="transparency-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false"><path d="M4 19V9"></path><path d="M10 19V5"></path><path d="M16 19v-7"></path><path d="M22 19V3"></path><path d="M2 19h21"></path></svg>
+              </span>
+              <h3>Analysis</h3>
+            </div>
+            <p>The story combines long-term trends, persistent hotspots, a trend-continuation scenario, the Ireland investigation, and an interactive sampled-location explorer.</p>
+            <p class="scenario-disclaimer">The hotspot scenario is an exploratory trend-continuation scenario rather than a forecast.</p>
+          </article>
+
+          <article class="transparency-card reveal">
+            <div class="transparency-card-heading">
+              <span class="transparency-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false"><path d="M4 4h16v16H4z"></path><path d="M8 9h8"></path><path d="M8 13h8"></path><path d="M8 17h5"></path></svg>
+              </span>
+              <h3>Open and reproducible</h3>
+            </div>
+            <p>All preprocessing scripts, generated figures, processed datasets, and documentation are included in this repository.</p>
+            <nav class="transparency-links" aria-label="Project documentation">
+              <a href="../README.md" target="_blank" rel="noopener">Repository guide</a>
+              <a href="../docs/project_progress.md" target="_blank" rel="noopener">Project progress</a>
+              <a href="../docs/current_hotspot_projection_method.md" target="_blank" rel="noopener">Hotspot scenario method</a>
+              <a href="../docs/ireland_change_investigation.md" target="_blank" rel="noopener">Ireland investigation</a>
+            </nav>
           </article>
         </div>
       </div>

@@ -586,7 +586,7 @@ Several regions remain important in the 2024 pattern, including Northern Italy /
 
 **Our own analysis used**  
 - 2024 hotspot map.
-- Region annotations already drafted in `prototype/map_prototype.html`.
+- Region annotations already drafted in `prototype/explorer.html`.
 - Future: extract approximate regional summaries from raster cells for each focus region.
 
 **Emotional goal**  
@@ -725,7 +725,7 @@ Readers can inspect the map themselves, test the story's claims visually and exp
 - Include concise explanation of PM2.5 units and threshold.
 
 **Our own analysis used**  
-- Existing interactive prototype in `prototype/map_prototype.html`.
+- Existing interactive explorer in `prototype/explorer.html`.
 - Existing overlay assets in `prototype/`.
 - All existing static figures as fallbacks or supporting thumbnails.
 
@@ -954,7 +954,7 @@ The closing methods panel should feel calm and transparent. It is not a legal di
 - `data_processed/yearly_pm25_summary_cleaned.csv`
 - `data_processed/yearly_pm25_summary.csv`
 - `prototype/index.html`
-- `prototype/map_prototype.html`
+- `prototype/explorer.html`
 
 ## Assets To Create Or Improve
 

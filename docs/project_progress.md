@@ -124,3 +124,75 @@ The project now focuses on the main message:
 - Improve remaining map visuals and legends.
 - Refine final text for an environmental audience.
 - Continue polishing the scrollytelling experience for the final presentation.
+
+# Final Development Progress
+**Date:** 13 July 2026
+
+The project has moved from an interactive prototype to a complete visual data story for final submission.
+
+## Storytelling
+
+- Redesigned the website as a complete scrollytelling experience with a clear question-and-answer structure.
+- Added a narrative introduction that establishes the central story of broad improvement and continuing spatial inequality.
+- Added **From monitoring stations to a map of Europe** to explain how station observations become EEA raster maps.
+- Added **Europe in 2007** as the visual and narrative baseline for the analysis.
+- Redesigned **Has Europe improved?** as a clear 2007–2024 comparison with project-derived summary values.
+- Added **Why did Europe become cleaner?** to connect the observed change with cleaner technologies, emission controls, and European policy.
+- Added the hotspot trend-continuation scenario to examine what could happen if recent trends continued unchanged.
+- Added the Ireland local exception as a cautious, visually subordinate example of uneven change.
+- Improved transitions so each section answers one question and leads naturally to the next.
+
+## Data Analysis
+
+The final project includes:
+
+- metadata inspection for all available annual EEA GeoTIFF rasters;
+- raster alignment and preservation of valid-data masks;
+- comparable-area overlap analysis for 2007 and 2024;
+- cleaned yearly PM2.5 raster-cell summaries;
+- 2024 and persistent hotspot detection;
+- a recent-trend continuation scenario for current hotspot cells;
+- a focused investigation of local change in Ireland; and
+- an enriched browser-ready sampling dataset with annual values and derived metrics.
+
+The reusable preprocessing and analysis scripts are fully documented in `scripts/`, with supporting methodological notes in `docs/`.
+
+## Interactive Features
+
+- Scroll-led storytelling with staged visual and textual reveals.
+- Annotated maps that identify important regions and guide interpretation.
+- A responsive Leaflet explorer with year scrubbing, playback, map modes, pan, and zoom.
+- A click-to-inspect panel for individual sampled raster locations.
+- An annual sparkline showing PM2.5 values and the 10 µg/m³ threshold.
+- Automatic, data-based interpretation for each selected location.
+- Responsive layouts for desktop and smaller screens.
+- Constant-size sampled points, with PM2.5 magnitude communicated through colour rather than bubble area.
+
+## Audience Feedback
+
+**Feedback:** “The story should teach the reader.”
+
+**Response:** Added concise educational sections explaining PM2.5, measurement and mapping methods, pollution sources, health relevance, and European policy.
+
+**Feedback:** “The maps should guide the audience.”
+
+**Response:** Added regional annotations, guided findings, clearer legends, and stronger narrative transitions between visualizations.
+
+**Feedback:** “Increase interactivity.”
+
+**Response:** Built an enriched interactive explorer with annual values, year controls, location profiles, sparklines, threshold history, and trend-continuation information.
+
+**Feedback:** “Explain preprocessing.”
+
+**Response:** Added reproducible scripts and methodological documentation describing raster metadata, alignment, comparable areas, missing data, sampling, and analysis limitations.
+
+## Current Status
+
+The project is functionally complete and has entered the final polishing phase before submission.
+
+Remaining work consists of:
+
+- final visual polish;
+- consistency review;
+- presentation preparation; and
+- final report.
