@@ -204,6 +204,296 @@
       grid-template-columns: minmax(0, 1.45fr) minmax(280px, 0.9fr);
     }
 
+    .measurement-section {
+      background: linear-gradient(180deg, #f7fafc, #ffffff);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .measurement-layout {
+      width: min(1120px, calc(100% - 40px));
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(310px, 0.82fr) minmax(460px, 1fr);
+      gap: clamp(32px, 4.6vw, 64px);
+      align-items: center;
+    }
+
+    .measurement-intro .lede {
+      max-width: 760px;
+      font-size: clamp(19px, 2.2vw, 27px);
+      line-height: 1.34;
+    }
+
+    .measurement-steps {
+      margin: 28px 0 0;
+      display: grid;
+      gap: 10px;
+    }
+
+    .measurement-step {
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      gap: 14px;
+      padding: 14px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .measurement-step:first-child {
+      border-top: 0;
+    }
+
+    .step-number {
+      width: 42px;
+      height: 42px;
+      display: inline-grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--ink);
+      color: white;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .measurement-step h3 {
+      font-size: 18px;
+      line-height: 1.2;
+    }
+
+    .measurement-step p {
+      margin: 6px 0 0;
+      color: #314154;
+      font-size: 15px;
+      line-height: 1.55;
+    }
+
+    .measurement-callout {
+      margin-top: 28px;
+      padding: 18px 20px;
+      border-left: 5px solid var(--pm-low);
+      border-radius: 8px;
+      background: #edf6fb;
+      box-shadow: 0 1px 0 rgba(23, 32, 51, 0.04);
+      font-size: 15px;
+      line-height: 1.55;
+      color: #314154;
+    }
+
+    .measurement-callout strong {
+      display: block;
+      margin-bottom: 5px;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--ink);
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .measurement-source {
+      margin-top: 14px;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .measurement-visual {
+      padding: clamp(12px, 2vw, 20px);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      box-shadow: var(--shadow);
+    }
+
+    .measurement-svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .europe-outline {
+      fill: #eef4f7;
+      stroke: var(--ink);
+      stroke-width: 2.2;
+      stroke-linejoin: round;
+      stroke-dasharray: 880;
+      stroke-dashoffset: 0;
+    }
+
+    .measurement-section.is-active .europe-outline {
+      animation: drawOutline 1.4s ease-out both;
+    }
+
+    .station-dot {
+      opacity: 0;
+      transform-box: fill-box;
+      transform-origin: center;
+      fill: var(--pm-low);
+      stroke: white;
+      stroke-width: 1.5;
+    }
+
+    .measurement-section.is-active .station-dot {
+      animation: popStation 520ms ease-out both;
+      animation-delay: calc(1.45s + var(--i) * 0.032s);
+    }
+
+    .primary-station {
+      opacity: 0;
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+
+    .measurement-section.is-active .primary-station {
+      animation: popStation 620ms ease-out 0.35s both;
+    }
+
+    .probe-ring {
+      fill: none;
+      stroke: var(--pm-low);
+      stroke-width: 2;
+      opacity: 0;
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+
+    .measurement-section.is-active .probe-ring {
+      animation: measurePulse 1.35s ease-out 0.8s both;
+    }
+
+    .gap-line {
+      opacity: 0;
+      fill: none;
+      stroke: rgba(96, 112, 133, 0.42);
+      stroke-width: 1.4;
+      stroke-dasharray: 6 8;
+    }
+
+    .measurement-section.is-active .gap-line {
+      animation: fadeIn 700ms ease-out 2.45s both;
+    }
+
+    .raster-tile {
+      opacity: 0;
+      stroke: rgba(255, 255, 255, 0.72);
+      stroke-width: 1;
+    }
+
+    .measurement-section.is-active .raster-tile {
+      animation: tileIn 700ms ease-out both;
+      animation-delay: calc(3.15s + var(--i) * 0.035s);
+    }
+
+    .smooth-raster {
+      opacity: 0;
+      mix-blend-mode: multiply;
+    }
+
+    .measurement-section.is-active .smooth-raster {
+      animation: smoothRaster 1.25s ease-out 4.75s both;
+    }
+
+    .final-map-hint {
+      opacity: 0;
+    }
+
+    .measurement-section.is-active .final-map-hint {
+      animation: fadeIn 900ms ease-out 5.65s both;
+    }
+
+    .stage-arrow {
+      fill: none;
+      stroke: var(--muted);
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-dasharray: 90;
+      stroke-dashoffset: 90;
+    }
+
+    .measurement-section.is-active .stage-arrow {
+      animation: drawArrow 800ms ease-out both;
+      animation-delay: calc(1s + var(--i) * 0.95s);
+    }
+
+    .stage-label {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      fill: var(--ink);
+    }
+
+    .stage-pill {
+      fill: #f7fafc;
+      stroke: var(--line);
+    }
+
+    @keyframes drawOutline {
+      from {
+        stroke-dashoffset: 880;
+        fill: #f8fbfd;
+      }
+      to {
+        stroke-dashoffset: 0;
+        fill: #eef4f7;
+      }
+    }
+
+    @keyframes popStation {
+      from {
+        opacity: 0;
+        transform: scale(0.25);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes measurePulse {
+      0% {
+        opacity: 0;
+        transform: scale(0.25);
+      }
+      38% {
+        opacity: 0.9;
+      }
+      100% {
+        opacity: 0;
+        transform: scale(2.8);
+      }
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes tileIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 0.82;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes smoothRaster {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 0.88;
+      }
+    }
+
+    @keyframes drawArrow {
+      to {
+        stroke-dashoffset: 0;
+      }
+    }
+
     .section-number {
       margin: 0 0 16px;
       color: var(--blue);
@@ -365,6 +655,468 @@
       background: #f7f9fb;
     }
 
+    .baseline-layout {
+      width: min(1240px, calc(100% - 40px));
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(280px, 0.68fr) minmax(0, 1fr);
+      gap: clamp(36px, 5vw, 72px);
+      align-items: center;
+    }
+
+    .baseline-copy {
+      max-width: 440px;
+    }
+
+    .baseline-copy .body-copy + .body-copy {
+      margin-top: 14px;
+    }
+
+    .baseline-figure {
+      margin: 0;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: var(--shadow);
+    }
+
+    .baseline-map-stage {
+      position: relative;
+      aspect-ratio: 6984 / 3005;
+      overflow: hidden;
+      background: #fff url("pm25_2007_overlay.png") center / contain no-repeat;
+    }
+
+    .baseline-raster {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .baseline-leaders {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .baseline-leaders path {
+      fill: none;
+      stroke: #44546a;
+      stroke-width: 1.2;
+      vector-effect: non-scaling-stroke;
+    }
+
+    .baseline-leaders circle {
+      fill: #fff;
+      stroke: #314154;
+      stroke-width: 1.5;
+      vector-effect: non-scaling-stroke;
+    }
+
+    .baseline-annotations {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .baseline-annotation {
+      position: absolute;
+      width: clamp(116px, 17%, 148px);
+      padding: 8px 9px;
+      border-left: 3px solid var(--annotation-color);
+      background: rgba(255, 255, 255, 0.94);
+      box-shadow: 0 5px 16px rgba(23, 32, 51, 0.12);
+      color: #314154;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: clamp(9px, 0.86vw, 11px);
+      line-height: 1.3;
+    }
+
+    .baseline-annotation strong {
+      display: block;
+      margin-bottom: 3px;
+      color: var(--ink);
+      font-size: 1.05em;
+    }
+
+    .baseline-annotation.scandinavia { top: 3%; left: 27%; }
+    .baseline-annotation.poland { top: 3%; right: 1.5%; }
+    .baseline-annotation.po-valley { bottom: 3%; left: 1.5%; }
+    .baseline-annotation.balkans { right: 1.5%; bottom: 3%; }
+
+    .baseline-legend {
+      padding: 17px 20px 18px;
+      border-top: 1px solid var(--line);
+      background: #fff;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .baseline-legend-ramp {
+      height: 10px;
+      border-radius: 2px;
+      background: linear-gradient(90deg, #2c7bb6 0%, #49aa64 25%, #f2c94c 50%, #f28e2b 73%, #c43c39 100%);
+    }
+
+    .baseline-legend-labels {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      margin-top: 8px;
+      color: #46566a;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .baseline-caption {
+      padding: 0 20px 16px;
+      background: #fff;
+    }
+
+    .scenario-section {
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      background: #f7f9fa;
+    }
+
+    .scenario-intro,
+    .scenario-summary {
+      width: min(1120px, calc(100% - 40px));
+      margin: 0 auto;
+      display: grid;
+      gap: clamp(34px, 5vw, 72px);
+      align-items: start;
+    }
+
+    .scenario-intro {
+      grid-template-columns: minmax(280px, 0.78fr) minmax(0, 1.55fr);
+    }
+
+    .scenario-map,
+    .scenario-chart {
+      margin: 0;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .scenario-map {
+      box-shadow: 0 16px 38px rgba(23, 32, 51, 0.08);
+    }
+
+    .scenario-map-visual {
+      position: relative;
+      background: #fff;
+    }
+
+    .scenario-map img,
+    .scenario-chart img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .scenario-region-leaders {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .scenario-region-leaders path {
+      fill: none;
+      stroke: #687382;
+      stroke-width: 1.15;
+      vector-effect: non-scaling-stroke;
+    }
+
+    .scenario-region-leaders circle {
+      fill: #fff;
+      stroke: #687382;
+      stroke-width: 1.35;
+      vector-effect: non-scaling-stroke;
+    }
+
+    .scenario-region-labels {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .scenario-region-label {
+      position: absolute;
+      width: clamp(96px, 18%, 132px);
+      padding: 6px 8px;
+      border-left: 2px solid #687382;
+      background: rgba(255, 255, 255, 0.93);
+      box-shadow: 0 3px 10px rgba(23, 32, 51, 0.1);
+      color: #29384b;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: clamp(9px, 1vw, 11px);
+      font-weight: 700;
+      line-height: 1.25;
+    }
+
+    .scenario-region-label.po-valley { top: 63%; left: 2%; }
+    .scenario-region-label.southern-poland { top: 41%; right: 2%; }
+    .scenario-region-label.romania-bulgaria { top: 53%; right: 2%; }
+    .scenario-region-label.balkans { top: 65%; right: 2%; }
+    .scenario-region-label.western-turkey { top: 79%; right: 2%; }
+
+    .scenario-legend {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px 28px;
+      padding: 24px 26px 26px;
+      border-top: 1px solid var(--line);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .scenario-legend-heading {
+      grid-column: 1 / -1;
+      color: var(--ink);
+      font-size: 15px;
+    }
+
+    .scenario-legend-item {
+      display: grid;
+      grid-template-columns: 21px 1fr;
+      gap: 12px;
+      align-items: start;
+      color: #314154;
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .scenario-swatch {
+      width: 21px;
+      height: 14px;
+      margin-top: 3px;
+      border-radius: 2px;
+    }
+
+    .scenario-regional-findings {
+      padding: 24px 26px 26px;
+      border-top: 1px solid var(--line);
+      background: #f7f9fa;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .scenario-regional-findings h3 {
+      margin: 0 0 14px;
+      color: var(--ink);
+      font-size: 17px;
+    }
+
+    .scenario-regional-findings ul {
+      display: grid;
+      gap: 11px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .scenario-regional-findings li {
+      position: relative;
+      padding-left: 17px;
+      color: #314154;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .scenario-regional-findings li::before {
+      content: "";
+      position: absolute;
+      top: 0.58em;
+      left: 0;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--blue);
+    }
+
+    .scenario-summary {
+      grid-template-columns: minmax(0, 1.42fr) minmax(280px, 0.78fr);
+      margin-top: clamp(54px, 7vw, 86px);
+      align-items: center;
+    }
+
+    .scenario-stats {
+      display: grid;
+      gap: 12px;
+    }
+
+    .scenario-stat {
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .scenario-stat strong {
+      display: block;
+      margin-bottom: 8px;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: clamp(34px, 4.2vw, 52px);
+      line-height: 1;
+      color: var(--ink);
+    }
+
+    .scenario-stat p {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: #314154;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .scenario-note {
+      width: min(1120px, calc(100% - 40px));
+      margin: clamp(42px, 6vw, 64px) auto 0;
+      padding: 22px 24px;
+      border-left: 5px solid var(--blue);
+      background: #eaf3f7;
+      color: #314154;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .scenario-note strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--ink);
+      font-size: 17px;
+    }
+
+    .improvement-key-number {
+      margin-top: 30px;
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-left: 5px solid var(--blue);
+      border-radius: 8px;
+      background: #fff;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .improvement-key-number strong {
+      display: block;
+      margin-bottom: 14px;
+      font-size: clamp(29px, 3.6vw, 42px);
+      line-height: 1;
+      color: var(--ink);
+    }
+
+    .improvement-mean-values {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 12px;
+      align-items: center;
+      margin-bottom: 13px;
+      color: #314154;
+      font-size: 14px;
+    }
+
+    .improvement-mean-values b {
+      margin-right: 4px;
+      color: var(--ink);
+    }
+
+    .improvement-key-number > p:last-child {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .improvement-comparison img {
+      width: 100%;
+      height: auto;
+      aspect-ratio: auto;
+      object-fit: contain;
+      background: #fff;
+    }
+
+    .comparison-findings {
+      display: grid;
+      gap: 0;
+      padding: 5px 20px 16px;
+      border-top: 1px solid var(--line);
+      background: #fff;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .comparison-findings p {
+      margin: 0;
+      padding: 12px 0 12px 17px;
+      border-bottom: 1px solid var(--line);
+      border-left: 3px solid var(--finding-color, var(--blue));
+      color: #314154;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .comparison-findings p:nth-child(2) {
+      --finding-color: var(--green);
+    }
+
+    .comparison-findings p:nth-child(3) {
+      --finding-color: var(--amber);
+      border-bottom: 0;
+    }
+
+    .improvement-conclusion {
+      width: min(1120px, calc(100% - 40px));
+      margin: clamp(38px, 5vw, 58px) auto 0;
+      color: var(--ink);
+      font-size: clamp(24px, 3.1vw, 38px);
+      line-height: 1.2;
+    }
+
+    .ireland-exception {
+      display: grid;
+      grid-template-columns: minmax(105px, 132px) 1fr;
+      gap: 16px;
+      align-items: center;
+      padding: 17px 18px 19px;
+      border-top: 1px solid var(--line);
+      background: #f7f9fa;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .ireland-exception img {
+      width: 100%;
+      height: auto;
+      aspect-ratio: auto;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: #fff;
+    }
+
+    .ireland-exception h3 {
+      margin: 0 0 7px;
+      color: var(--ink);
+      font-size: 15px;
+      line-height: 1.25;
+    }
+
+    .ireland-exception p {
+      margin: 0;
+      color: #314154;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .ireland-exception .ireland-caution {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
     .map-frame {
       min-height: 560px;
       display: grid;
@@ -372,8 +1124,7 @@
       position: relative;
     }
 
-    .map-header,
-    .transition-map-header {
+    .map-header {
       position: relative;
       z-index: 2;
       display: flex;
@@ -386,16 +1137,14 @@
       font-family: Arial, Helvetica, sans-serif;
     }
 
-    .map-header p,
-    .transition-map-header p {
+    .map-header p {
       margin: 0;
       color: var(--muted);
       font-size: 13px;
       line-height: 1.45;
     }
 
-    .year-badge,
-    .transition-year {
+    .year-badge {
       min-width: 112px;
       text-align: right;
       font-size: clamp(38px, 6vw, 64px);
@@ -412,7 +1161,6 @@
       z-index: 1;
     }
 
-    .transition-controls,
     .region-controls {
       display: grid;
       gap: 18px;
@@ -423,28 +1171,10 @@
       font-family: Arial, Helvetica, sans-serif;
     }
 
-    .transition-controls {
-      grid-template-columns: 1fr auto;
-    }
-
     .region-controls {
       grid-template-columns: repeat(4, 1fr);
     }
 
-    .transition-controls input[type="range"] {
-      width: 100%;
-      accent-color: var(--blue);
-    }
-
-    .year-endpoints {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 5px;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .play-button,
     .region-button {
       min-height: 42px;
       padding: 0 14px;
@@ -455,16 +1185,6 @@
       cursor: pointer;
       font-weight: 700;
       font-family: Arial, Helvetica, sans-serif;
-    }
-
-    .play-button {
-      background: var(--ink);
-      color: white;
-    }
-
-    .play-button.is-playing {
-      background: var(--blue);
-      border-color: var(--blue);
     }
 
     .region-button.active {
@@ -573,6 +1293,120 @@
       background: var(--red);
     }
 
+    .improvement-drivers {
+      background: linear-gradient(180deg, #ffffff, #f4f8f9);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .drivers-inner {
+      width: min(1120px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .drivers-intro {
+      display: grid;
+      grid-template-columns: minmax(280px, 0.8fr) minmax(0, 1.35fr);
+      gap: clamp(34px, 6vw, 88px);
+      align-items: end;
+    }
+
+    .drivers-intro .lede {
+      margin-top: 0;
+    }
+
+    .driver-cards {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: clamp(42px, 6vw, 64px);
+    }
+
+    .driver-card {
+      min-height: 250px;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-top: 4px solid var(--driver-color);
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: 0 10px 26px rgba(23, 32, 51, 0.06);
+    }
+
+    .driver-card.reveal {
+      transition-delay: calc(var(--i) * 100ms);
+    }
+
+    .driver-card.reveal.visible:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 18px 38px rgba(23, 32, 51, 0.12);
+    }
+
+    .driver-icon {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 22px;
+      border-radius: 8px;
+      background: color-mix(in srgb, var(--driver-color) 14%, white);
+      color: var(--driver-color);
+    }
+
+    .driver-icon svg {
+      width: 26px;
+      height: 26px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .driver-card h3 {
+      margin-bottom: 11px;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 19px;
+      line-height: 1.25;
+    }
+
+    .driver-card p {
+      margin: 0;
+      color: #46566a;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 14px;
+      line-height: 1.58;
+    }
+
+    .drivers-callout {
+      display: grid;
+      grid-template-columns: minmax(150px, 0.35fr) minmax(0, 1.65fr);
+      gap: 24px;
+      align-items: start;
+      margin-top: clamp(38px, 5vw, 56px);
+      padding: 24px 26px;
+      border-left: 5px solid var(--green);
+      background: #eaf4ef;
+    }
+
+    .drivers-callout strong {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 17px;
+    }
+
+    .drivers-callout p {
+      margin: 0;
+      color: #314154;
+      font-size: 17px;
+      line-height: 1.55;
+    }
+
+    .drivers-source {
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
     .reveal {
       opacity: 0;
       transform: translateY(22px);
@@ -675,10 +1509,57 @@
     }
 
     @media (max-width: 940px) {
+      .measurement-layout,
       .story-grid,
       .visual-step,
-      .visual-step.reverse {
+      .visual-step.reverse,
+      .scenario-intro,
+      .scenario-summary,
+      .baseline-layout {
         grid-template-columns: 1fr;
+      }
+
+      .baseline-copy {
+        max-width: 720px;
+      }
+
+      .baseline-map-stage {
+        aspect-ratio: auto;
+        overflow: visible;
+        background: #fff;
+      }
+
+      .baseline-raster {
+        height: auto;
+        aspect-ratio: 6984 / 3005;
+      }
+
+      .baseline-leaders {
+        display: none;
+      }
+
+      .baseline-annotations {
+        position: static;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1px;
+        padding-top: 1px;
+        background: var(--line);
+      }
+
+      .baseline-annotation,
+      .baseline-annotation.scandinavia,
+      .baseline-annotation.poland,
+      .baseline-annotation.po-valley,
+      .baseline-annotation.balkans {
+        position: static;
+        width: auto;
+        min-height: 76px;
+        padding: 14px 16px;
+        border-left-width: 4px;
+        box-shadow: none;
+        background: #fff;
+        font-size: 12px;
       }
 
       .fact-strip,
@@ -686,6 +1567,15 @@
       .stat-strip,
       .method-grid {
         grid-template-columns: repeat(2, 1fr);
+      }
+
+      .drivers-intro {
+        grid-template-columns: 1fr;
+        align-items: start;
+      }
+
+      .driver-cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
       .map-frame {
@@ -699,10 +1589,16 @@
 
     @media (max-width: 680px) {
       .hero-inner,
+      .measurement-layout,
       .story-grid,
       .visual-step,
       .wide-inner,
-      .explore-inner {
+      .explore-inner,
+      .scenario-intro,
+      .scenario-summary,
+      .scenario-note,
+      .drivers-inner,
+      .baseline-layout {
         width: min(100% - 28px, 1120px);
       }
 
@@ -715,22 +1611,70 @@
       .stat-strip,
       .method-grid,
       .image-comparison,
-      .region-controls,
-      .transition-controls {
+      .region-controls {
         grid-template-columns: 1fr;
+      }
+
+      .scenario-legend {
+        grid-template-columns: 1fr;
+      }
+
+      .scenario-region-leaders {
+        display: none;
+      }
+
+      .scenario-region-labels {
+        position: static;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1px;
+        padding-top: 1px;
+        background: var(--line);
+      }
+
+      .scenario-region-label,
+      .scenario-region-label.po-valley,
+      .scenario-region-label.southern-poland,
+      .scenario-region-label.romania-bulgaria,
+      .scenario-region-label.balkans,
+      .scenario-region-label.western-turkey {
+        position: static;
+        width: auto;
+        min-height: 38px;
+        padding: 11px 13px;
+        border-left-width: 3px;
+        background: #fff;
+        box-shadow: none;
+        font-size: 11px;
+      }
+
+      .driver-cards,
+      .drivers-callout {
+        grid-template-columns: 1fr;
+      }
+
+      .driver-card {
+        min-height: 0;
+      }
+
+      .baseline-legend-labels {
+        font-size: 11px;
+      }
+
+      .ireland-exception {
+        grid-template-columns: 92px 1fr;
+        gap: 13px;
       }
 
       h1 {
         font-size: 48px;
       }
 
-      .map-header,
-      .transition-map-header {
+      .map-header {
         display: grid;
       }
 
-      .year-badge,
-      .transition-year {
+      .year-badge {
         min-width: 0;
         text-align: left;
       }
@@ -741,6 +1685,15 @@
 
       .story-legend {
         max-width: 230px;
+      }
+
+      .measurement-step {
+        grid-template-columns: 40px 1fr;
+      }
+
+      .step-number {
+        width: 36px;
+        height: 36px;
       }
     }
   </style>
@@ -754,11 +1707,219 @@
       <p class="hook">
         Annual EEA raster maps show lower fine-particle pollution across much of Europe since 2007, while several regions still stand out in 2024.
       </p>
-      <a class="scroll-cue" href="#pm25"><span></span>Start the story</a>
+      <a class="scroll-cue" href="#measurement"><span></span>Start the story</a>
     </div>
   </section>
 
   <main>
+    <section class="story-section measurement-section" id="measurement">
+      <div class="measurement-layout">
+        <div class="measurement-intro reveal">
+          <p class="section-number">How the maps are made</p>
+          <h2>From monitoring stations to a map of Europe</h2>
+          <p class="lede">
+            PM2.5 is measured at monitoring stations, but stations only cover specific locations. The EEA combines quality-controlled observations with modelling and spatial interpolation to create the 1 km raster maps analysed in this story.
+          </p>
+
+          <div class="measurement-steps">
+            <article class="measurement-step">
+              <span class="step-number">1</span>
+              <div>
+                <h3>Measure the air</h3>
+                <p>Official stations sample ambient air and report PM2.5 concentration in &micro;g/m&sup3;.</p>
+              </div>
+            </article>
+            <article class="measurement-step">
+              <span class="step-number">2</span>
+              <div>
+                <h3>Check and average</h3>
+                <p>Measurements are quality-controlled and summarized into annual observations.</p>
+              </div>
+            </article>
+            <article class="measurement-step">
+              <span class="step-number">3</span>
+              <div>
+                <h3>Estimate between stations</h3>
+                <p>The EEA combines observations with modelling and spatial interpolation to estimate values between monitoring locations.</p>
+              </div>
+            </article>
+            <article class="measurement-step">
+              <span class="step-number">4</span>
+              <div>
+                <h3>Build the story</h3>
+                <p>This project analyses the resulting annual 1 km raster maps to compare years and identify remaining hotspots.</p>
+              </div>
+            </article>
+          </div>
+
+          <div class="measurement-callout">
+            <strong>Interesting fact</strong>
+            Although Europe has thousands of monitoring stations, PM2.5 values are estimated for every 1 km grid cell using the EEA's official mapping methodology.
+          </div>
+          <p class="measurement-source">Source: European Environment Agency (EEA).</p>
+          <p class="body-copy">
+            Now that we know how the map is created, we can ask what it shows—and why particles this small matter.
+          </p>
+        </div>
+
+        <figure class="measurement-visual reveal" aria-label="Animated illustration showing monitoring stations becoming PM2.5 raster maps">
+          <svg class="measurement-svg" viewBox="0 0 720 620" role="img" aria-labelledby="measure-title measure-desc">
+            <title id="measure-title">How station measurements become PM2.5 raster maps</title>
+            <desc id="measure-desc">A monitoring station measures air, stations appear across Europe, gaps between stations are shown, raster cells fill the spaces, and the final frame becomes a PM2.5 map surface.</desc>
+            <defs>
+              <radialGradient id="smoothSurface" cx="55%" cy="56%" r="66%">
+                <stop offset="0%" stop-color="#f46d43" stop-opacity="0.92" />
+                <stop offset="30%" stop-color="#f2c94c" stop-opacity="0.85" />
+                <stop offset="56%" stop-color="#63b35d" stop-opacity="0.76" />
+                <stop offset="100%" stop-color="#2c7bb6" stop-opacity="0.72" />
+              </radialGradient>
+              <clipPath id="europeClip">
+                <path d="M318 58 C272 74 238 96 218 132 L174 134 L148 166 L118 170 L104 214 L132 254 L118 304 L146 344 L176 340 L204 382 L188 430 L226 468 L288 454 L336 492 L384 470 L386 412 L420 394 L454 438 L486 420 L462 360 L512 330 L548 270 L528 212 L574 178 L540 138 L486 134 L450 96 L400 92 L366 62 Z" />
+              </clipPath>
+              <marker id="arrowHead" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M0 0 L10 5 L0 10 Z" fill="#607085" />
+              </marker>
+            </defs>
+
+            <rect x="0" y="0" width="720" height="620" rx="24" fill="#f7fafc" />
+            <path class="europe-outline" d="M318 58 C272 74 238 96 218 132 L174 134 L148 166 L118 170 L104 214 L132 254 L118 304 L146 344 L176 340 L204 382 L188 430 L226 468 L288 454 L336 492 L384 470 L386 412 L420 394 L454 438 L486 420 L462 360 L512 330 L548 270 L528 212 L574 178 L540 138 L486 134 L450 96 L400 92 L366 62 Z" />
+            <path class="europe-outline" d="M118 224 L92 238 L80 272 L104 292 L134 270 L142 238 Z" />
+            <path class="europe-outline" d="M76 298 L58 320 L70 344 L96 336 L102 312 Z" />
+
+            <g clip-path="url(#europeClip)">
+              <g class="gap-layer">
+                <path class="gap-line" d="M162 190 C246 214 306 210 392 174" />
+                <path class="gap-line" d="M154 302 C250 272 350 300 500 260" />
+                <path class="gap-line" d="M220 406 C306 360 388 382 466 424" />
+                <path class="gap-line" d="M306 112 C330 218 322 312 338 462" />
+              </g>
+              <g class="raster-grid">
+                <rect class="raster-tile" style="--i:0" x="104" y="76" width="56" height="56" fill="#2c7bb6" />
+                <rect class="raster-tile" style="--i:1" x="160" y="76" width="56" height="56" fill="#2c7bb6" />
+                <rect class="raster-tile" style="--i:2" x="216" y="76" width="56" height="56" fill="#63b35d" />
+                <rect class="raster-tile" style="--i:3" x="272" y="76" width="56" height="56" fill="#63b35d" />
+                <rect class="raster-tile" style="--i:4" x="328" y="76" width="56" height="56" fill="#f2c94c" />
+                <rect class="raster-tile" style="--i:5" x="384" y="76" width="56" height="56" fill="#f2c94c" />
+                <rect class="raster-tile" style="--i:6" x="440" y="76" width="56" height="56" fill="#fdae61" />
+                <rect class="raster-tile" style="--i:7" x="496" y="76" width="56" height="56" fill="#fdae61" />
+                <rect class="raster-tile" style="--i:8" x="104" y="132" width="56" height="56" fill="#2c7bb6" />
+                <rect class="raster-tile" style="--i:9" x="160" y="132" width="56" height="56" fill="#63b35d" />
+                <rect class="raster-tile" style="--i:10" x="216" y="132" width="56" height="56" fill="#63b35d" />
+                <rect class="raster-tile" style="--i:11" x="272" y="132" width="56" height="56" fill="#f2c94c" />
+                <rect class="raster-tile" style="--i:12" x="328" y="132" width="56" height="56" fill="#fdae61" />
+                <rect class="raster-tile" style="--i:13" x="384" y="132" width="56" height="56" fill="#fdae61" />
+                <rect class="raster-tile" style="--i:14" x="440" y="132" width="56" height="56" fill="#f46d43" />
+                <rect class="raster-tile" style="--i:15" x="496" y="132" width="56" height="56" fill="#f2c94c" />
+                <rect class="raster-tile" style="--i:16" x="104" y="188" width="56" height="56" fill="#2c7bb6" />
+                <rect class="raster-tile" style="--i:17" x="160" y="188" width="56" height="56" fill="#63b35d" />
+                <rect class="raster-tile" style="--i:18" x="216" y="188" width="56" height="56" fill="#f2c94c" />
+                <rect class="raster-tile" style="--i:19" x="272" y="188" width="56" height="56" fill="#fdae61" />
+                <rect class="raster-tile" style="--i:20" x="328" y="188" width="56" height="56" fill="#fdae61" />
+                <rect class="raster-tile" style="--i:21" x="384" y="188" width="56" height="56" fill="#f46d43" />
+                <rect class="raster-tile" style="--i:22" x="440" y="188" width="56" height="56" fill="#a50026" />
+                <rect class="raster-tile" style="--i:23" x="496" y="188" width="56" height="56" fill="#f46d43" />
+                <rect class="raster-tile" style="--i:24" x="104" y="244" width="56" height="56" fill="#2c7bb6" />
+                <rect class="raster-tile" style="--i:25" x="160" y="244" width="56" height="56" fill="#63b35d" />
+                <rect class="raster-tile" style="--i:26" x="216" y="244" width="56" height="56" fill="#f2c94c" />
+                <rect class="raster-tile" style="--i:27" x="272" y="244" width="56" height="56" fill="#fdae61" />
+                <rect class="raster-tile" style="--i:28" x="328" y="244" width="56" height="56" fill="#f46d43" />
+                <rect class="raster-tile" style="--i:29" x="384" y="244" width="56" height="56" fill="#f46d43" />
+                <rect class="raster-tile" style="--i:30" x="440" y="244" width="56" height="56" fill="#f2c94c" />
+                <rect class="raster-tile" style="--i:31" x="496" y="244" width="56" height="56" fill="#63b35d" />
+                <rect class="raster-tile" style="--i:32" x="104" y="300" width="56" height="56" fill="#63b35d" />
+                <rect class="raster-tile" style="--i:33" x="160" y="300" width="56" height="56" fill="#63b35d" />
+                <rect class="raster-tile" style="--i:34" x="216" y="300" width="56" height="56" fill="#f2c94c" />
+                <rect class="raster-tile" style="--i:35" x="272" y="300" width="56" height="56" fill="#fdae61" />
+                <rect class="raster-tile" style="--i:36" x="328" y="300" width="56" height="56" fill="#fdae61" />
+                <rect class="raster-tile" style="--i:37" x="384" y="300" width="56" height="56" fill="#f2c94c" />
+                <rect class="raster-tile" style="--i:38" x="440" y="300" width="56" height="56" fill="#63b35d" />
+                <rect class="raster-tile" style="--i:39" x="160" y="356" width="56" height="56" fill="#63b35d" />
+                <rect class="raster-tile" style="--i:40" x="216" y="356" width="56" height="56" fill="#f2c94c" />
+                <rect class="raster-tile" style="--i:41" x="272" y="356" width="56" height="56" fill="#fdae61" />
+                <rect class="raster-tile" style="--i:42" x="328" y="356" width="56" height="56" fill="#f2c94c" />
+                <rect class="raster-tile" style="--i:43" x="384" y="356" width="56" height="56" fill="#63b35d" />
+                <rect class="raster-tile" style="--i:44" x="216" y="412" width="56" height="56" fill="#f2c94c" />
+                <rect class="raster-tile" style="--i:45" x="272" y="412" width="56" height="56" fill="#fdae61" />
+                <rect class="raster-tile" style="--i:46" x="328" y="412" width="56" height="56" fill="#63b35d" />
+              </g>
+              <rect class="smooth-raster" x="92" y="54" width="500" height="470" fill="url(#smoothSurface)" />
+            </g>
+
+            <g class="primary-station">
+              <circle class="probe-ring" cx="318" cy="244" r="15" />
+              <line x1="318" y1="244" x2="318" y2="292" stroke="#172033" stroke-width="5" stroke-linecap="round" />
+              <circle cx="318" cy="236" r="12" fill="#2c7bb6" stroke="#ffffff" stroke-width="4" />
+              <rect x="297" y="292" width="42" height="18" rx="5" fill="#172033" />
+              <path d="M330 238 C346 230 358 232 372 242" fill="none" stroke="#607085" stroke-width="2" stroke-linecap="round" />
+              <text x="318" y="334" text-anchor="middle" class="stage-label">PM2.5 reading</text>
+            </g>
+
+            <g class="station-layer">
+              <circle class="station-dot" style="--i:0" cx="210" cy="138" r="5" />
+              <circle class="station-dot" style="--i:1" cx="256" cy="112" r="5" />
+              <circle class="station-dot" style="--i:2" cx="312" cy="100" r="5" />
+              <circle class="station-dot" style="--i:3" cx="370" cy="104" r="5" />
+              <circle class="station-dot" style="--i:4" cx="430" cy="128" r="5" />
+              <circle class="station-dot" style="--i:5" cx="490" cy="154" r="5" />
+              <circle class="station-dot" style="--i:6" cx="150" cy="186" r="5" />
+              <circle class="station-dot" style="--i:7" cx="202" cy="190" r="5" />
+              <circle class="station-dot" style="--i:8" cx="260" cy="186" r="5" />
+              <circle class="station-dot" style="--i:9" cx="322" cy="184" r="5" />
+              <circle class="station-dot" style="--i:10" cx="386" cy="194" r="5" />
+              <circle class="station-dot" style="--i:11" cx="454" cy="208" r="5" />
+              <circle class="station-dot" style="--i:12" cx="528" cy="222" r="5" />
+              <circle class="station-dot" style="--i:13" cx="132" cy="252" r="5" />
+              <circle class="station-dot" style="--i:14" cx="190" cy="260" r="5" />
+              <circle class="station-dot" style="--i:15" cx="252" cy="250" r="5" />
+              <circle class="station-dot" style="--i:16" cx="318" cy="244" r="5" />
+              <circle class="station-dot" style="--i:17" cx="384" cy="256" r="5" />
+              <circle class="station-dot" style="--i:18" cx="454" cy="272" r="5" />
+              <circle class="station-dot" style="--i:19" cx="512" cy="286" r="5" />
+              <circle class="station-dot" style="--i:20" cx="138" cy="320" r="5" />
+              <circle class="station-dot" style="--i:21" cx="198" cy="324" r="5" />
+              <circle class="station-dot" style="--i:22" cx="260" cy="318" r="5" />
+              <circle class="station-dot" style="--i:23" cx="322" cy="328" r="5" />
+              <circle class="station-dot" style="--i:24" cx="388" cy="336" r="5" />
+              <circle class="station-dot" style="--i:25" cx="456" cy="350" r="5" />
+              <circle class="station-dot" style="--i:26" cx="180" cy="388" r="5" />
+              <circle class="station-dot" style="--i:27" cx="238" cy="394" r="5" />
+              <circle class="station-dot" style="--i:28" cx="300" cy="384" r="5" />
+              <circle class="station-dot" style="--i:29" cx="364" cy="398" r="5" />
+              <circle class="station-dot" style="--i:30" cx="430" cy="418" r="5" />
+              <circle class="station-dot" style="--i:31" cx="224" cy="446" r="5" />
+              <circle class="station-dot" style="--i:32" cx="284" cy="452" r="5" />
+              <circle class="station-dot" style="--i:33" cx="350" cy="458" r="5" />
+              <circle class="station-dot" style="--i:34" cx="386" cy="424" r="5" />
+              <circle class="station-dot" style="--i:35" cx="466" cy="398" r="5" />
+            </g>
+
+            <g class="final-map-hint">
+              <rect x="560" y="64" width="112" height="88" rx="10" fill="#ffffff" stroke="#d8e0e8" />
+              <text x="616" y="84" text-anchor="middle" class="stage-label">Europe in 2007</text>
+              <circle cx="586" cy="112" r="6" fill="#f46d43" opacity="0.9" />
+              <circle cx="618" cy="104" r="5" fill="#f2c94c" opacity="0.9" />
+              <circle cx="648" cy="124" r="6" fill="#2c7bb6" opacity="0.9" />
+              <circle cx="604" cy="132" r="5" fill="#63b35d" opacity="0.9" />
+            </g>
+
+            <g class="stage-flow">
+              <rect class="stage-pill" x="24" y="568" width="100" height="30" rx="15" />
+              <text class="stage-label" x="74" y="588" text-anchor="middle">measure</text>
+              <path class="stage-arrow" style="--i:0" d="M132 583 L176 583" marker-end="url(#arrowHead)" />
+              <rect class="stage-pill" x="184" y="568" width="112" height="30" rx="15" />
+              <text class="stage-label" x="240" y="588" text-anchor="middle">observe</text>
+              <path class="stage-arrow" style="--i:1" d="M304 583 L348 583" marker-end="url(#arrowHead)" />
+              <rect class="stage-pill" x="356" y="568" width="112" height="30" rx="15" />
+              <text class="stage-label" x="412" y="588" text-anchor="middle">estimate</text>
+              <path class="stage-arrow" style="--i:2" d="M476 583 L520 583" marker-end="url(#arrowHead)" />
+              <rect class="stage-pill" x="528" y="568" width="118" height="30" rx="15" />
+              <text class="stage-label" x="587" y="588" text-anchor="middle">map Europe</text>
+            </g>
+          </svg>
+        </figure>
+      </div>
+    </section>
+
     <section class="story-section" id="pm25">
       <div class="story-grid">
         <div class="reveal">
@@ -834,45 +1995,62 @@
     </section>
 
     <section class="story-section" id="baseline">
-      <div class="visual-step">
-        <div class="reveal">
+      <div class="baseline-layout">
+        <div class="baseline-copy reveal">
           <p class="kicker">The baseline</p>
-          <h2>Start in 2007.</h2>
+          <h2>Europe in 2007</h2>
           <p class="body-copy">
-            Before comparing years, the reader needs a baseline. The 2007 layer shows where fine-particle concentrations were higher at the beginning of the available series, especially across parts of Central, Southern and Eastern Europe.
+            Before looking at change, we first need to understand the starting point.
           </p>
-          <div class="stat-strip">
-            <article class="stat-card">
-              <p class="stat-label">Cleaned mean</p>
-              <strong>11.17</strong>
-              <p>ug/m3 across valid raster cells in 2007.</p>
-            </article>
-            <article class="stat-card">
-              <p class="stat-label">Role in story</p>
-              <strong>Start</strong>
-              <p>The reference point for the later transformation.</p>
-            </article>
-            <article class="stat-card">
-              <p class="stat-label">Interaction</p>
-              <strong>Map</strong>
-              <p>Zoom, pan and inspect sampled cells to connect the color pattern to values.</p>
-            </article>
-          </div>
+          <p class="body-copy">
+            PM2.5 concentrations in 2007 were generally much higher than today, but pollution was not evenly distributed. Higher concentrations formed distinct belts across parts of Central, Southern and Southeast Europe, while northern areas were comparatively lower.
+          </p>
+          <p class="body-copy">These patterns provide the baseline for everything that follows.</p>
         </div>
-        <figure class="visual-frame map-frame reveal">
-          <div class="map-header">
-            <div>
-              <p class="kicker">Europe in 2007</p>
-              <p>Use this as the reference year before judging later improvement.</p>
+
+        <figure class="baseline-figure reveal">
+          <div class="baseline-map-stage">
+            <canvas class="baseline-raster" id="baseline-raster" data-source="pm25_2007_overlay.png" role="img" aria-label="Annual PM2.5 concentration across Europe in 2007"></canvas>
+
+            <svg class="baseline-leaders" viewBox="0 0 1000 430" preserveAspectRatio="none" aria-hidden="true">
+              <path d="M420 62 L520 62 L605 93" />
+              <circle cx="605" cy="93" r="4" />
+              <path d="M830 62 L735 62 L620 218" />
+              <circle cx="620" cy="218" r="4" />
+              <path d="M165 355 L330 355 L480 290" />
+              <circle cx="480" cy="290" r="4" />
+              <path d="M830 355 L720 355 L622 320" />
+              <circle cx="622" cy="320" r="4" />
+            </svg>
+
+            <div class="baseline-annotations">
+              <div class="baseline-annotation scandinavia" style="--annotation-color:#2c7bb6">
+                <strong>Northern Scandinavia</strong>
+                Annual PM2.5 concentrations were comparatively low across much of this region.
+              </div>
+              <div class="baseline-annotation poland" style="--annotation-color:#f28e2b">
+                <strong>Southern Poland</strong>
+                Elevated concentrations can reflect a combination of industry and residential heating.
+              </div>
+              <div class="baseline-annotation po-valley" style="--annotation-color:#c43c39">
+                <strong>Northern Italy / Po Valley</strong>
+                Higher concentrations are associated with dense activity and limited dispersion within the valley.
+              </div>
+              <div class="baseline-annotation balkans" style="--annotation-color:#f28e2b">
+                <strong>Balkans / Southeast Europe</strong>
+                Several areas were already above the 10 &micro;g/m&sup3; policy threshold used in this story.
+              </div>
             </div>
-            <div class="year-badge">2007</div>
           </div>
-          <div id="baseline-map" class="story-map" aria-label="Interactive 2007 PM2.5 baseline map"></div>
-          <div class="data-readout" id="baseline-readout">
-            <strong>Hover or click the sampled cells</strong>
-            Read actual PM2.5 values sampled from the 2007 raster.
+
+          <div class="baseline-legend" aria-label="Annual PM2.5 concentration legend">
+            <div class="baseline-legend-ramp"></div>
+            <div class="baseline-legend-labels">
+              <span>Lower annual PM2.5 concentration</span>
+              <span>Higher annual PM2.5 concentration</span>
+            </div>
           </div>
-          <figcaption class="caption">Interactive sampled layer created from the 2007 EEA PM2.5 raster. Values are annual mean concentrations.</figcaption>
+          <figcaption class="caption baseline-caption">Annual mean PM2.5 from the project's 2007 EEA raster output. Colour intensity is presented using the story's shared concentration scale.</figcaption>
         </figure>
       </div>
     </section>
@@ -883,48 +2061,92 @@
           <p class="kicker">The central question</p>
           <h2>Has Europe improved?</h2>
           <p class="body-copy">
-            Drag the year control to animate sampled raster values from 2007 toward 2024. Blue and green cells mark lower concentrations; orange and red cells mark values closer to or above the hotspot threshold.
+            The side-by-side view compares the beginning and end of the available series. Across much of Europe, the 2024 map shows lower annual PM2.5 concentrations than the 2007 baseline.
           </p>
           <p class="body-copy">
-            This view is a visual bridge between two measured years. It shows the direction of change, while the exact change calculation later uses only comparable raster cells.
+            The continental pattern became cleaner overall, but improvement did not occur at the same pace everywhere.
+          </p>
+
+          <aside class="improvement-key-number">
+            <p class="stat-label">Cleaned raster-cell mean</p>
+            <strong>About 37% lower</strong>
+            <div class="improvement-mean-values">
+              <span><b>2007</b> 11.17 &micro;g/m&sup3;</span>
+              <span aria-hidden="true">&rarr;</span>
+              <span><b>2024</b> 7.07 &micro;g/m&sup3;</span>
+            </div>
+            <p>This project-derived mean gives each valid raster cell equal weight; it is not population-weighted exposure.</p>
+          </aside>
+        </div>
+
+        <figure class="visual-frame improvement-comparison reveal">
+          <img src="../figures/pm25_2007_2024_comparison.png" alt="Side-by-side PM2.5 raster maps comparing Europe in 2007 and 2024" />
+          <figcaption class="comparison-findings">
+            <p>Europe's broad PM2.5 pattern became cleaner between 2007 and 2024.</p>
+            <p>The largest visual reductions appear across substantial parts of Central and Western Europe.</p>
+            <p>Northern Italy, Southern Poland and parts of Southeast Europe remain visually important in 2024.</p>
+          </figcaption>
+        </figure>
+      </div>
+
+      <p class="improvement-conclusion reveal">Yes overall&mdash;but the improvement was not spatially even.</p>
+    </section>
+
+    <section class="story-section improvement-drivers" id="improvement-drivers">
+      <div class="drivers-inner">
+        <div class="drivers-intro">
+          <div class="reveal">
+            <p class="kicker">From change to cause</p>
+            <h2>Why did Europe become cleaner?</h2>
+          </div>
+          <p class="lede reveal">
+            The improvement shown in the previous map did not happen by chance. Over the last two decades, European countries introduced cleaner technologies, stricter air-quality regulations and emission controls that reduced PM2.5 pollution.
           </p>
         </div>
-        <figure class="visual-frame map-frame reveal">
-          <div class="transition-map-header">
-            <div>
-              <p class="kicker">Interactive map transition</p>
-              <p id="transition-copy">Drag the slider to see how sampled PM2.5 values move from the 2007 baseline toward the 2024 pattern.</p>
+
+        <div class="driver-cards">
+          <article class="driver-card reveal" style="--i:0; --driver-color:#2c7bb6">
+            <div class="driver-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M3 13l2-5h12l4 5v5h-2"/><path d="M5 18H3v-5h18"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg>
             </div>
-            <div class="transition-year" id="transition-year">2007</div>
-          </div>
+            <h3>Cleaner transport</h3>
+            <p>Successive Euro vehicle standards tightened limits on exhaust pollutants, while cleaner fuels and engine technologies reduced emissions from newer vehicles. Traffic still produces non-exhaust particles from brakes, tyres and road wear.</p>
+            <!-- TODO: insert official EEA transport-emissions statistic and source here. -->
+          </article>
 
-          <div id="improvement-map" class="story-map" aria-label="Interactive PM2.5 map transition from 2007 to 2024"></div>
-
-          <div class="transition-controls">
-            <div>
-              <input
-                id="transition-slider"
-                type="range"
-                min="2007"
-                max="2024"
-                step="0.01"
-                value="2007"
-                aria-label="Scrub between the 2007 and 2024 PM2.5 map overlays"
-              />
-              <div class="year-endpoints">
-                <span>2007 baseline</span>
-                <span>2024 latest year</span>
-              </div>
+          <article class="driver-card reveal" style="--i:1; --driver-color:#607085">
+            <div class="driver-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M3 21V10l6 4V9l6 4V6h4v15"/><path d="M3 21h18M7 18h1M12 18h1M17 18h1"/></svg>
             </div>
-            <button class="play-button" id="transition-play" type="button">Play</button>
-          </div>
+            <h3>Cleaner industry</h3>
+            <p>Industrial emission limits encouraged filters, cleaner production processes and tighter controls at large facilities. Changes in energy production and lower emissions from power generation also helped reduce particulate pollution and the gases that form particles in the atmosphere.</p>
+            <!-- TODO: insert official EEA industry or energy-emissions statistic and source here. -->
+          </article>
 
-          <div class="data-readout" id="transition-readout">
-            <strong>Hover or click the sampled cells</strong>
-            Inspect the selected-year value, with 2007 and 2024 shown as context.
-          </div>
-          <figcaption class="caption">Intermediate slider positions interpolate between the sampled 2007 and 2024 raster values to show the direction of change.</figcaption>
-        </figure>
+          <article class="driver-card reveal" style="--i:2; --driver-color:#f28e2b">
+            <div class="driver-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 22c4 0 7-2.8 7-6.5 0-2.7-1.5-5-4.4-7.6.1 2.2-.8 3.7-2 4.6.1-3.7-1.8-7-4.7-9.5.2 3.3-2.9 5.5-2.9 9.7C5 18 8.1 22 12 22Z"/><path d="M9.5 18.5c0-1.8 1.1-3 2.8-4.5.1 1.4.8 2.2 1.5 3 .5.6.7 1.2.7 1.8"/></svg>
+            </div>
+            <h3>Cleaner heating</h3>
+            <p>Where older domestic boilers and stoves were replaced, more efficient systems and cleaner fuels reduced emissions from heating. Progress varies because solid-fuel use, building efficiency and replacement rates differ between countries and regions.</p>
+            <!-- TODO: insert official EEA residential-heating statistic and source here. -->
+          </article>
+
+          <article class="driver-card reveal" style="--i:3; --driver-color:#7b5aa6">
+            <div class="driver-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M4 10h16M5 10V8l7-4 7 4v2M6 20h12M7 10v8M12 10v8M17 10v8"/></svg>
+            </div>
+            <h3>European air-quality policy</h3>
+            <p>EU legislation requires member states to monitor ambient air, assess compliance and prepare plans where limits are exceeded. Combined with rules targeting major emission sources, this created a shared framework for sustained pollution reduction.</p>
+            <!-- TODO: insert official EEA or European Commission policy-impact statistic and source here. -->
+          </article>
+        </div>
+
+        <div class="drivers-callout reveal">
+          <strong>What this means</strong>
+          <p>These long-term improvements are visible in the PM2.5 maps shown earlier, demonstrating how environmental policy and cleaner technology can produce measurable changes over time.</p>
+        </div>
+        <p class="drivers-source reveal">Sources: <a href="https://www.eea.europa.eu/en/analysis/indicators/emissions-of-the-main-air" target="_blank" rel="noopener">European Environment Agency, emissions of the main air pollutants</a>; <a href="https://environment.ec.europa.eu/topics/air/air-quality/data-and-reporting_en" target="_blank" rel="noopener">European Commission, ambient air-quality data and reporting</a>.</p>
       </div>
     </section>
 
@@ -976,6 +2198,14 @@
         <figure class="visual-frame reveal">
           <img src="../figures/pm25_change_2007_2024_overlap.png" alt="Overlap-based PM2.5 change map from 2007 to 2024" />
           <figcaption class="caption">Overlap-based change analysis. The comparable-area mean decreased by about 4.44 ug/m3.</figcaption>
+          <aside class="ireland-exception">
+            <img src="../figures/ireland_pm25_change_detail.png" alt="Detailed map of local PM2.5 change across comparable raster cells on the island of Ireland" />
+            <div>
+              <h3>A local exception in Ireland</h3>
+              <p>Ireland's mean PM2.5 still fell overall, from 6.20 to 5.21 &micro;g/m&sup3;. However, a small localized cluster in central Ireland increased slightly between 2007 and 2024. Only 4.7% of comparable Irish raster cells increased, and none exceeded 10 &micro;g/m&sup3; in 2024.</p>
+              <p class="ireland-caution">This pattern should be interpreted carefully because the EEA maps are modelled and interpolated surfaces.</p>
+            </div>
+          </aside>
         </figure>
       </div>
     </section>
@@ -1000,6 +2230,89 @@
           </ul>
         </div>
       </div>
+    </section>
+
+    <section class="story-section scenario-section" id="hotspot-scenario">
+      <div class="scenario-intro">
+        <div class="reveal">
+          <p class="kicker">A trend-continuation scenario.</p>
+          <h2>Will today's hotspots still be hotspots?</h2>
+          <p class="body-copy">
+            This project asks a simple question: if the recent rate of improvement continues, which current hotspot areas could fall below the EU policy threshold over the next decade?
+          </p>
+          <p class="body-copy">
+            A trend-continuation scenario extends the observed 2015&ndash;2024 direction of change for each sufficiently observed hotspot cell. It shows where recent progress appears fast enough to cross 10 &micro;g/m&sup3;&mdash;and where it does not.
+          </p>
+        </div>
+
+        <figure class="scenario-map reveal">
+          <div class="scenario-map-visual">
+            <img src="../figures/current_hotspot_projection_categories.png" alt="Map classifying 2024 PM2.5 hotspot cells by when recent trends would carry them below 10 micrograms per cubic metre" />
+            <svg class="scenario-region-leaders" viewBox="0 0 1000 902" preserveAspectRatio="none" aria-hidden="true">
+              <path d="M172 600 L330 600 L478 700" />
+              <circle cx="478" cy="700" r="4" />
+              <path d="M815 392 L700 392 L555 557" />
+              <circle cx="555" cy="557" r="4" />
+              <path d="M815 500 L730 500 L642 691" />
+              <circle cx="642" cy="691" r="4" />
+              <path d="M815 610 L720 610 L580 735" />
+              <circle cx="580" cy="735" r="4" />
+              <path d="M815 755 L830 755 L795 800" />
+              <circle cx="795" cy="800" r="4" />
+            </svg>
+            <div class="scenario-region-labels" aria-label="Regions highlighted on the scenario map">
+              <span class="scenario-region-label po-valley">Northern Italy (Po Valley)</span>
+              <span class="scenario-region-label southern-poland">Southern Poland</span>
+              <span class="scenario-region-label balkans">Balkan Peninsula</span>
+              <span class="scenario-region-label romania-bulgaria">Romania / Bulgaria</span>
+              <span class="scenario-region-label western-turkey">Western Turkey</span>
+            </div>
+          </div>
+          <figcaption class="scenario-legend" aria-label="Trend-continuation scenario map legend">
+            <strong class="scenario-legend-heading">Scenario categories</strong>
+            <span class="scenario-legend-item"><span class="scenario-swatch" style="background:#238b45"></span><span>Projected below 10 &micro;g/m&sup3; by 2030</span></span>
+            <span class="scenario-legend-item"><span class="scenario-swatch" style="background:#2b8cbe"></span><span>Projected below 10 &micro;g/m&sup3; by 2035</span></span>
+            <span class="scenario-legend-item"><span class="scenario-swatch" style="background:#f28e2b"></span><span>Improving, but still above 10 &micro;g/m&sup3;</span></span>
+            <span class="scenario-legend-item"><span class="scenario-swatch" style="background:#c43c39"></span><span>Stable or worsening</span></span>
+            <span class="scenario-legend-item"><span class="scenario-swatch" style="background:#6b7280"></span><span>Insufficient data</span></span>
+          </figcaption>
+          <div class="scenario-regional-findings">
+            <h3>Key regional findings</h3>
+            <ul>
+              <li>Much of Central Europe continues improving, and many current hotspots could fall below 10 &micro;g/m&sup3; by around 2030 if recent trends continue.</li>
+              <li>Northern Italy improves steadily, but many cells remain above the threshold beyond 2035.</li>
+              <li>Southern Poland also improves, although some industrial and urban areas remain persistent hotspots.</li>
+              <li>Parts of Southeast Europe show slower improvement, with several regions remaining above the threshold throughout the scenario.</li>
+            </ul>
+          </div>
+        </figure>
+      </div>
+
+      <div class="scenario-summary">
+        <figure class="scenario-chart reveal">
+          <img src="../figures/current_hotspot_projection_summary.png" alt="Bar chart showing the share of current hotspot cells in each trend-continuation category" />
+        </figure>
+
+        <div class="scenario-stats reveal" aria-label="Headline trend-continuation scenario results">
+          <article class="scenario-stat">
+            <strong>49%</strong>
+            <p>Approximately half of today's hotspot cells would fall below the EU annual threshold by 2030 if recent trends continued.</p>
+          </article>
+          <article class="scenario-stat">
+            <strong>62%</strong>
+            <p>Nearly two-thirds of today's hotspot cells would fall below the threshold by 2035, including those crossing by 2030.</p>
+          </article>
+          <article class="scenario-stat">
+            <strong>6%</strong>
+            <p>A small but important share of today's hotspot cells show little improvement or slight worsening under the trend-continuation scenario.</p>
+          </article>
+        </div>
+      </div>
+
+      <aside class="scenario-note reveal">
+        <strong>This is not a forecast.</strong>
+        This trend-continuation scenario assumes recent rates of change continue unchanged. It does not account for future policy, technological change, economic activity, weather variability, wildfire smoke or unexpected emission changes.
+      </aside>
     </section>
 
     <section class="story-section alt" id="regions">
@@ -1028,7 +2341,7 @@
           </div>
           <div class="data-readout" id="region-readout">
             <strong>Regional focus</strong>
-            Orange sampled cells mark locations above 10 ug/m3 in 2024.
+            Each circle represents one sampled raster location. Colour indicates annual PM2.5 concentration; circle size is fixed.
           </div>
           <figcaption class="caption">The map combines guided regional annotations with sampled 2024 raster cells above the hotspot threshold.</figcaption>
         </figure>
@@ -1211,12 +2524,10 @@
       return "#a50026";
     }
 
-    function radiusForValue(value, map) {
-      const zoomBoost = Math.max(0, map.getZoom() - 4) * 0.9;
-      if (value === null || Number.isNaN(value)) {
-        return 3 + zoomBoost;
-      }
-      return Math.max(4, Math.min(11, 3.5 + value / 4 + zoomBoost));
+    const smallSampleCircleMedia = window.matchMedia("(max-width: 680px)");
+
+    function sampleCircleRadius() {
+      return smallSampleCircleMedia.matches ? 5 : 6;
     }
 
     function pointPopup(point, value, label, selectedYearValue) {
@@ -1257,7 +2568,7 @@
         if (value === null) return;
         const circle = L.circleMarker([point.lat, point.lng], {
           renderer: canvasRenderer,
-          radius: radiusForValue(value, map),
+          radius: sampleCircleRadius(),
           color: "rgba(23, 32, 51, 0.32)",
           weight: 0.35,
           fillColor: options.color ? options.color(point, value) : colorForValue(value),
@@ -1289,7 +2600,7 @@
               fillColor: colorForValue(value),
               fillOpacity: point.hotspot_2024 && progress > 0.78 ? 0.86 : 0.7
             });
-            circle.setRadius(radiusForValue(value, map));
+            circle.setRadius(sampleCircleRadius());
           });
           if (label) {
             layer.eachLayer(circle => {
@@ -1299,130 +2610,57 @@
         },
         restyle() {
           circles.forEach(circle => {
-            circle.setRadius(radiusForValue(circle.currentValue, map));
+            circle.setRadius(sampleCircleRadius());
           });
         }
       };
     }
 
-    const baselineMap = L.map("baseline-map", mapOptions).setView([51, 12], 4);
-    addBaseTiles(baselineMap);
-    addLegend(baselineMap, {
-      label: "Sampled PM2.5 annual mean, 2007",
-      scale: ["low", "10 threshold", "high"]
-    });
-    const baselineSamples = createSampleLayer(baselineMap, {
-      value: point => point.pm25_2007,
-      readoutId: "baseline-readout",
-      label: () => "2007 sampled PM2.5",
-      yearValue: () => 2007
-    });
-    baselineMap.on("zoomend", () => baselineSamples.restyle());
-    L.marker([50.5, 19.2]).addTo(baselineMap).bindPopup("Central Europe: higher PM2.5 levels are visible in the baseline year.");
-    L.marker([45.2, 9.5]).addTo(baselineMap).bindPopup("Northern Italy / Po Valley: a region that remains important later in the story.");
+    function renderBaselineRaster() {
+      const canvas = document.getElementById("baseline-raster");
+      if (!canvas) return;
 
-    const improvementMap = L.map("improvement-map", mapOptions).setView([51, 12], 4);
-    addBaseTiles(improvementMap);
-    const transitionLegend = addLegend(improvementMap, {
-      label: 'Sampled PM2.5 annual mean, <span id="legend-year">2007</span>',
-      scale: ["low", "10 threshold", "high"]
-    });
-    const transitionSamples = createSampleLayer(improvementMap, {
-      value: point => point.pm25_2007,
-      readoutId: "transition-readout",
-      label: () => `${Math.round(Number(slider.value))} PM2.5`,
-      yearValue: () => Number(slider.value)
-    });
-    improvementMap.on("zoomend", () => transitionSamples.restyle());
+      const image = new Image();
+      image.onload = () => {
+        const renderWidth = Math.min(image.naturalWidth, 2400);
+        const renderHeight = Math.round(renderWidth * image.naturalHeight / image.naturalWidth);
+        canvas.width = renderWidth;
+        canvas.height = renderHeight;
 
-    const slider = document.getElementById("transition-slider");
-    const yearLabel = document.getElementById("transition-year");
-    const transitionCopy = document.getElementById("transition-copy");
-    const playButton = document.getElementById("transition-play");
-    let transitionAnimation = null;
-    let transitionStartTime = null;
-    const transitionDuration = 6500;
+        const context = canvas.getContext("2d", { willReadFrequently: true });
+        context.drawImage(image, 0, 0, renderWidth, renderHeight);
+        const raster = context.getImageData(0, 0, renderWidth, renderHeight);
+        const colors = [
+          [44, 123, 182],
+          [73, 170, 100],
+          [242, 201, 76],
+          [242, 142, 43],
+          [196, 60, 57]
+        ];
 
-    function updateImprovementTransition(yearValue) {
-      const clampedYearValue = Math.max(2007, Math.min(2024, Number(yearValue)));
-      const year = Math.round(clampedYearValue);
-      const progress = (clampedYearValue - 2007) / (2024 - 2007);
+        for (let i = 0; i < raster.data.length; i += 4) {
+          if (raster.data[i + 3] < 8) continue;
+          const luminance = (
+            0.2126 * raster.data[i]
+            + 0.7152 * raster.data[i + 1]
+            + 0.0722 * raster.data[i + 2]
+          ) / 255;
+          const scaled = Math.max(0, Math.min(1, (luminance - 0.025) / 0.9));
+          const position = scaled * (colors.length - 1);
+          const lower = Math.floor(position);
+          const upper = Math.min(colors.length - 1, lower + 1);
+          const blend = position - lower;
 
-      transitionSamples.update(progress);
-      slider.value = clampedYearValue;
-      yearLabel.textContent = year;
-
-      const legendYear = document.getElementById("legend-year");
-      if (legendYear) {
-        legendYear.textContent = year;
-      }
-
-      if (year <= 2011) {
-        transitionCopy.textContent = "The 2007 layer shows more high-concentration colors across parts of Central, Southern and Eastern Europe.";
-      } else if (year < 2021) {
-        transitionCopy.textContent = "As the animation moves forward, many sampled cells shift from orange and yellow toward green and blue, indicating lower PM2.5.";
-      } else {
-        transitionCopy.textContent = "By 2024, lower values are more visible across Europe, while selected hotspot regions still stand out.";
-      }
+          raster.data[i] = colors[lower][0] + (colors[upper][0] - colors[lower][0]) * blend;
+          raster.data[i + 1] = colors[lower][1] + (colors[upper][1] - colors[lower][1]) * blend;
+          raster.data[i + 2] = colors[lower][2] + (colors[upper][2] - colors[lower][2]) * blend;
+        }
+        context.putImageData(raster, 0, 0);
+      };
+      image.src = canvas.dataset.source;
     }
 
-    function stopTransitionAnimation() {
-      if (transitionAnimation) {
-        cancelAnimationFrame(transitionAnimation);
-        transitionAnimation = null;
-      }
-      transitionStartTime = null;
-      playButton.textContent = "Play";
-      playButton.classList.remove("is-playing");
-      playButton.setAttribute("aria-pressed", "false");
-    }
-
-    function playTransition() {
-      stopTransitionAnimation();
-      const startYear = Number(slider.value) >= 2024 ? 2007 : Number(slider.value);
-      const remaining = 2024 - startYear;
-      const duration = Math.max(1400, transitionDuration * (remaining / (2024 - 2007)));
-
-      function step(now) {
-        if (transitionStartTime === null) {
-          transitionStartTime = now;
-        }
-        const elapsed = now - transitionStartTime;
-        const progress = Math.min(elapsed / duration, 1);
-        const easedProgress = 1 - Math.pow(1 - progress, 3);
-        const yearValue = startYear + easedProgress * remaining;
-        updateImprovementTransition(yearValue);
-
-        if (progress < 1) {
-          transitionAnimation = requestAnimationFrame(step);
-        } else {
-          stopTransitionAnimation();
-        }
-      }
-
-      playButton.textContent = "Playing";
-      playButton.classList.add("is-playing");
-      playButton.setAttribute("aria-pressed", "true");
-      transitionAnimation = requestAnimationFrame(step);
-    }
-
-    slider.addEventListener("input", function (event) {
-      stopTransitionAnimation();
-      updateImprovementTransition(Number(event.target.value));
-    });
-
-    playButton.addEventListener("click", function () {
-      if (transitionAnimation) {
-        stopTransitionAnimation();
-      } else {
-        if (Number(slider.value) >= 2024) {
-          slider.value = 2007;
-          updateImprovementTransition(2007);
-        }
-        playTransition();
-      }
-    });
-    updateImprovementTransition(2007);
+    renderBaselineRaster();
 
     const regions = {
       northernItaly: {
@@ -1466,6 +2704,7 @@
       label: () => "2024 sampled hotspot"
     });
     regionMap.on("zoomend", () => regionSamples.restyle());
+    smallSampleCircleMedia.addEventListener("change", () => regionSamples.restyle());
 
     const regionMarkers = {};
     Object.keys(regions).forEach(key => {
@@ -1499,6 +2738,19 @@
     });
 
     selectRegion("northernItaly");
+
+    const measurementSection = document.querySelector(".measurement-section");
+    if (measurementSection) {
+      const measurementObserver = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            measurementSection.classList.add("is-active");
+            measurementObserver.unobserve(measurementSection);
+          }
+        });
+      }, { threshold: 0.32 });
+      measurementObserver.observe(measurementSection);
+    }
 
     const revealObserver = new IntersectionObserver(entries => {
       entries.forEach(entry => {

@@ -1,0 +1,6 @@
+classification,cell_count,percentage_of_current_hotspot_cells,median_recent_slope,median_projected_crossing_year
+Projected below 10 by 2030,597576,48.861,-0.571,2026.915
+Projected below 10 by 2035,160741,13.143,-0.438,2031.690
+"Improving, but not below 10 by 2035",129194,10.564,-0.195,2041.280
+Stable or worsening,71317,5.831,0.115,
+Insufficient data,264191,21.602,,

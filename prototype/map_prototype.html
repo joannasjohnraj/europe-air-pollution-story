@@ -11,7 +11,7 @@
   />
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="pm25_interactive_samples.js"></script>
+  <script src="pm25_interactive_samples_enriched.js"></script>
 
   <style>
     :root {
@@ -205,6 +205,183 @@
       background: #dfe6ee;
     }
 
+    .map-shell {
+      position: relative;
+      min-width: 0;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .inspect-panel {
+      position: absolute;
+      z-index: 1000;
+      top: 14px;
+      right: 14px;
+      bottom: 14px;
+      width: min(390px, calc(100% - 28px));
+      overflow-y: auto;
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.98);
+      box-shadow: 0 18px 50px rgba(23, 32, 51, 0.22);
+      transform: translateX(calc(100% + 32px));
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 280ms ease, opacity 220ms ease;
+    }
+
+    .inspect-panel.is-open {
+      transform: translateX(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .inspect-close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 34px;
+      min-height: 34px;
+      padding: 0;
+      border-radius: 50%;
+      text-align: center;
+      font-size: 23px;
+      line-height: 1;
+    }
+
+    .inspect-eyebrow {
+      margin: 0 42px 6px 0;
+      color: var(--purple);
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .inspect-panel h2 {
+      margin: 0 42px 5px 0;
+      font-size: 25px;
+      line-height: 1.15;
+    }
+
+    .inspect-coordinates {
+      margin: 0 0 17px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .inspect-metrics {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .inspect-metric {
+      min-height: 78px;
+      padding: 11px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fbfcfd;
+    }
+
+    .inspect-metric-label {
+      display: flex;
+      gap: 7px;
+      align-items: center;
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .inspect-icon {
+      display: inline-grid;
+      place-items: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #e7f1f5;
+      color: var(--blue);
+      font-size: 9px;
+    }
+
+    .inspect-metric strong {
+      display: block;
+      color: var(--ink);
+      font-size: 17px;
+      line-height: 1.2;
+    }
+
+    .inspect-section {
+      margin-top: 12px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fff;
+    }
+
+    .inspect-section h3 {
+      margin: 0 0 8px;
+      font-size: 14px;
+    }
+
+    .inspect-section p {
+      margin: 0;
+      color: #34445a;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .inspect-scenario {
+      border-left: 4px solid var(--purple);
+      background: #f7f4fb;
+    }
+
+    .scenario-crossing {
+      margin-top: 5px !important;
+      color: var(--muted) !important;
+      font-size: 12px !important;
+    }
+
+    .sparkline-wrap {
+      padding-top: 4px;
+    }
+
+    #inspect-sparkline {
+      display: block;
+      width: 100%;
+      height: auto;
+      overflow: visible;
+    }
+
+    .sparkline-key {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 16px;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .sparkline-key span::before {
+      content: "";
+      display: inline-block;
+      width: 12px;
+      height: 2px;
+      margin: 0 5px 3px 0;
+      background: var(--blue);
+    }
+
+    .sparkline-key .threshold-key::before {
+      background: var(--red);
+    }
+
+    .inspect-meaning {
+      border-left: 4px solid var(--blue);
+      background: #eef7fa;
+    }
+
     .legend {
       min-width: 230px;
       padding: 10px 12px;
@@ -250,7 +427,25 @@
       }
 
       #map {
+        height: 100%;
+      }
+
+      .map-shell {
         height: 70vh;
+      }
+
+      .inspect-panel {
+        top: auto;
+        right: 10px;
+        bottom: 10px;
+        left: 10px;
+        width: auto;
+        max-height: 76%;
+        transform: translateY(calc(100% + 24px));
+      }
+
+      .inspect-panel.is-open {
+        transform: translateY(0);
       }
     }
   </style>
@@ -262,6 +457,7 @@
     <p>
       Sampled directly from the project rasters. Scrub time, inspect values, filter hotspots and zoom into regions.
     </p>
+    <p>Each circle represents one sampled raster location. Colour indicates annual PM2.5 concentration, or change when that mode is selected; circle size is fixed.</p>
   </header>
 
   <div class="container">
@@ -316,11 +512,67 @@
       </p>
     </aside>
 
-    <div id="map"></div>
+    <div class="map-shell">
+      <div id="map"></div>
+      <aside class="inspect-panel" id="inspect-panel" aria-hidden="true" aria-labelledby="inspect-title">
+        <button class="inspect-close" id="inspect-close" type="button" aria-label="Close location profile" title="Close">&times;</button>
+        <p class="inspect-eyebrow">Location profile</p>
+        <h2 id="inspect-title">Sampled European location</h2>
+        <p class="inspect-coordinates" id="inspect-coordinates"></p>
+
+        <div class="inspect-metrics">
+          <article class="inspect-metric">
+            <div class="inspect-metric-label"><span class="inspect-icon">07</span>2007 PM2.5</div>
+            <strong id="inspect-2007"></strong>
+          </article>
+          <article class="inspect-metric">
+            <div class="inspect-metric-label"><span class="inspect-icon">24</span>2024 PM2.5</div>
+            <strong id="inspect-2024"></strong>
+          </article>
+          <article class="inspect-metric">
+            <div class="inspect-metric-label"><span class="inspect-icon">ABS</span>Absolute change</div>
+            <strong id="inspect-absolute"></strong>
+          </article>
+          <article class="inspect-metric">
+            <div class="inspect-metric-label"><span class="inspect-icon">%</span>Percentage change</div>
+            <strong id="inspect-percentage"></strong>
+          </article>
+          <article class="inspect-metric">
+            <div class="inspect-metric-label"><span class="inspect-icon">10</span>2024 status</div>
+            <strong id="inspect-hotspot"></strong>
+          </article>
+          <article class="inspect-metric">
+            <div class="inspect-metric-label"><span class="inspect-icon">YRS</span>Years above 10</div>
+            <strong id="inspect-years-above"></strong>
+          </article>
+        </div>
+
+        <section class="inspect-section inspect-scenario">
+          <h3>Trend-continuation scenario</h3>
+          <p id="inspect-scenario"></p>
+          <p class="scenario-crossing" id="inspect-crossing"></p>
+        </section>
+
+        <section class="inspect-section">
+          <h3>Annual PM2.5, 2007–2024</h3>
+          <div class="sparkline-wrap">
+            <svg id="inspect-sparkline" viewBox="0 0 320 112" role="img" aria-label="Annual PM2.5 timeline for the selected location"></svg>
+          </div>
+          <div class="sparkline-key"><span>Annual value</span><span class="threshold-key">10 &micro;g/m&sup3; threshold</span></div>
+        </section>
+
+        <section class="inspect-section inspect-meaning">
+          <h3>What does this mean?</h3>
+          <p id="inspect-meaning"></p>
+        </section>
+      </aside>
+    </div>
   </div>
 
   <script>
-    const samples = window.PM25_INTERACTIVE_SAMPLES.points;
+    const enrichedData = window.PM25_INTERACTIVE_SAMPLES_ENRICHED;
+    const samples = enrichedData.points;
+    const availableYears = enrichedData.metadata.availableYears;
     const renderer = L.canvas({ padding: 0.35 });
     let currentMode = "level";
     let currentYearValue = 2007;
@@ -366,48 +618,37 @@
     const layer = L.layerGroup().addTo(map);
     const circles = [];
 
-    function interpolate(point, progress) {
-      if (point.pm25_2007 === null && point.pm25_2024 === null) return null;
-      if (point.pm25_2007 === null) return point.pm25_2024;
-      if (point.pm25_2024 === null) return point.pm25_2007;
-      return point.pm25_2007 + (point.pm25_2024 - point.pm25_2007) * progress;
+    function displayValueForYear(point, yearValue) {
+      const year = Math.max(2007, Math.min(2024, Number(yearValue)));
+      const observations = availableYears
+        .map(availableYear => ({
+          year: availableYear,
+          value: point.annualValues[String(availableYear)]
+        }))
+        .filter(observation => observation.value !== null);
+      if (!observations.length) return null;
+
+      const before = observations.filter(observation => observation.year <= year).at(-1);
+      const after = observations.find(observation => observation.year >= year);
+      if (!before) return after.value;
+      if (!after) return before.value;
+      if (before.year === after.year) return before.value;
+      const progress = (year - before.year) / (after.year - before.year);
+      return before.value + (after.value - before.value) * progress;
     }
 
     function selectedYearValue(point, yearValue) {
-      const year = Math.round(Number(yearValue));
-      if (year <= 2007) {
-        return {
-          year,
-          value: point.pm25_2007,
-          note: point.pm25_2007 === null ? "No valid raster value for this year." : "Observed 2007 raster value."
-        };
-      }
-      if (year >= 2024) {
-        return {
-          year,
-          value: point.pm25_2024,
-          note: point.pm25_2024 === null ? "No valid raster value for this year." : "Observed 2024 raster value."
-        };
-      }
-      if (point.pm25_2007 !== null && point.pm25_2024 !== null) {
-        const progress = (Number(yearValue) - 2007) / (2024 - 2007);
-        return {
-          year,
-          value: interpolate(point, progress),
-          note: "Interpolated between the sampled 2007 and 2024 values."
-        };
-      }
-      const nearestYear = year <= 2016 ? 2007 : 2024;
-      const nearestValue = nearestYear === 2007 ? point.pm25_2007 : point.pm25_2024;
+      const year = Math.max(2007, Math.min(2024, Math.round(Number(yearValue))));
+      const value = point.annualValues[String(year)] ?? null;
       return {
         year,
-        value: nearestValue,
-        note: nearestValue === null ? "No valid raster value for this year." : `Nearest available sampled value: ${nearestYear}.`
+        value,
+        note: value === null ? "No valid value for this year." : "Observed annual raster value."
       };
     }
 
     function formatPm25(value) {
-      return value === null || Number.isNaN(value) ? "No valid raster value for this year." : `${value.toFixed(2)} ug/m3`;
+      return value === null || Number.isNaN(value) ? "No valid value for this year." : `${value.toFixed(2)} ug/m3`;
     }
 
     function formatContextValue(value) {
@@ -434,21 +675,21 @@
       return "#b2182b";
     }
 
-    function radiusFor(value) {
-      const zoomBoost = Math.max(0, map.getZoom() - 4) * 0.9;
-      if (value === null || Number.isNaN(value)) return 3 + zoomBoost;
-      return Math.max(4, Math.min(11, 3.5 + Math.abs(value) / 4 + zoomBoost));
+    const smallSampleCircleMedia = window.matchMedia("(max-width: 840px)");
+
+    function sampleCircleRadius() {
+      return smallSampleCircleMedia.matches ? 5 : 6;
     }
 
     function pointValue(point) {
-      if (currentMode === "change") return point.change;
-      if (currentMode === "hotspots") return point.pm25_2024;
-      return selectedYearValue(point, currentYearValue).value;
+      if (currentMode === "change") return point.absoluteChange;
+      if (currentMode === "hotspots") return point.value2024;
+      return displayValueForYear(point, currentYearValue);
     }
 
     function shouldShow(point) {
-      if (currentMode === "hotspots") return point.hotspot_2024;
-      if (currentMode === "change") return point.change !== null;
+      if (currentMode === "hotspots") return point.value2024 !== null && point.value2024 > 10;
+      if (currentMode === "change") return point.absoluteChange !== null;
       return pointValue(point) !== null;
     }
 
@@ -456,7 +697,7 @@
       const value = pointValue(point);
       const fillColor = currentMode === "change" ? colorForChange(value) : colorForValue(value);
       return {
-        radius: radiusFor(value),
+        radius: sampleCircleRadius(),
         color: "rgba(23, 32, 51, 0.35)",
         weight: 0.35,
         fillColor,
@@ -465,27 +706,26 @@
     }
 
     function describe(point) {
-      const current = pointValue(point);
       const selected = selectedYearValue(point, currentYearValue);
-      const change = point.change === null ? "Comparable change not available" : `${point.change > 0 ? "+" : ""}${point.change.toFixed(2)} ug/m3`;
+      const change = point.absoluteChange === null ? "Comparable change not available" : `${point.absoluteChange > 0 ? "+" : ""}${point.absoluteChange.toFixed(2)} ug/m3`;
 
       if (currentMode === "change") {
         return `
           <strong>2007-2024 change</strong><br>
           Change: ${change}<br>
           Blue indicates improvement; red indicates worsening.<br>
-          2007: ${formatContextValue(point.pm25_2007)}<br>
-          2024: ${formatContextValue(point.pm25_2024)}
+          2007: ${formatContextValue(point.value2007)}<br>
+          2024: ${formatContextValue(point.value2024)}
         `;
       }
 
       return `
-        <strong>Selected year: ${selected.year}</strong><br>
-        PM2.5: ${formatPm25(current)}<br>
+        <strong>Current selection: ${selected.year}</strong><br>
+        PM2.5: ${formatPm25(selected.value)}<br>
         ${selected.note}<br>
-        2007: ${formatContextValue(point.pm25_2007)}<br>
-        2024: ${formatContextValue(point.pm25_2024)}<br>
-        2024 hotspot: ${point.hotspot_2024 ? "yes" : "no"}
+        2007: ${formatContextValue(point.value2007)}<br>
+        2024: ${formatContextValue(point.value2024)}<br>
+        2024 hotspot: ${point.value2024 !== null && point.value2024 > 10 ? "yes" : "no"}
       `;
     }
 
@@ -493,15 +733,223 @@
       document.getElementById("readout").innerHTML = describe(point);
     }
 
+    const inspectPanel = document.getElementById("inspect-panel");
+    let selectedCircle = null;
+
+    function setInspectText(id, value) {
+      document.getElementById(id).textContent = value;
+    }
+
+    function formatPanelPm25(value) {
+      return value === null || !Number.isFinite(value) ? "Not available" : `${value.toFixed(2)} µg/m³`;
+    }
+
+    function formatSigned(value, suffix) {
+      if (value === null || !Number.isFinite(value)) return "Not available";
+      return `${value > 0 ? "+" : ""}${value.toFixed(2)}${suffix}`;
+    }
+
+    function nearestGuidedRegion(point) {
+      let nearest = null;
+      Object.values(regions).forEach(region => {
+        const distance = map.distance(
+          [point.latitude, point.longitude],
+          region.coords
+        );
+        if (!nearest || distance < nearest.distance) {
+          nearest = { name: region.name, distance };
+        }
+      });
+      return nearest && nearest.distance <= 550000
+        ? `Near ${nearest.name}`
+        : "European sampled location";
+    }
+
+    function scenarioDescription(point) {
+      const labels = {
+        "projected below 10 by 2030": "Projected below 10 µg/m³ by 2030.",
+        "projected below 10 by 2035": "Projected below 10 µg/m³ by 2035.",
+        "improving but still above 10 after 2035": "Improving, but still above 10 µg/m³ after 2035.",
+        "stable or worsening": "Recent values are stable or worsening.",
+        "already below 10": "This location already meets the 10 µg/m³ annual threshold in 2024.",
+        "insufficient data": "Insufficient data for a trend scenario."
+      };
+      return labels[point.scenarioCategory] || "Insufficient data for a trend scenario.";
+    }
+
+    function interpretationFor(point) {
+      if (point.value2007 === null || point.value2024 === null || point.absoluteChange === null) {
+        return "The available data are insufficient for a complete 2007–2024 comparison at this location.";
+      }
+      const validValues = Object.values(point.annualValues).filter(value => value !== null);
+      if (validValues.length && validValues.every(value => value <= 10)) {
+        return "This location remained below the 10 µg/m³ threshold throughout all available years.";
+      }
+      const currentHotspot = point.value2024 > 10;
+      const substantialImprovement = point.absoluteChange <= -2 || point.percentageChange <= -20;
+      if (substantialImprovement && currentHotspot) {
+        return "This location improved substantially but still exceeds the 10 µg/m³ annual threshold.";
+      }
+      if (substantialImprovement) {
+        return "This location improved substantially and is below the 10 µg/m³ threshold in 2024.";
+      }
+      if (Math.abs(point.absoluteChange) <= 1) {
+        return currentHotspot
+          ? "This location shows limited net change and remains above the 10 µg/m³ threshold."
+          : "This location shows limited net change and is below the 10 µg/m³ threshold in 2024.";
+      }
+      if (point.absoluteChange < 0) {
+        return currentHotspot
+          ? "This location improved, but it remains above the 10 µg/m³ threshold."
+          : "This location improved and is below the 10 µg/m³ threshold in 2024.";
+      }
+      return currentHotspot
+        ? "Mapped PM2.5 increased at this location, which is above the 10 µg/m³ threshold in 2024."
+        : "Mapped PM2.5 increased at this location, but it remains below the 10 µg/m³ threshold in 2024.";
+    }
+
+    function renderSparkline(point) {
+      const svg = document.getElementById("inspect-sparkline");
+      const years = Array.from({ length: 18 }, (_, index) => 2007 + index);
+      const observations = years.map(year => ({
+        year,
+        value: point.annualValues[String(year)] ?? null
+      }));
+      const values = observations
+        .map(observation => observation.value)
+        .filter(value => value !== null);
+      if (!values.length) {
+        svg.innerHTML = '<text x="160" y="58" text-anchor="middle" fill="#607085" font-size="12">No valid annual values.</text>';
+        return;
+      }
+
+      const left = 22;
+      const right = 308;
+      const top = 10;
+      const bottom = 88;
+      const yMin = Math.max(0, Math.min(...values, 10) - 1);
+      const yMax = Math.max(...values, 10) + 1;
+      const xFor = year => left + ((year - 2007) / (2024 - 2007)) * (right - left);
+      const yFor = value => bottom - ((value - yMin) / (yMax - yMin)) * (bottom - top);
+
+      const segments = [];
+      let activeSegment = [];
+      observations.forEach(observation => {
+        if (observation.value === null) {
+          if (activeSegment.length) segments.push(activeSegment);
+          activeSegment = [];
+        } else {
+          activeSegment.push(`${xFor(observation.year).toFixed(1)},${yFor(observation.value).toFixed(1)}`);
+        }
+      });
+      if (activeSegment.length) segments.push(activeSegment);
+
+      const thresholdY = yFor(10).toFixed(1);
+      const lines = segments.map(segment =>
+        `<polyline points="${segment.join(" ")}" fill="none" stroke="#2c7bb6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></polyline>`
+      ).join("");
+      const endpoint = (year, value, color) => value === null ? "" :
+        `<circle cx="${xFor(year).toFixed(1)}" cy="${yFor(value).toFixed(1)}" r="3.6" fill="${color}" stroke="#fff" stroke-width="1.4"></circle>`;
+
+      svg.innerHTML = `
+        <line x1="${left}" y1="${thresholdY}" x2="${right}" y2="${thresholdY}" stroke="#c43c39" stroke-width="1.2" stroke-dasharray="5 4"></line>
+        <text x="${right}" y="${Math.max(9, Number(thresholdY) - 4)}" text-anchor="end" fill="#9f2f2c" font-size="9">10</text>
+        ${lines}
+        ${endpoint(2007, point.value2007, "#7b5aa6")}
+        ${endpoint(2024, point.value2024, "#172033")}
+        <text x="${left}" y="106" fill="#607085" font-size="9">2007</text>
+        <text x="${right}" y="106" text-anchor="end" fill="#607085" font-size="9">2024</text>
+      `;
+    }
+
+    function updateInspectPanel(point) {
+      setInspectText("inspect-title", nearestGuidedRegion(point));
+      setInspectText(
+        "inspect-coordinates",
+        `${point.latitude.toFixed(4)}° N, ${Math.abs(point.longitude).toFixed(4)}° ${point.longitude < 0 ? "W" : "E"}`
+      );
+      setInspectText("inspect-2007", formatPanelPm25(point.value2007));
+      setInspectText("inspect-2024", formatPanelPm25(point.value2024));
+      setInspectText("inspect-absolute", formatSigned(point.absoluteChange, " µg/m³"));
+      setInspectText("inspect-percentage", formatSigned(point.percentageChange, "%"));
+      setInspectText(
+        "inspect-hotspot",
+        point.value2024 === null ? "No valid 2024 value" : point.value2024 > 10 ? "Above 10 in 2024" : "Below 10 in 2024"
+      );
+      setInspectText(
+        "inspect-years-above",
+        `Exceeded 10 µg/m³ in ${point.yearsAbove10} of ${point.validYearCount} observed years`
+      );
+      setInspectText("inspect-scenario", scenarioDescription(point));
+      setInspectText(
+        "inspect-crossing",
+        point.projectedCrossingYear === null
+          ? point.scenarioCategory === "insufficient data"
+            ? "Insufficient data for a trend scenario."
+            : point.scenarioCategory === "already below 10"
+              ? "If recent trends continue, it is expected to remain below the threshold."
+              : "The recent trend does not indicate a crossing below the threshold."
+          : `Estimated crossing year: ${point.projectedCrossingYear.toFixed(1)}`
+      );
+      setInspectText("inspect-meaning", interpretationFor(point));
+      renderSparkline(point);
+    }
+
+    function applySelectionStyles() {
+      if (!selectedCircle) return;
+      circles.forEach(circle => {
+        if (!layer.hasLayer(circle)) return;
+        const baseStyle = styleFor(circle.pm25Point);
+        circle.setStyle(baseStyle);
+        circle.setRadius(baseStyle.radius);
+        if (circle === selectedCircle) {
+          circle.setStyle({ color: "#172033", weight: 2.6, fillOpacity: 1 });
+          circle.bringToFront();
+          return;
+        }
+        const distance = map.distance(
+          [selectedCircle.pm25Point.latitude, selectedCircle.pm25Point.longitude],
+          [circle.pm25Point.latitude, circle.pm25Point.longitude]
+        );
+        if (distance <= 450000) {
+          circle.setStyle({ fillOpacity: Math.max(0.22, baseStyle.fillOpacity * 0.48) });
+        }
+      });
+    }
+
+    function openInspectPanel(circle) {
+      selectedCircle = circle;
+      updateInspectPanel(circle.pm25Point);
+      updateReadout(circle.pm25Point);
+      inspectPanel.classList.add("is-open");
+      inspectPanel.setAttribute("aria-hidden", "false");
+      applySelectionStyles();
+    }
+
+    function closeInspectPanel() {
+      selectedCircle = null;
+      inspectPanel.classList.remove("is-open");
+      inspectPanel.setAttribute("aria-hidden", "true");
+      redraw();
+    }
+
     samples.forEach(point => {
-      const circle = L.circleMarker([point.lat, point.lng], {
+      const circle = L.circleMarker([point.latitude, point.longitude], {
         renderer,
         ...styleFor(point)
       });
       circle.pm25Point = point;
-      circle.on("mouseover click", () => {
+      circle.on("mouseover", () => {
         updateReadout(point);
-        circle.bindPopup(describe(point)).openPopup();
+        if (!circle.getTooltip()) {
+          circle.bindTooltip("", { direction: "top", opacity: 0.96, offset: [0, -4] });
+        }
+        circle.setTooltipContent(describe(point)).openTooltip();
+      });
+      circle.on("mouseout", () => circle.closeTooltip());
+      circle.on("click", () => {
+        circle.closeTooltip();
+        openInspectPanel(circle);
       });
       circles.push(circle);
     });
@@ -519,6 +967,7 @@
 
       document.getElementById("year-readout").textContent = Math.round(currentYearValue);
       updateLegendText();
+      applySelectionStyles();
     }
 
     function updateLegendText() {
@@ -558,7 +1007,7 @@
         document.getElementById("year-slider").value = 2024;
         updateSidebar(
           "2024 hotspots",
-          "Only sampled cells at or above 10 ug/m3 in 2024 are shown.",
+          "Only sampled cells above 10 ug/m3 in 2024 are shown.",
           "This view isolates places where fine-particle pollution remains elevated after broad improvement."
         );
       }
@@ -666,7 +1115,13 @@
       });
     });
 
+    document.getElementById("inspect-close").addEventListener("click", closeInspectPanel);
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && selectedCircle) closeInspectPanel();
+    });
+
     map.on("zoomend", redraw);
+    smallSampleCircleMedia.addEventListener("change", redraw);
 
     const legend = L.control({ position: "bottomright" });
     legend.onAdd = function () {
