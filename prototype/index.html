@@ -82,7 +82,7 @@
     }
 
     .hero-inner {
-      width: min(1120px, calc(100% - 40px));
+      width: min(1320px, calc(100% - 48px));
       margin: 0 auto;
       padding: 96px 0 54px;
     }
@@ -182,7 +182,7 @@
     .story-grid,
     .visual-step,
     .wide-inner {
-      width: min(1120px, calc(100% - 40px));
+      width: min(1320px, calc(100% - 48px));
       margin: 0 auto;
     }
 
@@ -210,7 +210,7 @@
     }
 
     .measurement-layout {
-      width: min(1120px, calc(100% - 40px));
+      width: min(1320px, calc(100% - 48px));
       margin: 0 auto;
       display: grid;
       grid-template-columns: minmax(310px, 0.82fr) minmax(460px, 1fr);
@@ -536,6 +536,7 @@
 
     .sources {
       grid-template-columns: repeat(4, 1fr);
+      align-items: start;
     }
 
     .stat-strip {
@@ -558,9 +559,105 @@
     }
 
     .source-card {
-      min-height: 210px;
+      min-height: 0;
+      padding: 0;
+      overflow: hidden;
       background: var(--paper);
       box-shadow: 0 12px 34px rgba(23, 32, 51, 0.08);
+    }
+
+    .source-toggle,
+    .transparency-toggle {
+      width: 100%;
+      border: 0;
+      background: transparent;
+      color: inherit;
+      cursor: pointer;
+      text-align: left;
+      font: inherit;
+    }
+
+    .source-toggle {
+      height: 250px;
+      padding: 18px;
+    }
+
+    .source-toggle:focus-visible,
+    .transparency-toggle:focus-visible {
+      outline: 3px solid var(--pm-threshold);
+      outline-offset: -4px;
+    }
+
+    .source-heading-row,
+    .transparency-heading-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 24px;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .source-heading-row h3 {
+      margin: 0;
+    }
+
+    .info-summary {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .info-disclosure {
+      position: relative;
+      width: 24px;
+      height: 24px;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+    }
+
+    .info-disclosure::before,
+    .info-disclosure::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 10px;
+      height: 1.5px;
+      background: var(--ink);
+      transform: translate(-50%, -50%);
+      transition: transform 220ms ease;
+    }
+
+    .info-disclosure::after {
+      transform: translate(-50%, -50%) rotate(90deg);
+    }
+
+    .info-card.is-expanded .info-disclosure::after {
+      transform: translate(-50%, -50%) rotate(0deg);
+    }
+
+    .info-details {
+      display: grid;
+      grid-template-rows: 0fr;
+      opacity: 0;
+      transition: grid-template-rows 320ms ease, opacity 220ms ease;
+    }
+
+    .info-details > div {
+      overflow: hidden;
+    }
+
+    .info-card.is-expanded .info-details {
+      grid-template-rows: 1fr;
+      opacity: 1;
+    }
+
+    .source-details p {
+      margin: 0;
+      padding: 17px 18px 18px;
+      border-top: 1px solid var(--line);
     }
 
     .fact-icon,
@@ -617,6 +714,33 @@
       color: var(--muted);
     }
 
+    .pm25-disclaimer {
+      width: min(1320px, calc(100% - 48px));
+      margin: 34px auto 0;
+      padding: 20px 22px;
+      border-left: 5px solid var(--purple);
+      background: #f4f1f8;
+      color: #314154;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .pm25-disclaimer h3 {
+      margin: 0 0 8px;
+      color: var(--ink);
+      font-size: 18px;
+    }
+
+    .pm25-disclaimer p {
+      max-width: 78ch;
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.55;
+    }
+
+    .pm25-disclaimer p + p {
+      margin-top: 3px;
+    }
+
     .source-card strong {
       display: block;
       margin-bottom: 14px;
@@ -656,7 +780,7 @@
     }
 
     .baseline-layout {
-      width: min(1240px, calc(100% - 40px));
+      width: min(1320px, calc(100% - 48px));
       margin: 0 auto;
       display: grid;
       grid-template-columns: minmax(280px, 0.68fr) minmax(0, 1fr);
@@ -783,7 +907,7 @@
 
     .scenario-intro,
     .scenario-summary {
-      width: min(1120px, calc(100% - 40px));
+      width: min(1320px, calc(100% - 48px));
       margin: 0 auto;
       display: grid;
       gap: clamp(34px, 5vw, 72px);
@@ -975,7 +1099,7 @@
     }
 
     .scenario-note {
-      width: min(1120px, calc(100% - 40px));
+      width: min(1320px, calc(100% - 48px));
       margin: clamp(42px, 6vw, 64px) auto 0;
       padding: 22px 24px;
       border-left: 5px solid var(--blue);
@@ -1070,7 +1194,7 @@
     }
 
     .improvement-conclusion {
-      width: min(1120px, calc(100% - 40px));
+      width: min(1320px, calc(100% - 48px));
       margin: clamp(38px, 5vw, 58px) auto 0;
       color: var(--ink);
       font-size: clamp(24px, 3.1vw, 38px);
@@ -1079,13 +1203,24 @@
 
     .ireland-exception {
       display: grid;
-      grid-template-columns: minmax(105px, 132px) 1fr;
-      gap: 16px;
+      grid-template-columns: minmax(160px, 200px) 1fr;
+      gap: 20px;
       align-items: center;
-      padding: 17px 18px 19px;
-      border-top: 1px solid var(--line);
-      background: #f7f9fa;
+      padding: 21px 22px 22px;
+      border: 1px solid #e3c89c;
+      border-left: 5px solid var(--amber);
+      background: #fff7e8;
+      box-shadow: 0 10px 24px rgba(56, 67, 77, 0.08);
       font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .ireland-lead {
+      grid-column: 1 / -1;
+      margin: 0;
+      color: var(--ink);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 17px;
+      line-height: 1.45;
     }
 
     .ireland-exception img {
@@ -1100,21 +1235,21 @@
     .ireland-exception h3 {
       margin: 0 0 7px;
       color: var(--ink);
-      font-size: 15px;
+      font-size: 18px;
       line-height: 1.25;
     }
 
     .ireland-exception p {
       margin: 0;
       color: #314154;
-      font-size: 12px;
-      line-height: 1.5;
+      font-size: 14px;
+      line-height: 1.55;
     }
 
     .ireland-exception .ireland-caution {
       margin-top: 8px;
       color: var(--muted);
-      font-size: 11px;
+      font-size: 12px;
     }
 
     .map-frame {
@@ -1285,6 +1420,89 @@
       line-height: 1.45;
     }
 
+    .hotspot-causes {
+      width: min(1320px, calc(100% - 48px));
+      margin: 48px auto 0;
+      padding-top: 34px;
+      border-top: 1px solid var(--line);
+    }
+
+    .hotspot-causes-header {
+      display: grid;
+      grid-template-columns: minmax(230px, 0.65fr) minmax(0, 1.35fr);
+      gap: 32px;
+      align-items: end;
+    }
+
+    .hotspot-causes-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    .hotspot-causes-header h3 {
+      margin: 0;
+      font-size: 32px;
+      line-height: 1.12;
+    }
+
+    .hotspot-causes-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .hotspot-cause-card {
+      padding: 17px;
+      border: 1px solid var(--line);
+      border-top: 3px solid var(--amber);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .hotspot-cause-card h3 {
+      margin: 0 0 8px;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 15px;
+      line-height: 1.25;
+    }
+
+    .hotspot-cause-card p {
+      margin: 0;
+      color: #46566a;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 13px;
+      line-height: 1.48;
+    }
+
+    .hotspot-causes-clarification,
+    .hotspot-causes-source {
+      max-width: 850px;
+      margin: 17px 0 0;
+      color: var(--muted);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .hotspot-causes-source {
+      margin-top: 8px;
+      font-size: 11px;
+    }
+
+    .hotspot-causes-source a {
+      color: var(--blue);
+      text-decoration-thickness: 1px;
+      text-underline-offset: 3px;
+    }
+
+    .hotspot-causes-source a:focus-visible {
+      outline: 2px solid var(--blue);
+      outline-offset: 3px;
+    }
+
     .dot {
       width: 10px;
       height: 10px;
@@ -1299,7 +1517,7 @@
     }
 
     .drivers-inner {
-      width: min(1120px, calc(100% - 40px));
+      width: min(1320px, calc(100% - 48px));
       margin: 0 auto;
     }
 
@@ -1318,12 +1536,14 @@
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 16px;
+      align-items: start;
       margin-top: clamp(42px, 6vw, 64px);
     }
 
     .driver-card {
-      min-height: 250px;
-      padding: 22px;
+      min-height: 0;
+      padding: 0;
+      overflow: hidden;
       border: 1px solid var(--line);
       border-top: 4px solid var(--driver-color);
       border-radius: 8px;
@@ -1336,8 +1556,25 @@
     }
 
     .driver-card.reveal.visible:hover {
-      transform: translateY(-5px);
+      transform: translateY(-3px);
       box-shadow: 0 18px 38px rgba(23, 32, 51, 0.12);
+    }
+
+    .driver-toggle {
+      width: 100%;
+      height: 236px;
+      padding: 20px;
+      border: 0;
+      background: transparent;
+      color: inherit;
+      cursor: pointer;
+      text-align: left;
+      font: inherit;
+    }
+
+    .driver-toggle:focus-visible {
+      outline: 3px solid var(--pm-threshold);
+      outline-offset: -4px;
     }
 
     .driver-icon {
@@ -1345,7 +1582,7 @@
       height: 48px;
       display: grid;
       place-items: center;
-      margin-bottom: 22px;
+      margin-bottom: 18px;
       border-radius: 8px;
       background: color-mix(in srgb, var(--driver-color) 14%, white);
       color: var(--driver-color);
@@ -1361,19 +1598,88 @@
       stroke-linejoin: round;
     }
 
-    .driver-card h3 {
-      margin-bottom: 11px;
+    .driver-title-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 24px;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .driver-title {
+      display: block;
       font-family: Arial, Helvetica, sans-serif;
       font-size: 19px;
+      font-weight: 700;
       line-height: 1.25;
     }
 
-    .driver-card p {
-      margin: 0;
+    .driver-summary,
+    .driver-details p {
       color: #46566a;
       font-family: Arial, Helvetica, sans-serif;
       font-size: 14px;
       line-height: 1.58;
+    }
+
+    .driver-summary {
+      display: block;
+      margin-top: 10px;
+    }
+
+    .driver-disclosure {
+      position: relative;
+      width: 24px;
+      height: 24px;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+    }
+
+    .driver-disclosure::before,
+    .driver-disclosure::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 10px;
+      height: 1.5px;
+      background: var(--ink);
+      transform: translate(-50%, -50%);
+      transition: transform 220ms ease;
+    }
+
+    .driver-disclosure::after {
+      transform: translate(-50%, -50%) rotate(90deg);
+    }
+
+    .driver-card.is-expanded .driver-disclosure::after {
+      transform: translate(-50%, -50%) rotate(0deg);
+    }
+
+    .driver-details {
+      display: grid;
+      grid-template-rows: 0fr;
+      opacity: 0;
+      transition: grid-template-rows 320ms ease, opacity 220ms ease;
+    }
+
+    .driver-details > div {
+      overflow: hidden;
+    }
+
+    .driver-details p {
+      margin: 0;
+      padding: 0 20px 20px;
+      border-top: 1px solid transparent;
+    }
+
+    .driver-card.is-expanded .driver-details {
+      grid-template-rows: 1fr;
+      opacity: 1;
+    }
+
+    .driver-card.is-expanded .driver-details p {
+      padding-top: 17px;
+      border-top-color: var(--line);
     }
 
     .drivers-callout {
@@ -1429,7 +1735,7 @@
     }
 
     .explore-inner {
-      width: min(1120px, calc(100% - 40px));
+      width: min(1320px, calc(100% - 48px));
       margin: 0 auto;
       padding: 88px 0;
     }
@@ -1501,7 +1807,7 @@
     }
 
     .transparency-inner {
-      width: min(1120px, calc(100% - 40px));
+      width: min(1320px, calc(100% - 48px));
       margin: 0 auto;
     }
 
@@ -1524,16 +1830,45 @@
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 16px;
+      align-items: start;
       margin-top: 34px;
     }
 
     .transparency-card {
       min-width: 0;
-      padding: 24px;
+      padding: 0;
+      overflow: hidden;
       border: 1px solid var(--line);
       border-top: 4px solid var(--blue);
       border-radius: 8px;
       background: var(--paper);
+    }
+
+    .transparency-toggle {
+      position: relative;
+      height: 190px;
+      padding: 22px 62px 22px 24px;
+    }
+
+    .transparency-toggle > .info-disclosure {
+      position: absolute;
+      top: 50%;
+      right: 24px;
+      transform: translateY(-50%);
+    }
+
+    .transparency-toggle .transparency-card-heading {
+      margin-bottom: 0;
+    }
+
+    .transparency-details > div {
+      padding: 0 24px;
+      border-top: 1px solid transparent;
+    }
+
+    .transparency-card.is-expanded .transparency-details > div {
+      padding: 18px 24px 24px;
+      border-top-color: var(--line);
     }
 
     .transparency-card-heading {
@@ -1639,11 +1974,33 @@
     }
 
     footer div {
-      width: min(1120px, 100%);
+      width: min(1320px, 100%);
       margin: 0 auto;
     }
 
+    @media (max-width: 1120px) {
+      .sources {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .hotspot-causes-grid {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+      }
+
+      .hotspot-cause-card {
+        grid-column: span 2;
+      }
+
+      .hotspot-cause-card:nth-child(4) {
+        grid-column: 2 / span 2;
+      }
+    }
+
     @media (max-width: 940px) {
+      .hotspot-causes-grid {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+      }
+
       .measurement-layout,
       .story-grid,
       .visual-step,
@@ -1803,14 +2160,47 @@
         min-height: 0;
       }
 
+      .driver-toggle,
+      .source-toggle,
+      .transparency-toggle {
+        min-height: 0;
+      }
+
+      .driver-toggle {
+        height: auto;
+      }
+
+      .pm25-disclaimer,
+      .hotspot-causes {
+        width: calc(100% - 28px);
+      }
+
+      .hotspot-causes-header,
+      .hotspot-causes-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hotspot-cause-card,
+      .hotspot-cause-card:nth-child(4) {
+        grid-column: auto;
+      }
+
+      .hotspot-causes-header h3 {
+        font-size: 28px;
+      }
+
       .baseline-legend-labels {
         font-size: 11px;
       }
 
       .ireland-exception {
-        grid-template-columns: 92px 1fr;
-        gap: 13px;
+        grid-template-columns: 1fr;
+        gap: 14px;
+        padding: 18px;
       }
+
+      .ireland-lead { grid-column: 1; }
+      .ireland-exception img { max-width: 220px; }
 
       h1 {
         font-size: 48px;
@@ -1842,6 +2232,18 @@
         height: 36px;
       }
     }
+
+    @media (prefers-reduced-motion: reduce) {
+      .driver-details,
+      .driver-disclosure::before,
+      .driver-disclosure::after,
+      .info-details,
+      .info-disclosure::before,
+      .info-disclosure::after {
+        transition: none;
+      }
+    }
+
   </style>
 </head>
 
@@ -2053,7 +2455,7 @@
               <text class="stage-label" x="74" y="588" text-anchor="middle">measure</text>
               <path class="stage-arrow" style="--i:0" d="M132 583 L176 583" marker-end="url(#arrowHead)" />
               <rect class="stage-pill" x="184" y="568" width="112" height="30" rx="15" />
-              <text class="stage-label" x="240" y="588" text-anchor="middle">observe</text>
+              <text class="stage-label" x="240" y="588" text-anchor="middle">check &amp; average</text>
               <path class="stage-arrow" style="--i:1" d="M304 583 L348 583" marker-end="url(#arrowHead)" />
               <rect class="stage-pill" x="356" y="568" width="112" height="30" rx="15" />
               <text class="stage-label" x="412" y="588" text-anchor="middle">estimate</text>
@@ -2098,6 +2500,13 @@
           </div>
         </div>
       </div>
+
+      <aside class="pm25-disclaimer reveal" aria-labelledby="pm25-disclaimer-title">
+        <h3 id="pm25-disclaimer-title">PM2.5 is not climate change</h3>
+        <p>This story focuses only on PM2.5 air pollution.</p>
+        <p>PM2.5 measures tiny airborne particles that affect human health.</p>
+        <p>It should not be interpreted as a measure of climate change or global warming.</p>
+      </aside>
     </section>
 
     <section class="story-section alt" id="sources">
@@ -2111,29 +2520,49 @@
             Fine-particle pollution is not one single source. It can come directly from combustion and can also form in the air from other pollutants.
           </p>
           <div class="sources">
-            <article class="source-card">
-              <strong>Heating</strong>
-              <div class="source-icon">H</div>
-              <h3>Homes and buildings</h3>
-              <p>Residential heating can contribute to PM2.5, especially where solid fuels are used and cold air traps pollution near the ground.</p>
+            <article class="source-card info-card">
+              <button class="source-toggle info-toggle" type="button" aria-expanded="false" aria-controls="source-heating-details">
+                <strong>Heating</strong>
+                <div class="source-icon" aria-hidden="true">H</div>
+                <span class="source-heading-row"><h3>Homes and buildings</h3><span class="info-disclosure" aria-hidden="true"></span></span>
+                <span class="info-summary">Residential heating can contribute to PM2.5</span>
+              </button>
+              <div class="source-details info-details" id="source-heating-details" aria-hidden="true"><div>
+                <p>Residential heating can contribute to PM2.5, especially where solid fuels are used and cold air traps pollution near the ground.</p>
+              </div></div>
             </article>
-            <article class="source-card">
-              <strong>Transport</strong>
-              <div class="source-icon">T</div>
-              <h3>Road traffic</h3>
-              <p>Traffic contributes exhaust particles and non-exhaust particles from brakes, tyres and road dust in dense corridors.</p>
+            <article class="source-card info-card">
+              <button class="source-toggle info-toggle" type="button" aria-expanded="false" aria-controls="source-transport-details">
+                <strong>Transport</strong>
+                <div class="source-icon" aria-hidden="true">T</div>
+                <span class="source-heading-row"><h3>Road traffic</h3><span class="info-disclosure" aria-hidden="true"></span></span>
+                <span class="info-summary">Traffic contributes exhaust particles and non-exhaust particles</span>
+              </button>
+              <div class="source-details info-details" id="source-transport-details" aria-hidden="true"><div>
+                <p>Traffic contributes exhaust particles and non-exhaust particles from brakes, tyres and road dust in dense corridors.</p>
+              </div></div>
             </article>
-            <article class="source-card">
-              <strong>Industry</strong>
-              <div class="source-icon">I</div>
-              <h3>Production and power</h3>
-              <p>Industry and energy production can create local and regional emissions that show up as persistent spatial patterns.</p>
+            <article class="source-card info-card">
+              <button class="source-toggle info-toggle" type="button" aria-expanded="false" aria-controls="source-industry-details">
+                <strong>Industry</strong>
+                <div class="source-icon" aria-hidden="true">I</div>
+                <span class="source-heading-row"><h3>Production and power</h3><span class="info-disclosure" aria-hidden="true"></span></span>
+                <span class="info-summary">Industry and energy production can create local and regional emissions</span>
+              </button>
+              <div class="source-details info-details" id="source-industry-details" aria-hidden="true"><div>
+                <p>Industry and energy production can create local and regional emissions that show up as persistent spatial patterns.</p>
+              </div></div>
             </article>
-            <article class="source-card">
-              <strong>Agriculture</strong>
-              <div class="source-icon">A</div>
-              <h3>Secondary particles</h3>
-              <p>Agricultural emissions can react with other pollutants and help form secondary particulate matter in the atmosphere.</p>
+            <article class="source-card info-card">
+              <button class="source-toggle info-toggle" type="button" aria-expanded="false" aria-controls="source-agriculture-details">
+                <strong>Agriculture</strong>
+                <div class="source-icon" aria-hidden="true">A</div>
+                <span class="source-heading-row"><h3>Secondary particles</h3><span class="info-disclosure" aria-hidden="true"></span></span>
+                <span class="info-summary">Agricultural emissions can react with other pollutants</span>
+              </button>
+              <div class="source-details info-details" id="source-agriculture-details" aria-hidden="true"><div>
+                <p>Agricultural emissions can react with other pollutants and help form secondary particulate matter in the atmosphere.</p>
+              </div></div>
             </article>
           </div>
         </div>
@@ -2246,45 +2675,73 @@
             <h2>Why did Europe become cleaner?</h2>
           </div>
           <p class="lede reveal">
-            The improvement shown in the previous map did not happen by chance. Over the last two decades, European countries introduced cleaner technologies, stricter air-quality regulations and emission controls that reduced PM2.5 pollution.
+            Cleaner technology, emission controls and European air-quality rules helped reduce PM2.5 over the last two decades.
           </p>
         </div>
 
         <div class="driver-cards">
           <article class="driver-card reveal" style="--i:0; --driver-color:#2c7bb6">
-            <div class="driver-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><path d="M3 13l2-5h12l4 5v5h-2"/><path d="M5 18H3v-5h18"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg>
+            <button class="driver-toggle" type="button" aria-expanded="false" aria-controls="driver-transport-details">
+              <span class="driver-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M3 13l2-5h12l4 5v5h-2"/><path d="M5 18H3v-5h18"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg>
+              </span>
+              <span class="driver-title-row">
+                <span class="driver-title" role="heading" aria-level="3">Cleaner transport</span>
+                <span class="driver-disclosure" aria-hidden="true"></span>
+              </span>
+              <span class="driver-summary">Cleaner vehicles and fuels reduced exhaust emissions.</span>
+            </button>
+            <div class="driver-details" id="driver-transport-details" aria-hidden="true">
+              <div><p>Successive Euro vehicle standards tightened limits on exhaust pollutants, while cleaner fuels and engine technologies reduced emissions from newer vehicles. Traffic still produces non-exhaust particles from brakes, tyres and road wear.</p></div>
             </div>
-            <h3>Cleaner transport</h3>
-            <p>Successive Euro vehicle standards tightened limits on exhaust pollutants, while cleaner fuels and engine technologies reduced emissions from newer vehicles. Traffic still produces non-exhaust particles from brakes, tyres and road wear.</p>
-            <!-- TODO: insert official EEA transport-emissions statistic and source here. -->
           </article>
 
           <article class="driver-card reveal" style="--i:1; --driver-color:#607085">
-            <div class="driver-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><path d="M3 21V10l6 4V9l6 4V6h4v15"/><path d="M3 21h18M7 18h1M12 18h1M17 18h1"/></svg>
+            <button class="driver-toggle" type="button" aria-expanded="false" aria-controls="driver-industry-details">
+              <span class="driver-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M3 21V10l6 4V9l6 4V6h4v15"/><path d="M3 21h18M7 18h1M12 18h1M17 18h1"/></svg>
+              </span>
+              <span class="driver-title-row">
+                <span class="driver-title" role="heading" aria-level="3">Cleaner industry</span>
+                <span class="driver-disclosure" aria-hidden="true"></span>
+              </span>
+              <span class="driver-summary">Emission controls reduced pollution from industry and power generation.</span>
+            </button>
+            <div class="driver-details" id="driver-industry-details" aria-hidden="true">
+              <div><p>Industrial emission limits encouraged filters, cleaner production processes and tighter controls at large facilities. Changes in energy production also reduced particulate pollution and the gases that form particles in the atmosphere.</p></div>
             </div>
-            <h3>Cleaner industry</h3>
-            <p>Industrial emission limits encouraged filters, cleaner production processes and tighter controls at large facilities. Changes in energy production and lower emissions from power generation also helped reduce particulate pollution and the gases that form particles in the atmosphere.</p>
-            <!-- TODO: insert official EEA industry or energy-emissions statistic and source here. -->
           </article>
 
           <article class="driver-card reveal" style="--i:2; --driver-color:#f28e2b">
-            <div class="driver-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><path d="M12 22c4 0 7-2.8 7-6.5 0-2.7-1.5-5-4.4-7.6.1 2.2-.8 3.7-2 4.6.1-3.7-1.8-7-4.7-9.5.2 3.3-2.9 5.5-2.9 9.7C5 18 8.1 22 12 22Z"/><path d="M9.5 18.5c0-1.8 1.1-3 2.8-4.5.1 1.4.8 2.2 1.5 3 .5.6.7 1.2.7 1.8"/></svg>
+            <button class="driver-toggle" type="button" aria-expanded="false" aria-controls="driver-heating-details">
+              <span class="driver-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M12 22c4 0 7-2.8 7-6.5 0-2.7-1.5-5-4.4-7.6.1 2.2-.8 3.7-2 4.6.1-3.7-1.8-7-4.7-9.5.2 3.3-2.9 5.5-2.9 9.7C5 18 8.1 22 12 22Z"/><path d="M9.5 18.5c0-1.8 1.1-3 2.8-4.5.1 1.4.8 2.2 1.5 3 .5.6.7 1.2.7 1.8"/></svg>
+              </span>
+              <span class="driver-title-row">
+                <span class="driver-title" role="heading" aria-level="3">Cleaner heating</span>
+                <span class="driver-disclosure" aria-hidden="true"></span>
+              </span>
+              <span class="driver-summary">Newer systems and cleaner fuels lowered heating emissions where adopted.</span>
+            </button>
+            <div class="driver-details" id="driver-heating-details" aria-hidden="true">
+              <div><p>Replacing older domestic boilers and stoves with more efficient systems can reduce emissions. Progress varies because solid-fuel use, building efficiency and replacement rates differ between countries and regions.</p></div>
             </div>
-            <h3>Cleaner heating</h3>
-            <p>Where older domestic boilers and stoves were replaced, more efficient systems and cleaner fuels reduced emissions from heating. Progress varies because solid-fuel use, building efficiency and replacement rates differ between countries and regions.</p>
-            <!-- TODO: insert official EEA residential-heating statistic and source here. -->
           </article>
 
           <article class="driver-card reveal" style="--i:3; --driver-color:#7b5aa6">
-            <div class="driver-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><path d="M4 10h16M5 10V8l7-4 7 4v2M6 20h12M7 10v8M12 10v8M17 10v8"/></svg>
+            <button class="driver-toggle" type="button" aria-expanded="false" aria-controls="driver-policy-details">
+              <span class="driver-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M4 10h16M5 10V8l7-4 7 4v2M6 20h12M7 10v8M12 10v8M17 10v8"/></svg>
+              </span>
+              <span class="driver-title-row">
+                <span class="driver-title" role="heading" aria-level="3">European air-quality policy</span>
+                <span class="driver-disclosure" aria-hidden="true"></span>
+              </span>
+              <span class="driver-summary">Shared rules strengthened monitoring and pollution reduction.</span>
+            </button>
+            <div class="driver-details" id="driver-policy-details" aria-hidden="true">
+              <div><p>EU legislation requires member states to monitor ambient air, assess compliance and prepare plans where limits are exceeded. Rules targeting major emission sources support this shared framework for sustained pollution reduction.</p></div>
             </div>
-            <h3>European air-quality policy</h3>
-            <p>EU legislation requires member states to monitor ambient air, assess compliance and prepare plans where limits are exceeded. Combined with rules targeting major emission sources, this created a shared framework for sustained pollution reduction.</p>
-            <!-- TODO: insert official EEA or European Commission policy-impact statistic and source here. -->
           </article>
         </div>
 
@@ -2345,10 +2802,11 @@
           <img src="../figures/pm25_change_2007_2024_overlap.png" alt="Overlap-based PM2.5 change map from 2007 to 2024" />
           <figcaption class="caption">Overlap-based change analysis. The comparable-area mean decreased by about 4.44 ug/m3.</figcaption>
           <aside class="ireland-exception">
+            <p class="ireland-lead">Europe&rsquo;s dominant pattern is improvement, but the raster comparison also reveals small places moving in the opposite direction.</p>
             <img src="../figures/ireland_pm25_change_detail.png" alt="Detailed map of local PM2.5 change across comparable raster cells on the island of Ireland" />
             <div>
-              <h3>A local exception in Ireland</h3>
-              <p>Ireland's mean PM2.5 still fell overall, from 6.20 to 5.21 &micro;g/m&sup3;. However, a small localized cluster in central Ireland increased slightly between 2007 and 2024. Only 4.7% of comparable Irish raster cells increased, and none exceeded 10 &micro;g/m&sup3; in 2024.</p>
+              <h3>A small but revealing exception</h3>
+              <p>Ireland's mean PM2.5 still fell overall, from 6.20 to 5.21 &micro;g/m&sup3;. A small localized cluster in central Ireland increased slightly between 2007 and 2024. Of comparable Irish raster cells, 4.7% increased. No increasing cell exceeded 10 &micro;g/m&sup3; in 2024.</p>
               <p class="ireland-caution">This pattern should be interpreted carefully because the EEA maps are modelled and interpolated surfaces.</p>
             </div>
           </aside>
@@ -2366,15 +2824,44 @@
           <p class="kicker">The remaining problem</p>
           <h2>Cleaner does not mean equal.</h2>
           <p class="body-copy">
-            By 2024, many sampled areas are lower than in 2007, but some places still exceed the 10 ug/m3 threshold used here. Those areas are important because EU air-quality policy is moving toward stricter annual PM2.5 limits.
+            Many areas were cleaner in 2024 than in 2007. Yet some still exceeded the 10 ug/m3 threshold used in this story.
           </p>
           <ul class="hotspot-list">
             <li><span class="dot"></span><span>About 20.7% of valid 2024 raster cells are above 10 ug/m3.</span></li>
-            <li><span class="dot"></span><span>Northern Italy is a useful focus area because basin geography, dense settlement and emissions can combine to limit dispersion.</span></li>
-            <li><span class="dot"></span><span>Central and Eastern Europe highlight the role of heating, industry and energy systems in regional air-quality patterns.</span></li>
-            <li><span class="dot"></span><span>The Balkans and southeast show why a European average can hide local exceedance patterns.</span></li>
+            <li><span class="dot"></span><span>The remaining exceedances are concentrated rather than evenly spread across Europe.</span></li>
           </ul>
         </div>
+      </div>
+
+      <div class="hotspot-causes reveal">
+        <div class="hotspot-causes-header">
+          <h3>Why do these hotspots remain?</h3>
+          <p>Regional pollution patterns reflect a combination of emissions and conditions that affect how particulate pollution forms, disperses and accumulates.</p>
+        </div>
+        <div class="hotspot-causes-grid">
+          <article class="hotspot-cause-card">
+            <h3>Po Valley</h3>
+            <p>Dense population, industry and transport combine with meteorological and geographical conditions that favour the accumulation of air pollutants.</p>
+          </article>
+          <article class="hotspot-cause-card">
+            <h3>Southern Poland</h3>
+            <p>Household solid-fuel heating, industry and transport contribute to elevated particulate pollution.</p>
+          </article>
+          <article class="hotspot-cause-card">
+            <h3>Central and Southeast Europe</h3>
+            <p>Solid-fuel heating and industrial emissions remain important sources of particulate matter in several central and eastern European regions.</p>
+          </article>
+          <article class="hotspot-cause-card">
+            <h3>Secondary particle formation</h3>
+            <p>Agricultural ammonia can react with other pollutants in the atmosphere and contribute to the formation of PM2.5.</p>
+          </article>
+          <article class="hotspot-cause-card">
+            <h3>Weather and topography</h3>
+            <p>Wind, temperature inversions, valleys and limited atmospheric mixing influence whether pollution disperses or accumulates.</p>
+          </article>
+        </div>
+        <p class="hotspot-causes-clarification">These are established regional drivers of particulate pollution; this project does not estimate the causal contribution of each source.</p>
+        <p class="hotspot-causes-source">Sources: European Environment Agency, <a href="https://www.eea.europa.eu/en/analysis/publications/air-quality-status-report-2026/particulate-matter-pm2.5" target="_blank" rel="noopener noreferrer">Air quality status report: PM2.5</a>, <a href="https://www.eea.europa.eu/en/analysis/publications/managing-air-quality-in-europe" target="_blank" rel="noopener noreferrer">Managing air quality in Europe</a>, and the <a href="https://www.eea.europa.eu/en/europe-environment-2025/countries/poland/health-impacts-of-air-pollution" target="_blank" rel="noopener noreferrer">Poland country profile</a>.</p>
       </div>
     </section>
 
@@ -2562,49 +3049,72 @@
         </div>
 
         <div class="transparency-grid">
-          <article class="transparency-card reveal">
+          <article class="transparency-card info-card reveal">
+            <button class="transparency-toggle info-toggle" type="button" aria-expanded="false" aria-controls="transparency-data-details">
             <div class="transparency-card-heading">
               <span class="transparency-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24" focusable="false"><ellipse cx="12" cy="5" rx="7" ry="3"></ellipse><path d="M5 5v6c0 1.7 3.1 3 7 3s7-1.3 7-3V5"></path><path d="M5 11v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6"></path></svg>
               </span>
               <h3>Official data</h3>
             </div>
+            <span class="info-summary">European Environment Agency (EEA)</span>
+            <span class="info-disclosure" aria-hidden="true"></span>
+            </button>
+            <div class="transparency-details info-details" id="transparency-data-details" aria-hidden="true"><div>
             <ul>
               <li>European Environment Agency (EEA)</li>
               <li>Annual PM2.5 GeoTIFF datasets</li>
               <li>1 km raster grids</li>
               <li>2007–2024, with 2009 unavailable</li>
             </ul>
+            </div></div>
           </article>
 
-          <article class="transparency-card reveal">
+          <article class="transparency-card info-card reveal">
+            <button class="transparency-toggle info-toggle" type="button" aria-expanded="false" aria-controls="transparency-processing-details">
             <div class="transparency-card-heading">
               <span class="transparency-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24" focusable="false"><path d="M4 6h16"></path><path d="M7 12h10"></path><path d="M10 18h4"></path><circle cx="8" cy="6" r="2"></circle><circle cx="15" cy="12" r="2"></circle><circle cx="12" cy="18" r="2"></circle></svg>
               </span>
               <h3>Data processing</h3>
             </div>
+            <span class="info-summary">Metadata inspection, raster alignment, comparable-area analysis</span>
+            <span class="info-disclosure" aria-hidden="true"></span>
+            </button>
+            <div class="transparency-details info-details" id="transparency-processing-details" aria-hidden="true"><div>
             <p>Python was used for metadata inspection, raster alignment, comparable-area analysis, yearly summaries, and hotspot detection.</p>
+            </div></div>
           </article>
 
-          <article class="transparency-card reveal">
+          <article class="transparency-card info-card reveal">
+            <button class="transparency-toggle info-toggle" type="button" aria-expanded="false" aria-controls="transparency-analysis-details">
             <div class="transparency-card-heading">
               <span class="transparency-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24" focusable="false"><path d="M4 19V9"></path><path d="M10 19V5"></path><path d="M16 19v-7"></path><path d="M22 19V3"></path><path d="M2 19h21"></path></svg>
               </span>
               <h3>Analysis</h3>
             </div>
+            <span class="info-summary">Long-term trends, persistent hotspots, a trend-continuation scenario</span>
+            <span class="info-disclosure" aria-hidden="true"></span>
+            </button>
+            <div class="transparency-details info-details" id="transparency-analysis-details" aria-hidden="true"><div>
             <p>The story combines long-term trends, persistent hotspots, a trend-continuation scenario, the Ireland investigation, and an interactive sampled-location explorer.</p>
             <p class="scenario-disclaimer">The hotspot scenario is an exploratory trend-continuation scenario rather than a forecast.</p>
+            </div></div>
           </article>
 
-          <article class="transparency-card reveal">
+          <article class="transparency-card info-card reveal">
+            <button class="transparency-toggle info-toggle" type="button" aria-expanded="false" aria-controls="transparency-open-details">
             <div class="transparency-card-heading">
               <span class="transparency-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24" focusable="false"><path d="M4 4h16v16H4z"></path><path d="M8 9h8"></path><path d="M8 13h8"></path><path d="M8 17h5"></path></svg>
               </span>
               <h3>Open and reproducible</h3>
             </div>
+            <span class="info-summary">All preprocessing scripts, generated figures, processed datasets, and documentation</span>
+            <span class="info-disclosure" aria-hidden="true"></span>
+            </button>
+            <div class="transparency-details info-details" id="transparency-open-details" aria-hidden="true"><div>
             <p>All preprocessing scripts, generated figures, processed datasets, and documentation are included in this repository.</p>
             <nav class="transparency-links" aria-label="Project documentation">
               <a href="../README.md" target="_blank" rel="noopener">Repository guide</a>
@@ -2612,6 +3122,7 @@
               <a href="../docs/current_hotspot_projection_method.md" target="_blank" rel="noopener">Hotspot scenario method</a>
               <a href="../docs/ireland_change_investigation.md" target="_blank" rel="noopener">Ireland investigation</a>
             </nav>
+            </div></div>
           </article>
         </div>
       </div>
@@ -2946,6 +3457,43 @@
     document.querySelectorAll(".region-button").forEach(button => {
       button.addEventListener("click", function () {
         selectRegion(button.dataset.region);
+      });
+    });
+
+    const driverToggles = Array.from(document.querySelectorAll(".driver-toggle"));
+    const infoToggles = Array.from(document.querySelectorAll(".info-toggle"));
+
+    function setDriverCardExpanded(button, expanded) {
+      const card = button.closest(".driver-card");
+      const details = document.getElementById(button.getAttribute("aria-controls"));
+      button.setAttribute("aria-expanded", String(expanded));
+      card.classList.toggle("is-expanded", expanded);
+      details.setAttribute("aria-hidden", String(!expanded));
+    }
+
+    driverToggles.forEach(button => {
+      button.addEventListener("click", () => {
+        const shouldExpand = button.getAttribute("aria-expanded") !== "true";
+        driverToggles.forEach(toggle => setDriverCardExpanded(toggle, false));
+        infoToggles.forEach(toggle => setInfoCardExpanded(toggle, false));
+        if (shouldExpand) setDriverCardExpanded(button, true);
+      });
+    });
+
+    function setInfoCardExpanded(button, expanded) {
+      const card = button.closest(".info-card");
+      const details = document.getElementById(button.getAttribute("aria-controls"));
+      button.setAttribute("aria-expanded", String(expanded));
+      card.classList.toggle("is-expanded", expanded);
+      details.setAttribute("aria-hidden", String(!expanded));
+    }
+
+    infoToggles.forEach(button => {
+      button.addEventListener("click", () => {
+        const shouldExpand = button.getAttribute("aria-expanded") !== "true";
+        infoToggles.forEach(toggle => setInfoCardExpanded(toggle, false));
+        driverToggles.forEach(toggle => setDriverCardExpanded(toggle, false));
+        if (shouldExpand) setInfoCardExpanded(button, true);
       });
     });
 
