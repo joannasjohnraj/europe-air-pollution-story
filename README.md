@@ -31,6 +31,7 @@ docs/              Method notes, raster observations, and storyboard documentati
 figures/           Generated maps, comparisons, and charts used by the story
 prototype/         Final interactive website, explorer, and browser-ready assets
 scripts/           Reusable preprocessing, analysis, and figure-generation scripts
+Final_Report(Joannas).pdf  Final submitted ACM-format report
 README.md          Project overview and reproduction guide
 ```
 
@@ -112,6 +113,14 @@ The scripts are organized by output rather than wrapped in one destructive pipel
 
 Generated outputs should only be refreshed when the corresponding source rasters or methodology change. Methodological assumptions and limitations are documented alongside the analyses in `docs/`.
 
+## Final Report
+
+The submitted ACM-format project report is included in the repository root:
+
+- `Final_Report(Joannas).pdf`
+
+The report summarizes the project development process, narrative design decisions, implementation, evaluation, and conclusions for the Data Journalism & Storytelling course submission.
+
 ## Technologies Used
 
 - Python
@@ -132,4 +141,4 @@ Generated outputs should only be refreshed when the corresponding source rasters
 
 ## Final Project Status
 
-This repository contains the completed interactive data story submitted for the **Data Journalism & Storytelling** course, SoSe 2026, University of Konstanz. It includes the final scrollytelling website, interactive location explorer, reproducible analysis scripts, processed outputs, generated figures, and methodological documentation used in the submission.
+This repository contains the completed interactive data story submitted for the **Data Journalism & Storytelling** course, SoSe 2026, University of Konstanz. It includes the final scrollytelling website, interactive location explorer, reproducible analysis scripts, processed outputs, generated figures, methodological documentation, and the final submitted ACM-format report.
