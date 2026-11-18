@@ -25,13 +25,11 @@ The story moves from an explanation of how PM2.5 is measured and mapped to the 2
 ## Repository Structure
 
 ```text
-data_raw/          Original annual EEA GeoTIFF rasters
 data_processed/    Analysis summaries and derived tabular outputs
 docs/              Method notes, raster observations, and storyboard documentation
 figures/           Generated maps, comparisons, and charts used by the story
 prototype/         Final interactive website, explorer, and browser-ready assets
 scripts/           Reusable preprocessing, analysis, and figure-generation scripts
-Final_Report(Joannas).pdf  Final submitted ACM-format report
 README.md          Project overview and reproduction guide
 ```
 
@@ -45,7 +43,7 @@ The main story is [`prototype/index.html`](prototype/index.html), and the reader
 - **Nominal resolution:** 1 km × 1 km
 - **Period represented in the repository:** 2007–2024
 
-The repository contains every annual raster available to this project within that period. A 2009 raster was not available, so browser-ready annual series preserve that year as missing rather than estimating a value. The annual files differ in metadata, geographic coverage, and valid-data masks; those differences are handled explicitly before comparison.
+The original annual rasters are excluded from this public repository because of their size. A 2009 raster was not available, so browser-ready annual series preserve that year as missing rather than estimating a value. The annual files differ in metadata, geographic coverage, and valid-data masks; those differences are handled explicitly before comparison.
 
 Official source: [European Environment Agency](https://www.eea.europa.eu/)
 
@@ -103,7 +101,7 @@ Opening the HTML file directly from the filesystem may not reliably load all loc
 
 ## Reproducibility
 
-The original GeoTIFF inputs remain in `data_raw/`. Analysis scripts use repository-relative inputs and write reusable outputs to `data_processed/`, `figures/`, `docs/`, or `prototype/` as appropriate.
+To reproduce the analysis, download the original EEA GeoTIFF files and place them in `data_raw/`. Analysis scripts use repository-relative inputs and write reusable outputs to `data_processed/`, `figures/`, `docs/`, or `prototype/` as appropriate.
 
 The scripts are organized by output rather than wrapped in one destructive pipeline, allowing individual analyses to be inspected and rerun independently. In particular:
 
@@ -117,7 +115,6 @@ Generated outputs should only be refreshed when the corresponding source rasters
 
 The submitted ACM-format project report is included in the repository root:
 
-- `Final_Report(Joannas).pdf`
 
 The report summarizes the project development process, narrative design decisions, implementation, evaluation, and conclusions for the Data Journalism & Storytelling course submission.
 
@@ -141,4 +138,4 @@ The report summarizes the project development process, narrative design decision
 
 ## Final Project Status
 
-This repository contains the completed interactive data story submitted for the **Data Journalism & Storytelling** course, SoSe 2026, University of Konstanz. It includes the final scrollytelling website, interactive location explorer, reproducible analysis scripts, processed outputs, generated figures, methodological documentation, and the final submitted ACM-format report.
+This repository contains the completed interactive data story submitted for the **Data Journalism & Storytelling** course, SoSe 2026, University of Konstanz. It includes the final scrollytelling website, interactive location explorer, reproducible analysis scripts, processed outputs, generated figures, methodological documentation.
